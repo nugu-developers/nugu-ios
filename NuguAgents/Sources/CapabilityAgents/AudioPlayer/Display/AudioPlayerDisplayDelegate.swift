@@ -38,23 +38,23 @@ public protocol AudioPlayerDisplayDelegate: AnyObject {
     ///
     /// - Parameter template: The template to update the screen.
     /// - Parameter header: The header of the originally handled directive.
-    func audioPlayerDisplayShouldUpdateMetadata(payload: Data, header: Downstream.Header)
+    func audioPlayerDisplayShouldUpdateMetadata(payload: AudioPlayerUpdateMetadataPayload, header: Downstream.Header)
     
     /// Tells the delegate that the displayed template should show lyrics
     /// - Parameter header: The header of the originally handled directive.
-    /// - Parameter completion: Whether succeeded or not
-    func audioPlayerDisplayShouldShowLyrics(header: Downstream.Header, completion: @escaping (Bool) -> Void)
+    /// - Parameter completion: Whether succeed or not
+    func audioPlayerDisplayShouldShowLyrics(completion: @escaping (Bool) -> Void)
     
     /// Tells the delegate that the displayed template should hide lyrics
     /// - Parameter header: The header of the originally handled directive.
-    /// - Parameter completion: Whether succeeded or not
-    func audioPlayerDisplayShouldHideLyrics(header: Downstream.Header, completion: @escaping (Bool) -> Void)
+    /// - Parameter completion: Whether succeed or not
+    func audioPlayerDisplayShouldHideLyrics(completion: @escaping (Bool) -> Void)
     
     /// Tells the delegate that the displayed template should scroll with given direction.
     /// - Parameter direction: Direction to scroll.
     /// - Parameter header: The header of the originally handled directive.
     /// - Parameter completion: Whether succeeded or not
-    func audioPlayerDisplayShouldControlLyricsPage(direction: AudioPlayerDisplayControlPayload.Direction, header: Downstream.Header, completion: @escaping (Bool) -> Void)
+    func audioPlayerDisplayShouldControlLyricsPage(direction: AudioPlayerDisplayControlPayload.Direction, completion: @escaping (Bool) -> Void)
     
     /// <#Description#>
     /// - Parameter completion: <#completion description#>

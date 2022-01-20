@@ -86,6 +86,7 @@ public class AudioDisplayView: UIView {
     
     public var displayPayload: [String: AnyHashable]?
     public var isSeekable: Bool = false
+    public var isBarModeEnabled: Bool = true
     public var isNuguButtonShow: Bool = true {
         didSet {
             idleBarHeightConstraint.constant = (isNuguButtonShow ? 68.0 : 0)
@@ -272,12 +273,12 @@ public extension AudioDisplayView {
         }
     }
     
-    static func makeDisplayAudioPlayerView(audioPlayerDisplayTemplate: AudioPlayerDisplayTemplate, frame: CGRect) -> AudioDisplayView? {
+    static func makeDisplayAudioPlayerView(audioPlayerDisplayTemplate: AudioPlayerDisplayTemplate, frame: CGRect, isBarModeEnabled: Bool = true) -> AudioDisplayView? {
         let displayAudioPlayerView: AudioDisplayView?
         
         switch audioPlayerDisplayTemplate.type {
         case "AudioPlayer.Template1":
-            displayAudioPlayerView = AudioPlayer1View(frame: frame)
+            displayAudioPlayerView = AudioPlayer1View(frame: frame, isBarModeEnabled: isBarModeEnabled)
         default:
             displayAudioPlayerView = nil
         }
@@ -285,12 +286,7 @@ public extension AudioDisplayView {
         return displayAudioPlayerView
     }
     
-    func updateSettings(payload: Data) {
-        guard let payload = try? JSONDecoder().decode(AudioPlayerUpdateMetadataPayload.self, from: payload) else {
-                log.error("invalid payload")
-                return
-        }
-        
+    func updateSettings(payload: AudioPlayerUpdateMetadataPayload) {
         if let favorite = payload.metadata?.template?.content?.settings?.favorite {
             favoriteButtonContainerView.isHidden = false
             favoriteButton.isSelected = favorite
@@ -349,7 +345,10 @@ extension AudioDisplayView {
     }
     
     @IBAction func barTypeButtonDidClick(_ button: UIButton) {
-        self.setBarMode()
+        if isBarModeEnabled {
+            self.setBarMode()
+        }
+        
         delegate?.onBarTypeButtonClick()
     }
     

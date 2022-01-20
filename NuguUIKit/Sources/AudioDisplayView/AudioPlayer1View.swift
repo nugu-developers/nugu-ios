@@ -21,6 +21,7 @@
 import UIKit
 
 import NuguUtils
+import NuguAgents
 
 final class AudioPlayer1View: AudioDisplayView {
     // Private Properties
@@ -112,8 +113,9 @@ final class AudioPlayer1View: AudioDisplayView {
     }
     
     // Initialize
-    override init(frame: CGRect) {
+    init(frame: CGRect, isBarModeEnabled: Bool = true) {
         super.init(frame: frame)
+        self.isBarModeEnabled = isBarModeEnabled
         
         loadFromXib()
     }
@@ -174,7 +176,11 @@ final class AudioPlayer1View: AudioDisplayView {
         shuffleButton.setImage(UIImage(named: "btn_random_off", in: Bundle.imageBundle, compatibleWith: nil), for: .normal)
         shuffleButton.setImage(UIImage(named: "btn_random_on", in: Bundle.imageBundle, compatibleWith: nil), for: .selected)
         
-        setBarMode(0)
+        if isBarModeEnabled {
+            setBarMode(0)
+        } else {
+            setFullMode(0)
+        }
         
         theme = UserInterfaceUtil.style == .dark ? .dark : .light
     }

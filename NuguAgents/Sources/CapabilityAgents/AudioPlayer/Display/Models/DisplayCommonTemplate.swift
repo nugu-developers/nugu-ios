@@ -18,68 +18,68 @@
 //  limitations under the License.
 //
 
-struct DisplayCommonTemplate: Decodable {
-    struct Common {
-        struct Image: Decodable {
-            let contentDescription: String?
-            let sources: [Source]
+public struct DisplayCommonTemplate: Decodable {
+    public struct Common {
+        public struct Image: Decodable {
+            public let contentDescription: String?
+            public let sources: [Source]
             
-            struct Source: Decodable {
-                let url: String
-                let size: String?
-                let widthPixel: Int?
-                let heightPixel: Int?
+            public struct Source: Decodable {
+                public let url: String
+                public let size: String?
+                public let widthPixel: Int?
+                public let heightPixel: Int?
             }
         }
 
-        struct Title: Decodable {
-            let logo: Image?
-            let text: Text
-            let subtext: Text?
-            let subicon: Image?
-            let button: Button?
+        public struct Title: Decodable {
+            public let logo: Image?
+            public let text: Text
+            public let subtext: Text?
+            public let subicon: Image?
+            public let button: Button?
         }
         
-        struct Background: Decodable {
-            let image: Image?
-            let color: String?
+        public struct Background: Decodable {
+            public let image: Image?
+            public let color: String?
         }
         
-        struct Text: Decodable {
-            let text: String?
-            let color: String?
+        public struct Text: Decodable {
+            public let text: String?
+            public let color: String?
         }
         
-        struct TextInput: Decodable {
-            let text: String
-            let playServiceId: String?
+        public struct TextInput: Decodable {
+            public let text: String
+            public let playServiceId: String?
         }
         
-        struct Button: Decodable {
-            let type: Type?
-            let image: Image?
-            let text: String?
-            let token: String
-            let eventType: EventType?
-            let triggerChild: Bool?
-            let textInput: TextInput?
-            let event: Event?
-            let control: Control?
-            let postback: [String: AnyHashable]?
-            let autoTrigger: AutoTrigger?
-            let closeTemplateAfter: Bool?
+        public struct Button: Decodable {
+            public let type: Type?
+            public let image: Image?
+            public let text: String?
+            public let token: String
+            public let eventType: EventType?
+            public let triggerChild: Bool?
+            public let textInput: TextInput?
+            public let event: Event?
+            public let control: Control?
+            public let postback: [String: AnyHashable]?
+            public let autoTrigger: AutoTrigger?
+            public let closeTemplateAfter: Bool?
             
-            struct AutoTrigger: Decodable {
-                let delayInMilliseconds: Int
-                let showTimer: Bool
+            public struct AutoTrigger: Decodable {
+                public let delayInMilliseconds: Int
+                public let showTimer: Bool
             }
             
-            enum `Type`: String, Decodable {
+            public enum `Type`: String, Decodable {
                 case text
                 case image
             }
             
-            enum CodingKeys: String, CodingKey {
+            private enum CodingKeys: String, CodingKey {
                 case type
                 case image
                 case text
@@ -94,7 +94,7 @@ struct DisplayCommonTemplate: Decodable {
                 case closeTemplateAfter
             }
             
-            init(from decoder: Decoder) throws {
+            public init(from decoder: Decoder) throws {
                 let container = try decoder.container(keyedBy: CodingKeys.self)
                 
                 type = try? container.decodeIfPresent(Type.self, forKey: .type)
@@ -114,13 +114,13 @@ struct DisplayCommonTemplate: Decodable {
             }
         }
         
-        enum ImageAlign {
+        public enum ImageAlign {
             case left
             case right
             case undefined
         }
         
-        enum Duration {
+        public enum Duration {
             case none
             case short
             case mid
@@ -128,28 +128,28 @@ struct DisplayCommonTemplate: Decodable {
             case longest
         }
         
-        enum BadgeNumberMode {
+        public enum BadgeNumberMode {
             case immutability
             case page
         }
         
-        enum EventType {
+        public enum EventType {
             case elementSelected
             case textInput
             case event
             case control
         }
         
-        struct Event: Decodable {
-            let type: String
-            let data: [String: AnyHashable]
+        public struct Event: Decodable {
+            public let type: String
+            public let data: [String: AnyHashable]
             
-            enum CodingKeys: String, CodingKey {
+            private enum CodingKeys: String, CodingKey {
                 case type
                 case data
             }
             
-            init(from decoder: Decoder) throws {
+            public init(from decoder: Decoder) throws {
                 let container = try decoder.container(keyedBy: CodingKeys.self)
                 
                 type = try container.decode(String.self, forKey: .type)
@@ -157,57 +157,57 @@ struct DisplayCommonTemplate: Decodable {
             }
         }
         
-        struct Control: Decodable {
-            let type: `Type`
-            enum `Type` {
+        public struct Control: Decodable {
+            public let type: `Type`
+            public enum `Type` {
                 case templatePrevious
                 case templateCloseAll
             }
         }
         
-        struct Toggle: Decodable {
-            let style: Style
-            let status: Status
-            let token: String
+        public struct Toggle: Decodable {
+            public let style: Style
+            public let status: Status
+            public let token: String
             
-            enum Style: String, Decodable {
+            public enum Style: String, Decodable {
                 case image
                 case text
             }
             
-            enum Status: String, Decodable {
+            public enum Status: String, Decodable {
                 case on
                 case off
             }
         }
         
-        struct ToggleStyle: Decodable {
-            let text: ToggleStyle.Text?
-            let image: ToggleStyle.Image?
+        public struct ToggleStyle: Decodable {
+            public let text: ToggleStyle.Text?
+            public let image: ToggleStyle.Image?
             
-            struct Text: Decodable {
-                let on: DisplayCommonTemplate.Common.Text?
-                let off: DisplayCommonTemplate.Common.Text?
+            public struct Text: Decodable {
+                public let on: DisplayCommonTemplate.Common.Text?
+                public let off: DisplayCommonTemplate.Common.Text?
             }
             
-            struct Image: Decodable {
-                let on: DisplayCommonTemplate.Common.Image?
-                let off: DisplayCommonTemplate.Common.Image?
+            public struct Image: Decodable {
+                public let on: DisplayCommonTemplate.Common.Image?
+                public let off: DisplayCommonTemplate.Common.Image?
             }
         }
         
-        struct Match: Decodable {
-            let header: Text
-            let body: Text?
-            let footer: Text?
-            let image: Image
-            let score: Text
+        public struct Match: Decodable {
+            public let header: Text
+            public let body: Text?
+            public let footer: Text?
+            public let image: Image
+            public let score: Text
         }
     }
 }
 
 extension DisplayCommonTemplate.Common.ImageAlign: Decodable {
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let value = try decoder.singleValueContainer().decode(String.self)
         
         switch value {
@@ -219,7 +219,7 @@ extension DisplayCommonTemplate.Common.ImageAlign: Decodable {
 }
 
 extension DisplayCommonTemplate.Common.Duration: Decodable {
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let value = try decoder.singleValueContainer().decode(String.self)
         
         switch value {
@@ -234,7 +234,7 @@ extension DisplayCommonTemplate.Common.Duration: Decodable {
 }
 
 extension DisplayCommonTemplate.Common.BadgeNumberMode: Decodable {
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let value = try decoder.singleValueContainer().decode(String.self)
         
         switch value {
@@ -246,7 +246,7 @@ extension DisplayCommonTemplate.Common.BadgeNumberMode: Decodable {
 }
 
 extension DisplayCommonTemplate.Common.EventType: Decodable {
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let value = try decoder.singleValueContainer().decode(String.self)
         
         switch value {
@@ -260,7 +260,7 @@ extension DisplayCommonTemplate.Common.EventType: Decodable {
 }
 
 extension DisplayCommonTemplate.Common.Control.`Type`: Decodable {
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let value = try decoder.singleValueContainer().decode(String.self)
         
         switch value {
@@ -272,7 +272,7 @@ extension DisplayCommonTemplate.Common.Control.`Type`: Decodable {
 }
 
 extension DisplayCommonTemplate.Common.Toggle.Status {
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let value = try decoder.singleValueContainer().decode(String.self)
         
         switch value.lowercased() {

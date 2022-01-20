@@ -32,13 +32,14 @@ public class AudioDisplayViewPresenter {
     public var audioDisplayView: AudioDisplayView?
     
     private weak var viewController: UIViewController?
-    private weak var superView: UIView?
+    public weak var superView: UIView?
     private var targetView: UIView? {
         superView ?? viewController?.view
     }
     private weak var nuguClient: NuguClient?
     private weak var themeController: NuguThemeController?
     private let isNuguButtonShow: Bool
+    private let isBarModeEnabled: Bool
     
     // Observers
     private let notificationCenter = NotificationCenter.default
@@ -53,8 +54,8 @@ public class AudioDisplayViewPresenter {
     ///   - superView: Target view for AudioDisplayView should be added to.
     ///   - nuguClient: NuguClient instance which should be passed for delegation.
     ///   - isNuguButtonShow : Indicates whether to show the nugu microphone button.
-    public convenience init(superView: UIView, nuguClient: NuguClient, themeController: NuguThemeController? = nil, isNuguButtonShow: Bool = true) {
-        self.init(nuguClient: nuguClient, themeController: themeController, isNuguButtonShow: isNuguButtonShow)
+    public convenience init(superView: UIView, nuguClient: NuguClient, themeController: NuguThemeController? = nil, isNuguButtonShow: Bool = true, isBarModeEnabled: Bool = true) {
+        self.init(nuguClient: nuguClient, themeController: themeController, isNuguButtonShow: isNuguButtonShow, isBarModeEnabled: isBarModeEnabled)
         self.superView = superView
     }
     
@@ -63,18 +64,19 @@ public class AudioDisplayViewPresenter {
     ///   - viewController: Target viewController for AudioDisplayView should be added to.
     ///   - nuguClient: NuguClient instance which should be passed for delegation.
     ///   - isNuguButtonShow : Indicates whether to show the nugu microphone button.
-    public convenience init(viewController: UIViewController, nuguClient: NuguClient, themeController: NuguThemeController? = nil, isNuguButtonShow: Bool = true) {
-        self.init(nuguClient: nuguClient, themeController: themeController, isNuguButtonShow: isNuguButtonShow)
+    public convenience init(viewController: UIViewController, nuguClient: NuguClient, themeController: NuguThemeController? = nil, isNuguButtonShow: Bool = true, isBarModeEnabled: Bool = true) {
+        self.init(nuguClient: nuguClient, themeController: themeController, isNuguButtonShow: isNuguButtonShow, isBarModeEnabled: isBarModeEnabled)
         self.viewController = viewController
     }
     
     /// Initialize
     /// - Parameters:
     ///   - nuguClient: NuguClient instance which should be passed for delegation.
-    private init(nuguClient: NuguClient, themeController: NuguThemeController? = nil, isNuguButtonShow: Bool) {
+    private init(nuguClient: NuguClient, themeController: NuguThemeController? = nil, isNuguButtonShow: Bool, isBarModeEnabled: Bool) {
         self.nuguClient = nuguClient
         self.themeController = themeController
         self.isNuguButtonShow = isNuguButtonShow
+        self.isBarModeEnabled = isBarModeEnabled
         
         if let themeController = themeController {
             addThemeControllerObserver(themeController)
@@ -118,25 +120,25 @@ extension AudioDisplayViewPresenter: AudioPlayerDisplayDelegate {
         }
     }
     
-    public func audioPlayerDisplayShouldUpdateMetadata(payload: Data, header: Downstream.Header) {
+    public func audioPlayerDisplayShouldUpdateMetadata(payload: AudioPlayerUpdateMetadataPayload, header: Downstream.Header) {
         DispatchQueue.main.async { [weak self] in
             self?.audioDisplayView?.updateSettings(payload: payload)
         }
     }
     
-    public func audioPlayerDisplayShouldShowLyrics(header: Downstream.Header, completion: @escaping (Bool) -> Void) {
+    public func audioPlayerDisplayShouldShowLyrics(completion: @escaping (Bool) -> Void) {
         DispatchQueue.main.async { [weak self] in
             completion(self?.audioDisplayView?.shouldShowLyrics() ?? false)
         }
     }
     
-    public func audioPlayerDisplayShouldHideLyrics(header: Downstream.Header, completion: @escaping (Bool) -> Void) {
+    public func audioPlayerDisplayShouldHideLyrics(completion: @escaping (Bool) -> Void) {
         DispatchQueue.main.async { [weak self] in
             completion(self?.audioDisplayView?.shouldHideLyrics() ?? false)
         }
     }
     
-    public func audioPlayerDisplayShouldControlLyricsPage(direction: AudioPlayerDisplayControlPayload.Direction, header: Downstream.Header, completion: @escaping (Bool) -> Void) {
+    public func audioPlayerDisplayShouldControlLyricsPage(direction: AudioPlayerDisplayControlPayload.Direction, completion: @escaping (Bool) -> Void) {
         DispatchQueue.main.async {
             completion(false)
         }
@@ -173,7 +175,11 @@ private extension AudioDisplayViewPresenter {
         
         audioDisplayView?.removeFromSuperview()
         guard let targetView = targetView,
-              let audioDisplayView = AudioDisplayView.makeDisplayAudioPlayerView(audioPlayerDisplayTemplate: audioPlayerDisplayTemplate, frame: targetView.frame) else {
+              let audioDisplayView = AudioDisplayView.makeDisplayAudioPlayerView(
+                audioPlayerDisplayTemplate: audioPlayerDisplayTemplate,
+                frame: targetView.frame,
+                isBarModeEnabled: isBarModeEnabled
+              ) else {
             completion(nil)
             return
         }
