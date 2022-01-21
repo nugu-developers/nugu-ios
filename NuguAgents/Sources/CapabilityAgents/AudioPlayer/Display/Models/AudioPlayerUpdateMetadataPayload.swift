@@ -18,18 +18,18 @@
 //  limitations under the License.
 //
 
-struct AudioPlayerUpdateMetadataPayload: Decodable {
-    let playServiceId: String
-    let metadata: Metadata?
+public struct AudioPlayerUpdateMetadataPayload: Decodable {
+    public let playServiceId: String
+    public let metadata: Metadata?
     
-    struct Metadata: Decodable {
-        let template: Template?
+    public struct Metadata: Decodable {
+        public let template: Template?
         
-        struct Template: Decodable {
-            let content: Content?
+        public struct Template: Decodable {
+            public let content: Content?
             
-            struct Content: Decodable {
-                let settings: AudioPlayerSettingsTemplate?
+            public struct Content: Decodable {
+                public let settings: AudioPlayerSettingsTemplate?
             }
         }
     }

@@ -1,6 +1,6 @@
 //
 //  AudioPlayerSettingsTemplate.swift
-//  NuguUIKit
+//  NuguAgent
 //
 //  Created by jin kim on 2020/03/13.
 //  Copyright © 2020 SK Telecom Co., Ltd. All rights reserved.
@@ -18,10 +18,8 @@
 //  limitations under the License.
 //
 
-import NuguAgents
-
-struct AudioPlayerSettingsTemplate: Decodable {
-    let favorite: Bool?
-    let `repeat`: AudioPlayerDisplayRepeat?
-    let shuffle: Bool?
+public struct AudioPlayerSettingsTemplate: Decodable {
+    public let favorite: Bool?
+    public let `repeat`: AudioPlayerDisplayRepeat?
+    public let shuffle: Bool?
 }

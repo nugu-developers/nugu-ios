@@ -19,6 +19,8 @@
 
 import UIKit
 
+import NuguAgents
+
 final class DisplayTitleView: UIView {
     @IBOutlet weak var titleContainerView: UIView!
     @IBOutlet weak var logoImageView: UIImageView!

@@ -18,18 +18,18 @@
 //  limitations under the License.
 //
 
-struct AudioPlayerLyricsTemplate: Decodable {
-    let title: String
-    let lyricsType: String
-    let lyricsInfoList: [LyricsInfo]
-    let showButton: ShowButton?
+public struct AudioPlayerLyricsTemplate: Decodable {
+   public let title: String
+   public let lyricsType: String
+   public let lyricsInfoList: [LyricsInfo]
+   public let showButton: ShowButton?
     
-    struct LyricsInfo: Decodable {
-        let time: Int?
-        let text: String
+    public struct LyricsInfo: Decodable {
+        public let time: Int?
+        public let text: String
     }
     
-    struct ShowButton: Decodable {
-        let text: String
+    public struct ShowButton: Decodable {
+        public let text: String
     }
 }

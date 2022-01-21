@@ -43,8 +43,8 @@ public struct AudioPlayer1Template: Decodable {
             public let backgroundColor: String?
             public let badgeImageUrl: String?
             public let badgeMessage: String?
-            let lyrics: AudioPlayerLyricsTemplate?
-            let settings: AudioPlayerSettingsTemplate?
+            public let lyrics: AudioPlayerLyricsTemplate?
+            public let settings: AudioPlayerSettingsTemplate?
         }
     }
 }
