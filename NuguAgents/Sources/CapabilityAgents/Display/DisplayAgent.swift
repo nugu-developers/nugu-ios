@@ -173,9 +173,8 @@ public extension DisplayAgent {
     func displayTemplateViewDidClear(templateId: String) {
         guard let item = templateList.first(where: { $0.templateId == templateId }) else { return }
         if self.removeRenderedTemplate(item: item) {
-            if templateList.count == 0 {
-                self.playSyncManager.stopPlay(dialogRequestId: item.dialogRequestId)
-            } else {
+            self.playSyncManager.stopPlay(dialogRequestId: item.dialogRequestId)
+            if templateList.count != 0 {
                 guard let restartItem = templateList.first else { return }
                 let displayHistoryControl = try? JSONDecoder().decode(DisplayHistoryControl.self, from: restartItem.payload)
                 self.playSyncManager.startPlay(
