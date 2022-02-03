@@ -38,8 +38,7 @@ public class AudioDisplayViewPresenter {
     }
     private weak var nuguClient: NuguClient?
     private weak var themeController: NuguThemeController?
-    private let isNuguButtonShow: Bool
-    private let isBarModeEnabled: Bool
+    private let options: AudioDisplayViewPresenterOptions
     
     // Observers
     private let notificationCenter = NotificationCenter.default
@@ -54,8 +53,8 @@ public class AudioDisplayViewPresenter {
     ///   - superView: Target view for AudioDisplayView should be added to.
     ///   - nuguClient: NuguClient instance which should be passed for delegation.
     ///   - isNuguButtonShow : Indicates whether to show the nugu microphone button.
-    public convenience init(superView: UIView, nuguClient: NuguClient, themeController: NuguThemeController? = nil, isNuguButtonShow: Bool = true, isBarModeEnabled: Bool = true) {
-        self.init(nuguClient: nuguClient, themeController: themeController, isNuguButtonShow: isNuguButtonShow, isBarModeEnabled: isBarModeEnabled)
+    public convenience init(superView: UIView, nuguClient: NuguClient, themeController: NuguThemeController? = nil, options: AudioDisplayViewPresenterOptions = .all) {
+        self.init(nuguClient: nuguClient, themeController: themeController, options: options)
         self.superView = superView
     }
     
@@ -64,28 +63,32 @@ public class AudioDisplayViewPresenter {
     ///   - viewController: Target viewController for AudioDisplayView should be added to.
     ///   - nuguClient: NuguClient instance which should be passed for delegation.
     ///   - isNuguButtonShow : Indicates whether to show the nugu microphone button.
-    public convenience init(viewController: UIViewController, nuguClient: NuguClient, themeController: NuguThemeController? = nil, isNuguButtonShow: Bool = true, isBarModeEnabled: Bool = true) {
-        self.init(nuguClient: nuguClient, themeController: themeController, isNuguButtonShow: isNuguButtonShow, isBarModeEnabled: isBarModeEnabled)
+    public convenience init(viewController: UIViewController, nuguClient: NuguClient, themeController: NuguThemeController? = nil, options: AudioDisplayViewPresenterOptions) {
+        self.init(nuguClient: nuguClient, themeController: themeController, options: options)
         self.viewController = viewController
     }
     
     /// Initialize
     /// - Parameters:
     ///   - nuguClient: NuguClient instance which should be passed for delegation.
-    private init(nuguClient: NuguClient, themeController: NuguThemeController? = nil, isNuguButtonShow: Bool, isBarModeEnabled: Bool) {
+    private init(nuguClient: NuguClient, themeController: NuguThemeController? = nil, options: AudioDisplayViewPresenterOptions = .all) {
         self.nuguClient = nuguClient
         self.themeController = themeController
-        self.isNuguButtonShow = isNuguButtonShow
-        self.isBarModeEnabled = isBarModeEnabled
+        self.options = options
         
         if let themeController = themeController {
             addThemeControllerObserver(themeController)
         }
         
-        controlCenterManager = ControlCenterManager(audioPlayerAgent: nuguClient.audioPlayerAgent)
+        if options.contains(.nowPlayingInfoCenter) {
+            controlCenterManager = ControlCenterManager(audioPlayerAgent: nuguClient.audioPlayerAgent)
+        }
+        
+        if options.contains(.barMode) {
+            nuguClient.audioPlayerAgent.displayDelegate = self
+        }
         
         addAudioPlayerAgentObserver(nuguClient.audioPlayerAgent)
-        nuguClient.audioPlayerAgent.displayDelegate = self
     }
     
     deinit {
@@ -178,7 +181,7 @@ private extension AudioDisplayViewPresenter {
               let audioDisplayView = AudioDisplayView.makeDisplayAudioPlayerView(
                 audioPlayerDisplayTemplate: audioPlayerDisplayTemplate,
                 frame: targetView.frame,
-                isBarModeEnabled: isBarModeEnabled
+                isBarModeEnabled: options.contains(.barMode)
               ) else {
             completion(nil)
             return
@@ -207,7 +210,7 @@ private extension AudioDisplayViewPresenter {
                 audioDisplayView.theme = .light
             }
         }
-        audioDisplayView.isNuguButtonShow = isNuguButtonShow
+        audioDisplayView.isNuguButtonShow = options.contains(.nuguButtons)
         completion(audioDisplayView)
         
         UIView.animate(withDuration: 0.3, animations: {
