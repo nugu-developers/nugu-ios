@@ -162,11 +162,15 @@ extension MediaPlayer {
     }
     
     public var volume: Float {
-        get {
-            return player?.volume ?? 1.0
-        }
+        get { player?.volume ?? 1.0 }
+        set { player?.volume = newValue }
+    }
+    
+    public var speed: Float {
+        get { player?.rate ?? 1.0 }
         set {
-            player?.volume = newValue
+            player?.rate = newValue
+            
         }
     }
 }

@@ -85,16 +85,19 @@ extension TTSPlayer: MediaPlayable {
     var offset: TimeIntervallic {
         return internalPlayer?.offset ?? NuguTimeInterval(seconds: 0)
     }
+    
     var duration: TimeIntervallic {
         return internalPlayer?.duration ?? NuguTimeInterval(seconds: 0)
     }
+    
     var volume: Float {
-        get {
-            internalPlayer?.volume ?? 1.0
-        }
-        set(newValue) {
-            internalPlayer?.volume = newValue
-        }
+        get { internalPlayer?.volume ?? 1.0 }
+        set { internalPlayer?.volume = newValue }
+    }
+    
+    var speed: Float {
+        get { internalPlayer?.speed ?? 1.0 }
+        set { internalPlayer?.speed = newValue }
     }
     
     func play() {
