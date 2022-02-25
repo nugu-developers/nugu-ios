@@ -44,7 +44,7 @@ public class PhoneCallAgent: PhoneCallAgentProtocol {
     // Handleable Directive
     private lazy var handleableDirectiveInfos: [DirectiveHandleInfo] = [
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "SendCandidates", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleSendCandidates),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "MakeCall", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: false), preFetch: prefetchMakeCall, directiveHandler: handleMakeCall)
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "MakeCall", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: false), preFetch: prefetchMakeCall, directiveHandler: handleMakeCall),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "BlockNumber", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleBlockNumber)
     ]
     
@@ -217,6 +217,29 @@ private extension PhoneCallAgent {
     
     func handleBlockNumber() -> HandleDirective {
         return { [weak self] directive, completion in
+            guard let self = self else {
+                completion(.canceled)
+                return
+            }
+            
+            self.phoneCallDispatchQueue.async { [weak self] in
+                guard let self = self, let delegate = self.delegate else {
+                    completion(.canceled)
+                    return
+                }
+                
+                guard let blockNumberItem = try? JSONDecoder().decode(PhoneCallAgentDirectivePayload.BlockNumber.self, from: directive.payload) else {
+                    completion(.failed("Invalid payload"))
+                    return
+                }
+                
+                defer { completion(.finished) }
+                
+                delegate.phoneCallAgentDidReceiveBlockNumber(
+                    payload: blockNumberItem,
+                    header: directive.header
+                )
+            }
         }
     }
 }

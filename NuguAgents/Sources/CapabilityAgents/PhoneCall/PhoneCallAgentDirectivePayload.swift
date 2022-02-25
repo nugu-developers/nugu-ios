@@ -54,7 +54,7 @@ public struct PhoneCallAgentDirectivePayload {
     
     /// An Item received through the 'BlockNumber' directive in `PhoneCallAgent`.
     public struct BlockNumber {
-        enum BlockType: String, Codable {
+        public enum BlockType: String, Codable {
             case exact = "EXACT"
             case prefix = "PREFIX"
             case postfix = "POSTFIX"
