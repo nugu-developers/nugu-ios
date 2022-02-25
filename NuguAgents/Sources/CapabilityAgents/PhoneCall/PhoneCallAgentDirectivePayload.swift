@@ -51,6 +51,22 @@ public struct PhoneCallAgentDirectivePayload {
         /// <#Description#>
         public let callType: PhoneCallType
     }
+    
+    /// An Item received through the 'BlockNumber' directive in `PhoneCallAgent`.
+    public struct BlockNumber {
+        enum BlockType: String, Codable {
+            case exact = "EXACT"
+            case prefix = "PREFIX"
+            case postfix = "POSTFIX"
+        }
+        
+        /// The unique identifier to specify play service.
+        public let playServiceId: String
+        /// <#Description#>
+        public let number: String
+        /// <#Description#>
+        public let blockType: BlockType
+    }
 }
 
 // MARK: - PhoneCallAgentDirectivePayload.SendCandidates + Codable
@@ -60,3 +76,7 @@ extension PhoneCallAgentDirectivePayload.SendCandidates: Codable {}
 // MARK: - PhoneCallAgentDirectivePayload.MakeCall + Codable
 
 extension PhoneCallAgentDirectivePayload.MakeCall: Codable {}
+
+// MARK: - PhoneCallAgentDirectivePayload.BlockNumber + Codable
+
+extension PhoneCallAgentDirectivePayload.BlockNumber: Codable {}

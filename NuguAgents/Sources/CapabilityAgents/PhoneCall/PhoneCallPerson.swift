@@ -121,7 +121,7 @@ public struct PhoneCallPerson: Codable {
     // MARK: Contact
     
     /// <#Description#>
-    public struct Contact: Codable {
+    public struct Contact {
         
         /// <#Description#>
         public enum Label: String, Codable {
@@ -135,14 +135,17 @@ public struct PhoneCallPerson: Codable {
         public let label: Label?
         /// <#Description#>
         public let number: String?
+        /// <#Description#>
+        public let isBlocked: Bool?
         
         /// <#Description#>
         /// - Parameters:
         ///   - label: <#label description#>
         ///   - number: <#number description#>
-        public init(label: Label?, number: String?) {
+        public init(label: Label?, number: String?, isBlocked: Bool?) {
             self.label = label
             self.number = number
+            self.isBlocked = isBlocked
         }
     }
     
@@ -163,6 +166,8 @@ public struct PhoneCallPerson: Codable {
     /// <#Description#>
     public let numInCallHistory: String?
     /// <#Description#>
+    public let poiId: String?
+    /// <#Description#>
     public let token: String?
     /// <#Description#>
     public let score: String?
@@ -179,6 +184,7 @@ public struct PhoneCallPerson: Codable {
     ///   - businessHours: <#businessHours description#>
     ///   - history: <#history description#>
     ///   - numInCallHistory: <#numInCallHistory description#>
+    ///   - poiId: <#poiId description#>
     ///   - token: <#token description#>
     ///   - score: <#score description#>
     ///   - contacts: <#contacts description#>
@@ -191,6 +197,7 @@ public struct PhoneCallPerson: Codable {
         businessHours: BusinessHours?,
         history: History?,
         numInCallHistory: String?,
+        poiId: String?,
         token: String?,
         score: String?,
         contacts: [Contact]?
@@ -203,8 +210,43 @@ public struct PhoneCallPerson: Codable {
         self.businessHours = businessHours
         self.history = history
         self.numInCallHistory = numInCallHistory
+        self.poiId = poiId
         self.token = token
         self.score = score
         self.contacts = contacts
+    }
+}
+
+// MARK: - PhoneCallPerson.Contact + Codable
+
+extension PhoneCallPerson.Contact: Codable {
+    enum CodingKeys: String, CodingKey {
+        case label
+        case number
+        case isBlocked
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        try container.encodeIfPresent(label, forKey: .label)
+        try container.encodeIfPresent(number, forKey: .number)
+        
+        if let isBlockedValue = isBlocked {
+            try container.encodeIfPresent(isBlockedValue ? "TRUE": "FALSE", forKey: .isBlocked)
+        }
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        label = try? container.decodeIfPresent(Label.self, forKey: .label)
+        number = try? container.decodeIfPresent(String.self, forKey: .number)
+        let isBlockString = try? container.decodeIfPresent(String.self, forKey: .isBlocked)
+        if isBlockString == "TRUE" {
+            isBlocked = true
+        } else {
+            isBlocked = false
+        }
     }
 }

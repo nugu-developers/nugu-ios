@@ -25,7 +25,7 @@ import NuguCore
 import RxSwift
 
 public class PhoneCallAgent: PhoneCallAgentProtocol {
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .phoneCall, version: "1.2")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .phoneCall, version: "1.3")
     
     // PhoneCallAgentProtocol
     public weak var delegate: PhoneCallAgentDelegate?
@@ -45,6 +45,7 @@ public class PhoneCallAgent: PhoneCallAgentProtocol {
     private lazy var handleableDirectiveInfos: [DirectiveHandleInfo] = [
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "SendCandidates", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleSendCandidates),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "MakeCall", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: false), preFetch: prefetchMakeCall, directiveHandler: handleMakeCall)
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "BlockNumber", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleBlockNumber)
     ]
     
     private var disposeBag = DisposeBag()
@@ -211,6 +212,11 @@ private extension PhoneCallAgent {
                     referrerDialogRequestId: directive.header.dialogRequestId
                 ).rx)
             }
+        }
+    }
+    
+    func handleBlockNumber() -> HandleDirective {
+        return { [weak self] directive, completion in
         }
     }
 }
