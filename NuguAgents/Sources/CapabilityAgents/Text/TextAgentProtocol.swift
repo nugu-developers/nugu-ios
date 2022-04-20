@@ -35,6 +35,7 @@ public protocol TextAgentProtocol: CapabilityAgentable {
     @discardableResult func requestTextInput(
         text: String,
         token: String?,
+        source: String?,
         requestType: TextAgentRequestType,
         completion: ((StreamDataState) -> Void)?
     ) -> String
@@ -46,11 +47,13 @@ public extension TextAgentProtocol {
     @discardableResult func requestTextInput(
         text: String,
         token: String? = nil,
+        source: String? = nil,
         requestType: TextAgentRequestType
     ) -> String {
         return requestTextInput(
             text: text,
             token: token,
+            source: source,
             requestType: requestType,
             completion: nil
         )
@@ -58,12 +61,15 @@ public extension TextAgentProtocol {
     
     @discardableResult func requestTextInput(
         text: String,
+        token: String? = nil,
+        source: String? = nil,
         requestType: TextAgentRequestType,
         completion: ((StreamDataState) -> Void)?
     ) -> String {
         return requestTextInput(
             text: text,
-            token: nil,
+            token: token,
+            source: source,
             requestType: requestType,
             completion: completion
         )
