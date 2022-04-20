@@ -260,15 +260,13 @@ private extension TextAgent {
         case .specific(let playServiceId):
             attributes["playServiceId"] = playServiceId
         case .dialog:
-            if let dialogAttributes = dialogAttributeStore.attributes {
-                attributes.merge(dialogAttributes)
-            }
+            attributes.merge(dialogAttributeStore.attributes ?? [:])
         default:
             break
         }
         
         if let source = source {
-            attributes.merge(["source": source])
+            attributes["source"] = source
         }
         
         return Event(
