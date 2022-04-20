@@ -44,11 +44,9 @@ extension TextAgent.Event: Eventable {
         case .textInput(let text, let token, let attributes):
             payload = [
                 "text": text,
-                "token": token,
-                "playServiceId": attributes?["playServiceId"],
-                "domainTypes": attributes?["domainTypes"],
-                "asrContext": attributes?["asrContext"]
-            ]
+                "token": token
+            ].merged(with: attributes ?? [:])
+            
         case .textSourceFailed(let token, let playServiceId, let errorCode):
             payload = [
                 "token": token,

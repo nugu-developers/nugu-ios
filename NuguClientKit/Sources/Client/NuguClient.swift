@@ -438,16 +438,23 @@ public extension NuguClient {
     ///
     /// - Parameters:
     ///   - text: The `text` to be recognized
-    ///   - token: <#token description#>
-    ///   - requestType: <#requestType description#>
+    ///   - token: token
+    ///   - requestType: `TextAgentRequestType`
     ///   - completion: The completion handler to call when the request is complete
     /// - Returns: The dialogRequestId for request.
-    @discardableResult func requestTextInput(text: String, token: String? = nil, requestType: TextAgentRequestType, completion: ((StreamDataState) -> Void)? = nil) -> String {
+    @discardableResult func requestTextInput(
+        text: String,
+        token: String? = nil,
+        source: String? = nil,
+        requestType: TextAgentRequestType,
+        completion: ((StreamDataState) -> Void)? = nil
+    ) -> String {
         dialogStateAggregator.isChipsRequestInProgress = true
         
         return textAgent.requestTextInput(
             text: text,
             token: token,
+            source: source,
             requestType: requestType
         ) { [weak self] state in
             switch state {

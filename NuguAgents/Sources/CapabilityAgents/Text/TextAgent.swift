@@ -93,15 +93,20 @@ extension TextAgent {
     @discardableResult public func requestTextInput(
         text: String,
         token: String?,
+        source: String?,
         requestType: TextAgentRequestType,
         completion: ((StreamDataState) -> Void)?
     ) -> String {
-        
-        return sendFullContextEvent(textInput(
-            text: text,
-            token: token,
-            requestType: requestType
-        ), completion: completion).dialogRequestId
+        sendFullContextEvent(
+            textInput(
+                text: text,
+                token: token,
+                source: source,
+                requestType: requestType
+            ),
+            completion: completion
+        )
+        .dialogRequestId
     }
 }
 
@@ -145,6 +150,7 @@ private extension TextAgent {
                 self.sendFullContextEvent(self.textInput(
                     text: payload.text,
                     token: payload.token,
+                    source: payload.source,
                     requestType: requestType,
                     referrerDialogRequestId: directive.header.dialogRequestId
                 ))
@@ -196,6 +202,7 @@ private extension TextAgent {
                 self.sendFullContextEvent(self.textInput(
                     text: payload.text,
                     token: payload.token,
+                    source: payload.source,
                     requestType: requestType,
                     referrerDialogRequestId: directive.header.dialogRequestId
                 ), completion: completion)
@@ -244,17 +251,24 @@ private extension TextAgent {
     func textInput(
         text: String,
         token: String?,
+        source: String?,
         requestType: TextAgentRequestType,
         referrerDialogRequestId: String? = nil
     ) -> Single<Eventable> {
-        let attributes: [String: AnyHashable]?
+        var attributes = [String: AnyHashable]()
         switch requestType {
         case .specific(let playServiceId):
-            attributes = ["playServiceId": playServiceId]
+            attributes["playServiceId"] = playServiceId
         case .dialog:
-            attributes = self.dialogAttributeStore.attributes
-        case .normal:
-            attributes = nil
+            if let dialogAttributes = dialogAttributeStore.attributes {
+                attributes.merge(dialogAttributes)
+            }
+        default:
+            break
+        }
+        
+        if let source = source {
+            attributes.merge(["source": source])
         }
         
         return Event(
