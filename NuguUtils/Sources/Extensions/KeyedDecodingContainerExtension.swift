@@ -165,6 +165,8 @@ private extension KeyedDecodingContainer where K == JSONCodingKey {
     }
 }
 
+private struct Dummy: Decodable {}
+
 extension UnkeyedDecodingContainer {
     mutating func decode(_ type: [AnyHashable].Type) throws -> [AnyHashable] {
         var array: [AnyHashable] = []
@@ -180,6 +182,9 @@ extension UnkeyedDecodingContainer {
             } else if var container = try? nestedUnkeyedContainer(),
                       let nestedArray = try? container.decode([AnyHashable].self) {
                 array.append(nestedArray)
+            } else {
+                _ = try decode(Dummy.self) // consume non-decodable
+
             }
         }
         return array
@@ -199,6 +204,9 @@ extension UnkeyedDecodingContainer {
             } else if var container = try? nestedUnkeyedContainer(),
                       let nestedArray = try? container.decode([Any].self) {
                 array.append(nestedArray)
+            } else {
+                _ = try decode(Dummy.self) // consume non-decodable
+
             }
         }
         return array
