@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'SilverTray'
-  s.version = '1.6.0'
+  s.version = '1.6.1'
   s.license = 'Apache License, Version 2.0'
   s.summary = 'Data chunk player'
   s.description = <<-DESC
