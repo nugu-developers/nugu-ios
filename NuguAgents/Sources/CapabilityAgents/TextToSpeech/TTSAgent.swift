@@ -52,6 +52,14 @@ public final class TTSAgent: TTSAgentProtocol {
         }
     }
     
+    public var speed: Float = 1.0 {
+        didSet {
+            ttsDispatchQueue.sync {
+                latestPlayer?.speed = speed
+            }
+        }
+    }
+    
     // Private
     private let playSyncManager: PlaySyncManageable
     private let contextManager: ContextManageable
@@ -322,6 +330,14 @@ extension TTSAgent: MediaPlayerDelegate {
             }
         }
     }
+    
+    public func mediaPlayerChunkDidConsume(_ chunk: Data) {
+        post(NuguAgentNotification.TTS.Chunk(chunk: chunk))
+    }
+    
+    public func mediaPlayerDurationDidChange(_ duration: TimeIntervallic, mediaPlayer: MediaPlayable) {
+        post(NuguAgentNotification.TTS.Duration(duration: duration.truncatedMilliSeconds))
+    }
 }
 
 // MARK: - Private (Directive)
@@ -330,6 +346,8 @@ private extension TTSAgent {
     func prefetchPlay() -> PrefetchDirective {
         return { [weak self] directive in
             let player = try TTSPlayer(directive: directive)
+            player.speed = self?.speed ?? 1.0
+            
             self?.ttsDispatchQueue.sync { [weak self] in
                 guard let self = self else { return }
                 
@@ -504,6 +522,8 @@ private extension TTSAgent {
 extension Notification.Name {
     static let ttsAgentStateDidChange = Notification.Name(rawValue: "com.sktelecom.romaine.notification.name.tts_agent_state_did_change")
     static let ttsAgentResultDidReceive = Notification.Name(rawValue: "com.sktelecom.romaine.notification.name.tts_agent_result_did_receive")
+    static let ttsAgentChunkDidConsumed = Notification.Name(rawValue: "com.sktelecom.romaine.notification.name.tts_agent_chunk_did_consumed")
+    static let ttsAgentDurationDidComputed = Notification.Name(rawValue: "com.sktelecom.romaine.notification.name.tts_agent_duration_did_computed")
 }
 
 public extension NuguAgentNotification {
@@ -531,6 +551,26 @@ public extension NuguAgentNotification {
                       let header = from["header"] as? Downstream.Header else { return nil }
                 
                 return Result(text: text, header: header)
+            }
+        }
+        
+        public struct Chunk: TypedNotification {
+            public static var name: Notification.Name = .ttsAgentChunkDidConsumed
+            public let chunk: Data
+            
+            public static func make(from: [String: Any]) -> Chunk? {
+                guard let chunk = from["chunk"] as? Data else { return nil }
+                return Chunk(chunk: chunk)
+            }
+        }
+        
+        public struct Duration: TypedNotification {
+            public static var name: Notification.Name = .ttsAgentDurationDidComputed
+            public let duration: Int
+            
+            public static func make(from: [String : Any]) -> NuguAgentNotification.TTS.Duration? {
+                guard let duration = from["duration"] as? Int else { return nil }
+                return Duration(duration: duration)
             }
         }
     }

@@ -165,11 +165,7 @@ public extension SpeechRecognizerAggregator {
         stopMicInputProvider()
         asrAgent.stopRecognition()
     }
-}
-
-// MARK: - Private
-
-extension SpeechRecognizerAggregator {
+    
     func startMicInputProvider(requestingFocus: Bool, completion: @escaping (Bool) -> Void) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
@@ -185,7 +181,8 @@ extension SpeechRecognizerAggregator {
                     completion(false)
                     return
                 }
-                self.micQueue.async { [unowned self] in
+                self.micQueue.async { [weak self] in
+                    guard let self = self else { return }
                     guard self.micInputProvider.isRunning == false else {
                         completion(true)
                         return
@@ -204,9 +201,9 @@ extension SpeechRecognizerAggregator {
     }
     
     func stopMicInputProvider() {
-        micQueue.sync {
-            startMicWorkItem?.cancel()
-            micInputProvider.stop()
+        micQueue.async { [weak self] in
+            self?.startMicWorkItem?.cancel()
+            self?.micInputProvider.stop()
         }
     }
 }
@@ -219,13 +216,13 @@ extension SpeechRecognizerAggregator: MicInputProviderDelegate {
             keywordDetector.putAudioBuffer(buffer: buffer)
         }
         
-        if [.listening, .recognizing].contains(asrAgent.asrState) {
+        if [.listening(), .recognizing].contains(asrAgent.asrState) {
             asrAgent.putAudioBuffer(buffer: buffer)
         }
     }
     
     public func audioEngineConfigurationChanged() {
-        startListeningWithTrigger()
+        // Nothing to do
     }
 }
 

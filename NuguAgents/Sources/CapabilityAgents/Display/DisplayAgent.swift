@@ -26,7 +26,7 @@ import RxSwift
 
 public final class DisplayAgent: DisplayAgentProtocol {
     // CapabilityAgentable
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .display, version: "1.8")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .display, version: "1.9")
     
     public weak var delegate: DisplayAgentDelegate?
     public var defaultDisplayTempalteDuration: DisplayTemplateDuration = .short
@@ -62,10 +62,11 @@ public final class DisplayAgent: DisplayAgentProtocol {
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Close", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleClose),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ControlFocus", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleControlFocus),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ControlScroll", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleControlScroll),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Update", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleUpdate)
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Update", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleUpdate),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "RedirectTriggerChild", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleRedirectTriggerChild)
     ] + [
         "FullText1", "FullText2", "FullText3",
-        "ImageText1", "ImageText2", "ImageText3", "ImageText4",
+        "ImageText1", "ImageText2", "ImageText3", "ImageText4", "ImageText5",
         "TextList1", "TextList2", "TextList3", "TextList4",
         "ImageList1", "ImageList2", "ImageList3",
         "Weather1", "Weather2", "Weather3", "Weather4", "Weather5",
@@ -159,6 +160,37 @@ public extension DisplayAgent {
             self.templateList
                 .filter { $0.template.contextLayer != .overlay }
                 .forEach { self.playSyncManager.resetTimer(property: $0.template.playSyncProperty) }
+        }
+    }
+    
+    func triggerChild(templateId: String, data: [String: AnyHashable]) {
+        self.displayDispatchQueue.async { [weak self] in
+            guard let self = self else { return }
+            self.sendCompactContextEvent(self.triggerChild(templateId: templateId, data: data))
+        }
+    }
+    
+    func displayTemplateViewDidClear(templateId: String) {
+        guard let item = templateList.first(where: { $0.templateId == templateId }) else { return }
+        if self.removeRenderedTemplate(item: item) {
+            self.playSyncManager.stopPlay(dialogRequestId: item.dialogRequestId)
+            if templateList.count != 0 {
+                guard let restartItem = templateList.first else { return }
+                let displayHistoryControl = try? JSONDecoder().decode(DisplayHistoryControl.self, from: restartItem.payload)
+                self.playSyncManager.startPlay(
+                    property: restartItem.template.playSyncProperty,
+                    info: PlaySyncInfo(
+                        playStackServiceId: restartItem.template.playStackControl?.playServiceId,
+                        dialogRequestId: restartItem.dialogRequestId,
+                        messageId: restartItem.templateId,
+                        duration: restartItem.template.duration?.time ?? self.defaultDisplayTempalteDuration.time,
+                        displayHistoryControl: displayHistoryControl != nil ?
+                        ["parent": displayHistoryControl?.historyControl.parent ?? false,
+                         "child": displayHistoryControl?.historyControl.child ?? false,
+                         "parentToken": displayHistoryControl?.historyControl.parentToken ?? ""] : nil
+                    )
+                )
+            }
         }
     }
 }
@@ -315,6 +347,25 @@ private extension DisplayAgent {
         }
     }
     
+    func handleRedirectTriggerChild() -> HandleDirective {
+        return { [weak self] directive, completion in
+            guard let triggerChildPayload = try? JSONDecoder().decode(DisplayRedirectTriggerChildPayload.self, from: directive.payload)  else {
+                completion(.failed("Invalid payload"))
+                return
+            }
+            defer { completion(.finished) }
+
+            self?.displayDispatchQueue.async { [weak self] in
+                guard let self = self else { return }
+                self.sendCompactContextEvent(Event(
+                    typeInfo: .triggerChild(parentToken: triggerChildPayload.parentToken, data: triggerChildPayload.data),
+                    playServiceId: triggerChildPayload.playServiceId,
+                    referrerDialogRequestId: directive.header.dialogRequestId
+                ).rx)
+            }
+        }
+    }
+    
     func prefetchDisplay() -> PrefetchDirective {
         return { [weak self] directive in
             guard let template = try? JSONDecoder().decode(DisplayTemplate.Payload.self, from: directive.payload)  else {
@@ -352,6 +403,8 @@ private extension DisplayAgent {
                 }
                 defer { completion(.finished) }
                 
+                let displayHistoryControl = try? JSONDecoder().decode(DisplayHistoryControl.self, from: directive.payload)
+                
                 self.sessionManager.activate(dialogRequestId: item.dialogRequestId, category: .display)
                 self.playSyncManager.startPlay(
                     property: item.template.playSyncProperty,
@@ -359,12 +412,16 @@ private extension DisplayAgent {
                         playStackServiceId: item.template.playStackControl?.playServiceId,
                         dialogRequestId: item.dialogRequestId,
                         messageId: item.templateId,
-                        duration: item.template.duration?.time ?? self.defaultDisplayTempalteDuration.time
+                        duration: item.template.duration?.time ?? self.defaultDisplayTempalteDuration.time,
+                        displayHistoryControl: displayHistoryControl != nil ?
+                        ["parent": displayHistoryControl?.historyControl.parent ?? false,
+                         "child": displayHistoryControl?.historyControl.child ?? false,
+                         "parentToken": displayHistoryControl?.historyControl.parentToken ?? ""] : nil
                     )
                 )
                 
                 let semaphore = DispatchSemaphore(value: 0)
-                delegate.displayAgentShouldRender(template: item) { [weak self] in
+                delegate.displayAgentShouldRender(template: item, historyControl: displayHistoryControl?.historyControl) { [weak self] in
                     defer { semaphore.signal() }
                     guard let self = self else { return }
                     guard let displayObject = $0 else {
@@ -379,7 +436,6 @@ private extension DisplayAgent {
                         .observe(on: self.displayScheduler)
                         .subscribe({ [weak self] _ in
                             guard let self = self else { return }
-                            
                             if self.removeRenderedTemplate(item: item) {
                                 self.playSyncManager.stopPlay(dialogRequestId: item.dialogRequestId)
                             }
@@ -446,16 +502,37 @@ private extension DisplayAgent {
             return Disposables.create()
         }.subscribe(on: displayScheduler)
     }
+    
+    func triggerChild(templateId: String, data: [String: AnyHashable]) -> Single<Eventable> {
+        return Single.create { [weak self] (observer) -> Disposable in
+            guard let item = self?.templateList.first(where: { $0.templateId == templateId }),
+                  let targetServiceId = data["playServiceId"] as? String,
+                  let innerData = data["data"] as? [String: AnyHashable] else {
+                      observer(.failure(NuguAgentError.invalidState))
+                      return Disposables.create()
+                  }
+            let triggerChildEvent = Event(
+                typeInfo: .triggerChild(parentToken: item.template.token, data: innerData),
+                playServiceId: targetServiceId,
+                referrerDialogRequestId: item.dialogRequestId
+            )
+            observer(.success(triggerChildEvent))
+            return Disposables.create()
+        }.subscribe(on: displayScheduler)
+    }
 }
 
 // MARK: - Private
 
 private extension DisplayAgent {
     func setRenderedTemplate(item: DisplayTemplate) {
-        templateList
+        let displayHistoryControl = try? JSONDecoder().decode(DisplayHistoryControl.self, from: item.payload)
+        if displayHistoryControl?.historyControl.child != true {
+            templateList
             // FIXME: Currently the application is not separating the display view according to 'LayerType'.
             // .filter { $0.template.contextLayer == item.template.contextLayer }
-            .forEach { removeRenderedTemplate(item: $0) }
+                .forEach { removeRenderedTemplate(item: $0) }
+        }
         templateList.insert(item, at: 0)
     }
     

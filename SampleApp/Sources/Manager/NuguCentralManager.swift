@@ -40,9 +40,19 @@ final class NuguCentralManager {
         let nuguBuilder = NuguClient.Builder()
 
         // Set Last WakeUp Keyword
-        // If you don't want to use saved wakeup-word, don't need to be implemented.
-        // Because `aria` is set as a default keyword
-        if let keyword = Keyword(rawValue: UserDefaults.Standard.wakeUpWord) {
+        let wakeupDictionary = UserDefaults.Standard.wakeUpWordDictionary
+        let wakeupRawValue = Int(wakeupDictionary["rawValue"] ?? "0") ?? 0
+        
+        // If you want to set offered file
+        let keywordItem = Keyword(
+            rawValue: wakeupRawValue,
+            description: wakeupDictionary["description"],
+            netFilePath: Bundle.main.url(forResource: wakeupDictionary["netFileName"], withExtension: "raw")?.path,
+            searchFilePath: Bundle.main.url(forResource: wakeupDictionary["searchFileName"], withExtension: "raw")?.path
+        )
+        // Otherwise, you can use default wakeup keyword (Keyword.aria, Keyword.tinkerbell)
+        
+        if let keyword = keywordItem {
             nuguBuilder.keywordDetector.keyword = keyword
         }
         
@@ -417,10 +427,8 @@ extension NuguCentralManager: SoundAgentDataSource {
 // MARK: - NuguClientDelegate
 
 extension NuguCentralManager: NuguClientDelegate {
-    func nuguClientShouldUpdateAudioSessionForFocusAquire() -> Bool {
-        // If you set AudioSessionManager to nil, You should implement this
-        // And return NUGU SDK can use the audio session or not.
-        return false
+    func nuguClientRequestAccessToken() -> String? {
+        return UserDefaults.Standard.accessToken
     }
 
     func nuguClientDidChangeSpeechState(_ state: SpeechRecognizerAggregatorState) {
@@ -430,44 +438,11 @@ extension NuguCentralManager: NuguClientDelegate {
         notificationCenter.post(name: .speechStateDidChangeNotification, object: nil, userInfo: ["state": state])
     }
     
-    func nuguClientRequestAccessToken() -> String? {
-        return UserDefaults.Standard.accessToken
-    }
-    
-    func nuguClientDidReleaseAudioSession() {
-        // If you set AudioSessionManager to nil, You should implement this
-    }
-    
-    func nuguClientDidReceive(direcive: Downstream.Directive) {
-        // Use some analytics SDK(or API) here.
-        log.debug("\(direcive.header.type)")
-    }
-    
-    func nuguClientDidReceive(attachment: Downstream.Attachment) {
-        // Use some analytics SDK(or API) here.
-        log.debug("\(attachment.header.type)")
-    }
-    
-    func nuguClientWillSend(event: Upstream.Event) {
-        // Use some analytics SDK(or API) here.
-        log.debug("\(event.header.type)")
-    }
-    
-    func nuguClientDidSend(event: Upstream.Event, error: Error?) {
+    func nuguClientDidSend(event: Event, error: Error?) {
         // Use some analytics SDK(or API) here.
         // Error: URLError or NetworkError or EventSenderError
         log.debug("\(error?.localizedDescription ?? ""): \(event.header.type)")
         guard let error = error else { return }
         handleNetworkError(error: error)
-    }
-    
-    func nuguClientDidSend(attachment: Upstream.Attachment, error: Error?) {
-        // Use some analytics SDK(or API) here.
-        // Error: EventSenderError
-        log.debug("\(error?.localizedDescription ?? ""): \(attachment.seq)")
-    }
-    
-    func nuguClientServerInitiatedDirectiveRecevierStateDidChange(_ state: ServerSideEventReceiverState) {
-        log.debug("nuguClientServerInitiatedDirectiveRecevierStateDidChange: \(state)")
     }
 }

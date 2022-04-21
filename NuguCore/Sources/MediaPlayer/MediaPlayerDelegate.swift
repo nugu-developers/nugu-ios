@@ -25,8 +25,10 @@ import NuguUtils
 public protocol MediaPlayerDelegate: AnyObject {
     func mediaPlayerStateDidChange(_ state: MediaPlayerState, mediaPlayer: MediaPlayable)
     func mediaPlayerDurationDidChange(_ duration: TimeIntervallic, mediaPlayer: MediaPlayable)
+    func mediaPlayerChunkDidConsume(_ chunk: Data)
 }
 
 public extension MediaPlayerDelegate {
     func mediaPlayerDurationDidChange(_ duration: TimeIntervallic, mediaPlayer: MediaPlayable) {}
+    func mediaPlayerChunkDidConsume(_ chunk: Data) {}
 }

@@ -27,5 +27,8 @@ public enum PhoneCallIntent: String, Codable {
     case history = "HISTORY"
     case redial = "REDIAL"
     case missed = "MISSED"
+    case exactOne = "EXACT_ONE"
+    case saveContact = "SAVE_CONTACT"
+    case block = "BLOCK"
     case none = "NONE"
 }

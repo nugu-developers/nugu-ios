@@ -69,9 +69,44 @@ enum KeywordDetectorConst {
 
 // MARK: Keyword
 
-public enum Keyword: Int, CustomStringConvertible, CaseIterable {
-    case aria = 0 // ɑriɑ
-    case tinkerbell = 3 // tɪŋkəbel
+public enum Keyword: CustomStringConvertible, CaseIterable {
+    public static var allCases: [Keyword] = [
+        .aria, .tinkerbell // TODO: - Adds custom wakeup word
+    ]
+    
+    case aria // ɑriɑ
+    case tinkerbell // tɪŋkəbel
+    case custom(description: String, netFilePath: String, searchFilePath: String)
+    
+    public init?(
+        rawValue: Int,
+        description: String? = nil,
+        netFilePath: String? = nil,
+        searchFilePath: String? = nil
+    ) {
+        switch rawValue {
+        case Self.aria.rawValue:
+            self = .aria
+        case Self.tinkerbell.rawValue:
+            self = .tinkerbell
+        case -1:
+            self = .custom(
+            description: description ?? "",
+            netFilePath: netFilePath ?? "",
+            searchFilePath: searchFilePath ?? ""
+        )
+        default:
+            return nil
+        }
+    }
+    
+    public var rawValue: Int {
+        switch self {
+        case .aria: return 0
+        case .tinkerbell: return 3
+        case .custom: return -1
+        }
+    }
     
     public var description: String {
         switch self {
@@ -79,6 +114,8 @@ public enum Keyword: Int, CustomStringConvertible, CaseIterable {
             return "아리아"
         case .tinkerbell:
             return "팅커벨"
+        case .custom(let description, _, _):
+            return description
         }
     }
     
@@ -89,6 +126,8 @@ public enum Keyword: Int, CustomStringConvertible, CaseIterable {
             return Bundle(for: TycheKeywordDetectorEngine.self).url(forResource: "skt_trigger_am_aria", withExtension: "raw")!.path
         case .tinkerbell:
             return Bundle(for: TycheKeywordDetectorEngine.self).url(forResource: "skt_trigger_am_tinkerbell", withExtension: "raw")!.path
+        case .custom(_, let netFilePath, _):
+            return netFilePath
         }
         #else
         switch self {
@@ -96,6 +135,8 @@ public enum Keyword: Int, CustomStringConvertible, CaseIterable {
             return Bundle.module.url(forResource: "skt_trigger_am_aria", withExtension: "raw")!.path
         case .tinkerbell:
             return Bundle.module.url(forResource: "skt_trigger_am_tinkerbell", withExtension: "raw")!.path
+        case .custom(_, let netFilePath, _):
+            return netFilePath
         }
         #endif
     }
@@ -107,6 +148,8 @@ public enum Keyword: Int, CustomStringConvertible, CaseIterable {
             return Bundle(for: TycheKeywordDetectorEngine.self).url(forResource: "skt_trigger_search_aria", withExtension: "raw")!.path
         case .tinkerbell:
             return Bundle(for: TycheKeywordDetectorEngine.self).url(forResource: "skt_trigger_search_tinkerbell", withExtension: "raw")!.path
+        case .custom(_, _, let searchFilePath):
+            return searchFilePath
         }
         #else
         switch self {
@@ -114,6 +157,8 @@ public enum Keyword: Int, CustomStringConvertible, CaseIterable {
             return Bundle.module.url(forResource: "skt_trigger_search_aria", withExtension: "raw")!.path
         case .tinkerbell:
             return Bundle.module.url(forResource: "skt_trigger_search_tinkerbell", withExtension: "raw")!.path
+        case .custom(_, _, let searchFilePath):
+            return searchFilePath
         }
         #endif
     }

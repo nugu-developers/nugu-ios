@@ -37,6 +37,15 @@ class AudioEngineManager<Observer: AudioEngineObservable> {
     }
     
     func startAudioEngine() throws {
+        UnifiedErrorCatcher.try {
+            if let audioUnit = inputNode.audioUnit {
+                AudioOutputUnitStop(audioUnit)
+                AudioUnitUninitialize(audioUnit)
+            }
+            
+            return nil
+        }
+        
         var engineError: Error!
         _audioEngine.mutate { engine in
             guard engine.isRunning == false else { return }

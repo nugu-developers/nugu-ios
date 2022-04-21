@@ -43,4 +43,6 @@ public protocol PhoneCallAgentDelegate: AnyObject {
     ///   - header: The header of the originally handled directive.
     /// - Returns: If have an error, the error-code is returned, otherwise it returns `nil`.
     func phoneCallAgentDidReceiveMakeCall(payload: PhoneCallAgentDirectivePayload.MakeCall, header: Downstream.Header) -> PhoneCallErrorCode?
+    
+    func phoneCallAgentDidReceiveBlockNumber(payload: PhoneCallAgentDirectivePayload.BlockNumber, header: Downstream.Header)
 }

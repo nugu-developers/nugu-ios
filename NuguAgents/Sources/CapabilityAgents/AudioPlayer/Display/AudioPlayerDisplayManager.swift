@@ -107,7 +107,7 @@ extension AudioPlayerDisplayManager {
         }
 
         // Seekable : when sourceType is "URL" and durationSec should be over than 0 (Followed by AudioPlayerInterface v1.4)
-        let isSeekable = (payload.sourceType?.rawValue == "URL")
+        let isSeekable = (payload.sourceType == .url)
             && (Int(content["durationSec"] as? String ?? "0") ?? 0 > 0)
         
         let item = AudioPlayerDisplayTemplate(
@@ -160,7 +160,7 @@ extension AudioPlayerDisplayManager {
         }
     }
     
-    func updateMetadata(payload: Data, playServiceId: String, header: Downstream.Header) {
+    func updateMetadata(payload: AudioPlayerUpdateMetadataPayload, playServiceId: String, header: Downstream.Header) {
         guard currentItem?.mediaPayload.playServiceId == playServiceId else { return }
         delegate?.audioPlayerDisplayShouldUpdateMetadata(payload: payload, header: header)
     }
@@ -171,7 +171,7 @@ extension AudioPlayerDisplayManager {
                 completion(false)
                 return
         }
-        delegate.audioPlayerDisplayShouldShowLyrics(header: header, completion: completion)
+        delegate.audioPlayerDisplayShouldShowLyrics(completion: completion)
     }
     
     func hideLyrics(playServiceId: String, header: Downstream.Header, completion: @escaping (Bool) -> Void) {
@@ -180,7 +180,7 @@ extension AudioPlayerDisplayManager {
                 completion(false)
                 return
         }
-        delegate.audioPlayerDisplayShouldHideLyrics(header: header, completion: completion)
+        delegate.audioPlayerDisplayShouldHideLyrics(completion: completion)
     }
     
     func isLyricsVisible(playServiceId: String, completion: @escaping (Bool) -> Void) {
@@ -198,7 +198,7 @@ extension AudioPlayerDisplayManager {
                 completion(false)
                 return
         }
-        delegate.audioPlayerDisplayShouldControlLyricsPage(direction: payload.direction, header: header, completion: completion)
+        delegate.audioPlayerDisplayShouldControlLyricsPage(direction: payload.direction, completion: completion)
     }
     
     func notifyUserInteraction() {

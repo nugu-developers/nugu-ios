@@ -33,6 +33,8 @@ public struct PlaySyncInfo {
     /// <#Description#>
     public let duration: TimeIntervallic
     
+    public let historyControl: [String: Any]?
+    
     /// <#Description#>
     /// - Parameters:
     ///   - playStackServiceId: <#playStackServiceId description#>
@@ -43,12 +45,14 @@ public struct PlaySyncInfo {
         playStackServiceId: String?,
         dialogRequestId: String,
         messageId: String,
-        duration: TimeIntervallic
+        duration: TimeIntervallic,
+        displayHistoryControl: [String: Any]? = nil
     ) {
         self.playStackServiceId = playStackServiceId
         self.dialogRequestId = dialogRequestId
         self.messageId = messageId
         self.duration = duration
+        self.historyControl = displayHistoryControl
     }
 }
 

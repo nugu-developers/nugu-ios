@@ -44,7 +44,8 @@ final class MainViewController: UIViewController {
     private lazy var audioDisplayViewPresenter = AudioDisplayViewPresenter(
         viewController: self,
         nuguClient: NuguCentralManager.shared.client,
-        themeController: NuguCentralManager.shared.themeController
+        themeController: NuguCentralManager.shared.themeController,
+        options: []
     )
     
     // MARK: Observers

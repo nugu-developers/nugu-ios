@@ -22,12 +22,14 @@ import Foundation
 
 import NuguCore
 
+public typealias HistoryControl = DisplayHistoryControl.HistoryControl
+
 /// The `DisplayAgentDelegate`  is used to notify observers when a template directive is received.
 public protocol DisplayAgentDelegate: AnyObject {
     /// Tells the delegate that the specified template should be displayed.
     ///
     /// - Parameter template: The template to display.
-    func displayAgentShouldRender(template: DisplayTemplate, completion: @escaping (AnyObject?) -> Void)
+    func displayAgentShouldRender(template: DisplayTemplate, historyControl: HistoryControl?, completion: @escaping (AnyObject?) -> Void)
     
     /// Tells the delegate that the specified template should be removed from the screen.
     ///

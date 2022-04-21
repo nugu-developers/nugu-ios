@@ -32,7 +32,7 @@ public class DisplayWebViewPresenter: NSObject {
 
     public weak var delegate: DisplayWebViewPresenterDelegate?
     
-    private var nuguDisplayWebView: NuguDisplayWebView?
+    private var nuguDisplayWebViews = [NuguDisplayWebView]()
     private weak var viewController: UIViewController?
     private weak var superView: UIView?
     private var targetView: UIView? {
@@ -54,7 +54,7 @@ public class DisplayWebViewPresenter: NSObject {
     ///   - superView: Target view for NuguDisplayWebView should be added to.
     ///   - nuguClient: NuguClient instance which should be passed for delegation.
     ///   - clientInfo: Optional and additional values which can be injected for pre-promised and customized layout.
-    ///   - clientInfo: Optional controller which can be injected for theme change notification and automatic theme change.
+    ///   - themeController: Optional controller which can be injected for theme change notification and automatic theme change.
     public convenience init(superView: UIView, nuguClient: NuguClient, clientInfo: [String: String]? = nil, themeController: NuguThemeController? = nil) {
         self.init(nuguClient: nuguClient, clientInfo: clientInfo, themeController: themeController)
         self.superView = superView
@@ -65,7 +65,7 @@ public class DisplayWebViewPresenter: NSObject {
     ///   - viewController: Target viewController for NuguDisplayWebView should be added to.
     ///   - nuguClient: NuguClient instance which should be passed for delegation.
     ///   - clientInfo: Optional and additional values which can be injected for pre-promised and customized layout.
-    ///   - clientInfo: Optional controller which can be injected for theme change notification and automatic theme change.
+    ///   - themeController: Optional controller which can be injected for theme change notification and automatic theme change.
     public convenience init(viewController: UIViewController, nuguClient: NuguClient, clientInfo: [String: String]? = nil, themeController: NuguThemeController? = nil) {
         self.init(nuguClient: nuguClient, clientInfo: clientInfo, themeController: themeController)
         self.viewController = viewController
@@ -75,7 +75,7 @@ public class DisplayWebViewPresenter: NSObject {
     /// - Parameters:
     ///   - nuguClient: NuguClient instance which should be passed for delegation.
     ///   - clientInfo: Optional and additional values which can be injected for pre-promised and customized layout.
-    ///   - clientInfo: Optional controller which can be injected for theme change notification and automatic theme change.
+    ///   - themeController: Optional controller which can be injected for theme change notification and automatic theme change.
     private init(nuguClient: NuguClient, clientInfo: [String: String]? = nil, themeController: NuguThemeController? = nil) {
         super.init()
         self.nuguClient = nuguClient
@@ -83,7 +83,8 @@ public class DisplayWebViewPresenter: NSObject {
         nuguClient.displayAgent.delegate = self
         if let themeController = themeController {
             addThemeControllerObserver(themeController)
-            let newClientInfo = ["theme": themeController.theme.rawValue]
+            let newClientInfo = ["theme": themeController.theme.rawValue,
+                                 "displayInterfaceVersion": self.nuguClient?.displayAgent.capabilityAgentProperty.version ?? ""]
             self.clientInfo?.merge(newClientInfo)
         }
     }
@@ -99,7 +100,7 @@ public class DisplayWebViewPresenter: NSObject {
 
 extension DisplayWebViewPresenter: DisplayAgentDelegate {
     public func displayAgentRequestContext(templateId: String, completion: @escaping (DisplayContext?) -> Void) {
-        guard let nuguDisplayWebView = nuguDisplayWebView  else {
+        guard let nuguDisplayWebView = nuguDisplayWebViews.first(where: { $0.templateId == templateId }) else {
             completion(nil)
             return
         }
@@ -108,10 +109,14 @@ extension DisplayWebViewPresenter: DisplayAgentDelegate {
         })
     }
     
-    public func displayAgentShouldRender(template: DisplayTemplate, completion: @escaping (AnyObject?) -> Void) {
-        log.debug("templateId: \(template.templateId)")
+    public func displayAgentShouldRender(template: DisplayTemplate, historyControl: HistoryControl?, completion: @escaping (AnyObject?) -> Void) {
+        log.debug("templateId: \(template.templateId), historyControl: \(String(describing: historyControl))")
         DispatchQueue.main.async {  [weak self] in
-            self?.addDisplayView(displayTemplate: template, completion: completion)
+            if historyControl?.child == true {
+                self?.appendChildDisplayView(displayTemplate: template, completion: completion)
+            } else {
+                self?.addDisplayView(displayTemplate: template, completion: completion)
+            }
         }
     }
     
@@ -125,7 +130,7 @@ extension DisplayWebViewPresenter: DisplayAgentDelegate {
     public func displayAgentDidClear(templateId: String) {
         log.debug("templateId: \(templateId)")
         DispatchQueue.main.async { [weak self] in
-            self?.dismissDisplayView()
+            self?.dismissDisplayView(templateId: templateId)
         }
     }
     
@@ -135,7 +140,8 @@ extension DisplayWebViewPresenter: DisplayAgentDelegate {
     
     public func displayAgentShouldScroll(templateId: String, direction: DisplayControlPayload.Direction, header: Downstream.Header, completion: @escaping (Bool) -> Void) {
         DispatchQueue.main.async { [weak self] in
-            self?.nuguDisplayWebView?.scroll(direction: direction, completion: completion)
+            guard let nuguDisplayWebView = self?.nuguDisplayWebViews.first(where: { $0.templateId == templateId }) else { return }
+            nuguDisplayWebView.scroll(direction: direction, completion: completion)
         }
     }
 }
@@ -153,7 +159,10 @@ private extension DisplayWebViewPresenter {
     }
     
     func replaceDisplayView(displayTemplate: DisplayTemplate, completion: @escaping (AnyObject?) -> Void) {
+        let nuguDisplayWebView = nuguDisplayWebViews.last
         nuguDisplayWebView?.load(
+            templateId: displayTemplate.templateId,
+            token: displayTemplate.template.token,
             dialogRequestId: displayTemplate.dialogRequestId,
             displayPayload: displayTemplate.payload,
             displayType: displayTemplate.type,
@@ -163,53 +172,207 @@ private extension DisplayWebViewPresenter {
             self?.nuguClient?.displayAgent.elementDidSelect(templateId: displayTemplate.templateId, token: token, postback: postback)
         }
         if checkSupportVisibleTokenListOrSupportFocusedItemToken(displayTemplate: displayTemplate) == true {
-            addWebViewCompletion = { [weak self] in
-                guard let self = self else { return }
-                completion(self.nuguDisplayWebView)
+            addWebViewCompletion = {
+                completion(nuguDisplayWebView)
             }
         } else {
             completion(nuguDisplayWebView)
         }
     }
     
-    func addDisplayView(displayTemplate: DisplayTemplate, completion: @escaping (AnyObject?) -> Void) {
-        if let targetView = self.targetView,
-           let nuguDisplayWebView = self.nuguDisplayWebView,
-            targetView.subviews.contains(nuguDisplayWebView) {
-            replaceDisplayView(displayTemplate: displayTemplate, completion: completion)
-            return
-        }
-        nuguDisplayWebView = NuguDisplayWebView(frame: CGRect())
-        nuguDisplayWebView?.displayWebView?.navigationDelegate = self
-        nuguDisplayWebView?.load(
+    func appendChildDisplayView(displayTemplate: DisplayTemplate, completion: @escaping (AnyObject?) -> Void) {
+        let childDisplayWebView = NuguDisplayWebView(frame: CGRect())
+        childDisplayWebView.displayWebView?.navigationDelegate = self
+        childDisplayWebView.load(
+            templateId: displayTemplate.templateId,
+            token: displayTemplate.template.token,
             dialogRequestId: displayTemplate.dialogRequestId,
             displayPayload: displayTemplate.payload,
             displayType: displayTemplate.type,
             clientInfo: self.clientInfo
         )
-        nuguDisplayWebView?.onClose = { [weak self] in
+        childDisplayWebView.onClose = { [weak self] in
             self?.nuguClient?.ttsAgent.stopTTS()
-            self?.dismissDisplayView()
+            self?.dismissDisplayView(templateId: displayTemplate.templateId)
         }
-        nuguDisplayWebView?.onItemSelect = { [weak self] (token, postback) in
+        childDisplayWebView.onItemSelect = { [weak self] (token, postback) in
             self?.nuguClient?.displayAgent.elementDidSelect(templateId: displayTemplate.templateId, token: token, postback: postback)
         }
-        nuguDisplayWebView?.onUserInteraction = { [weak self] in
+        childDisplayWebView.onTextInput = { [weak self] (text, playServiceId) in
+            var requestType: TextAgentRequestType
+            if let playServiceId = playServiceId {
+                requestType = .specific(playServiceId: playServiceId)
+            } else {
+                requestType = .dialog
+            }
+            self?.nuguClient?.textAgent.requestTextInput(text: text, requestType: requestType)
+        }
+        childDisplayWebView.onEvent = { [weak self] (templateId, type, data) in
+            switch type {
+            case "Display.TriggerChild":
+                self?.nuguClient?.displayAgent.triggerChild(templateId: templateId, data: data)
+            default: break
+            }
+        }
+        childDisplayWebView.onControl = { [weak self] (type) in
+            switch type {
+            case "TEMPLATE_PREVIOUS":
+                UIView.animate(
+                    withDuration: 0.3,
+                    animations: {
+                        childDisplayWebView.alpha = 0
+                    },
+                    completion: { [weak self] _ in
+                        self?.nuguDisplayWebViews.removeAll(where: { $0.templateId == childDisplayWebView.templateId })
+                        childDisplayWebView.removeFromSuperview()
+                        if let templateId = childDisplayWebView.templateId {
+                            self?.nuguClient?.displayAgent.displayTemplateViewDidClear(templateId: templateId)
+                        }
+                    }
+                )
+            case "TEMPLATE_CLOSEALL":
+                self?.nuguClient?.ttsAgent.stopTTS()
+                self?.nuguDisplayWebViews.forEach({ displayWebViewToClose in
+                    if let templateId = displayWebViewToClose.templateId {
+                        self?.nuguClient?.displayAgent.displayTemplateViewDidClear(templateId: templateId)
+                    }
+                    displayWebViewToClose.removeFromSuperview()
+                })
+                self?.nuguDisplayWebViews.removeAll()
+            default: break
+            }
+        }
+        childDisplayWebView.onUserInteraction = { [weak self] in
             self?.nuguClient?.displayAgent.notifyUserInteraction()
         }
-        nuguDisplayWebView?.onTapForStopRecognition = { [weak self] in
-            guard [.listening, .recognizing].contains(self?.nuguClient?.asrAgent.asrState) else { return }
+        childDisplayWebView.onTapForStopRecognition = { [weak self] in
+            guard [.listening(), .recognizing].contains(self?.nuguClient?.asrAgent.asrState) else { return }
             self?.nuguClient?.asrAgent.stopRecognition()
         }
-        nuguDisplayWebView?.onChipsSelect = { [weak self] (selectedChips) in
+        childDisplayWebView.onChipsSelect = { [weak self] (selectedChips) in
             self?.nuguClient?.requestTextInput(text: selectedChips, requestType: .dialog)
         }
-        nuguDisplayWebView?.onNuguButtonClick = { [weak self] in
+        childDisplayWebView.onNuguButtonClick = { [weak self] in
             self?.delegate?.onDisplayWebViewNuguButtonClick()
         }
         
-        nuguDisplayWebView?.alpha = 0
-        guard let nuguDisplayWebView = self.nuguDisplayWebView, let targetView = self.targetView else {
+        childDisplayWebView.alpha = 0
+        guard let targetView = self.targetView else {
+            completion(nil)
+            return
+        }
+        if let voiceChrome = targetView.subviews.filter({ $0.isKind(of: NuguVoiceChrome.self) }).first {
+            targetView.insertSubview(childDisplayWebView, belowSubview: voiceChrome)
+        } else {
+            targetView.addSubview(childDisplayWebView)
+        }
+        childDisplayWebView.translatesAutoresizingMaskIntoConstraints = false
+        childDisplayWebView.topAnchor.constraint(equalTo: targetView.topAnchor).isActive = true
+        childDisplayWebView.leadingAnchor.constraint(equalTo: targetView.leadingAnchor).isActive = true
+        childDisplayWebView.trailingAnchor.constraint(equalTo: targetView.trailingAnchor).isActive = true
+        childDisplayWebView.bottomAnchor.constraint(equalTo: targetView.bottomAnchor).isActive = true
+        
+        targetView.layoutIfNeeded()
+        
+        if checkSupportVisibleTokenListOrSupportFocusedItemToken(displayTemplate: displayTemplate) == true {
+            addWebViewCompletion = {
+                completion(childDisplayWebView)
+            }
+        } else {
+            completion(childDisplayWebView)
+        }
+
+        UIView.animate(withDuration: 0.3, animations: {
+            childDisplayWebView.alpha = 1.0
+        }, completion: { [weak self] (_) in
+            self?.nuguDisplayWebViews.append(childDisplayWebView)
+        })
+    }
+    
+    func addDisplayView(displayTemplate: DisplayTemplate, completion: @escaping (AnyObject?) -> Void) {
+        if let targetView = self.targetView,
+           let nuguDisplayWebView = self.nuguDisplayWebViews.last,
+            targetView.subviews.contains(nuguDisplayWebView) {
+            replaceDisplayView(displayTemplate: displayTemplate, completion: completion)
+            return
+        }
+        let nuguDisplayWebView = NuguDisplayWebView(frame: CGRect())
+        nuguDisplayWebView.displayWebView?.navigationDelegate = self
+        nuguDisplayWebView.load(
+            templateId: displayTemplate.templateId,
+            token: displayTemplate.template.token,
+            dialogRequestId: displayTemplate.dialogRequestId,
+            displayPayload: displayTemplate.payload,
+            displayType: displayTemplate.type,
+            clientInfo: self.clientInfo
+        )
+        nuguDisplayWebView.onClose = { [weak self] in
+            self?.nuguClient?.ttsAgent.stopTTS()
+            self?.dismissDisplayView(templateId: displayTemplate.templateId)
+        }
+        nuguDisplayWebView.onItemSelect = { [weak self] (token, postback) in
+            self?.nuguClient?.displayAgent.elementDidSelect(templateId: displayTemplate.templateId, token: token, postback: postback)
+        }
+        nuguDisplayWebView.onTextInput = { [weak self] (text, playServiceId) in
+            var requestType: TextAgentRequestType
+            if let playServiceId = playServiceId {
+                requestType = .specific(playServiceId: playServiceId)
+            } else {
+                requestType = .dialog
+            }
+            self?.nuguClient?.textAgent.requestTextInput(text: text, requestType: requestType)
+        }
+        nuguDisplayWebView.onEvent = { [weak self] (templateId, type, data) in
+            switch type {
+            case "Display.TriggerChild":
+                self?.nuguClient?.displayAgent.triggerChild(templateId: templateId, data: data)
+            default: break
+            }
+        }
+        nuguDisplayWebView.onControl = { [weak self] (type) in
+            switch type {
+            case "TEMPLATE_PREVIOUS":
+                UIView.animate(
+                    withDuration: 0.3,
+                    animations: {
+                        nuguDisplayWebView.alpha = 0
+                    },
+                    completion: { [weak self] _ in
+                        self?.nuguDisplayWebViews.removeAll(where: { $0.templateId == nuguDisplayWebView.templateId })
+                        nuguDisplayWebView.removeFromSuperview()
+                        if let templateId = nuguDisplayWebView.templateId {
+                            self?.nuguClient?.displayAgent.displayTemplateViewDidClear(templateId: templateId)
+                        }
+                    }
+                )
+            case "TEMPLATE_CLOSEALL":
+                self?.nuguClient?.ttsAgent.stopTTS()
+                self?.nuguDisplayWebViews.forEach({ displayWebViewToClose in
+                    if let templateId = displayWebViewToClose.templateId {
+                        self?.nuguClient?.displayAgent.displayTemplateViewDidClear(templateId: templateId)
+                    }
+                    displayWebViewToClose.removeFromSuperview()
+                })
+                self?.nuguDisplayWebViews.removeAll()
+            default: break
+            }
+        }
+        nuguDisplayWebView.onUserInteraction = { [weak self] in
+            self?.nuguClient?.displayAgent.notifyUserInteraction()
+        }
+        nuguDisplayWebView.onTapForStopRecognition = { [weak self] in
+            guard [.listening(), .recognizing].contains(self?.nuguClient?.asrAgent.asrState) else { return }
+            self?.nuguClient?.asrAgent.stopRecognition()
+        }
+        nuguDisplayWebView.onChipsSelect = { [weak self] (selectedChips) in
+            self?.nuguClient?.requestTextInput(text: selectedChips, requestType: .dialog)
+        }
+        nuguDisplayWebView.onNuguButtonClick = { [weak self] in
+            self?.delegate?.onDisplayWebViewNuguButtonClick()
+        }
+        
+        nuguDisplayWebView.alpha = 0
+        guard let targetView = self.targetView else {
             completion(nil)
             return
         }
@@ -224,21 +387,11 @@ private extension DisplayWebViewPresenter {
         nuguDisplayWebView.trailingAnchor.constraint(equalTo: targetView.trailingAnchor).isActive = true
         nuguDisplayWebView.bottomAnchor.constraint(equalTo: targetView.bottomAnchor).isActive = true
         
-        let closeButton = UIButton(type: .custom)
-        closeButton.setImage(UIImage(named: "btn_close"), for: .normal)
-        closeButton.addTarget(self, action: #selector(self.onDisplayViewCloseButtonDidClick), for: .touchUpInside)
-        nuguDisplayWebView.addSubview(closeButton)
-        closeButton.translatesAutoresizingMaskIntoConstraints = false
-        closeButton.topAnchor.constraint(equalTo: topSafeAreaAnchor ?? targetView.topAnchor, constant: 20).isActive = true
-        closeButton.trailingAnchor.constraint(equalTo: targetView.trailingAnchor, constant: -20).isActive = true
-        closeButton.widthAnchor.constraint(equalToConstant: 24).isActive = true
-        closeButton.heightAnchor.constraint(equalToConstant: 24).isActive = true
         targetView.layoutIfNeeded()
         
         if checkSupportVisibleTokenListOrSupportFocusedItemToken(displayTemplate: displayTemplate) == true {
-            addWebViewCompletion = { [weak self] in
-                guard let self = self else { return }
-                completion(self.nuguDisplayWebView)
+            addWebViewCompletion = {
+                completion(nuguDisplayWebView)
             }
         } else {
             completion(nuguDisplayWebView)
@@ -247,29 +400,34 @@ private extension DisplayWebViewPresenter {
         UIView.animate(withDuration: 0.3, animations: {
             nuguDisplayWebView.alpha = 1.0
         }, completion: { [weak self] (_) in
-            self?.nuguDisplayWebView = nuguDisplayWebView
+            self?.nuguDisplayWebViews.append(nuguDisplayWebView)
         })
     }
     
-    @objc func onDisplayViewCloseButtonDidClick() {
-        nuguClient?.ttsAgent.stopTTS()
-        dismissDisplayView()
-    }
-    
     func updateDisplayView(displayTemplate: DisplayTemplate) {
-        nuguDisplayWebView?.update(dialogRequestId: displayTemplate.dialogRequestId, updatePayload: displayTemplate.payload)
+        guard let nuguDisplayWebView = nuguDisplayWebViews.first(where: { $0.token == displayTemplate.template.token }) else { return }
+        nuguDisplayWebView.update(
+            templateId: displayTemplate.templateId,
+            dialogRequestId: displayTemplate.dialogRequestId,
+            updatePayload: displayTemplate.payload
+        )
     }
     
-    func dismissDisplayView() {
-        guard nuguDisplayWebView != nil else { return }
+    func dismissDisplayView(templateId: String) {
+        guard let nuguDisplayWebView = nuguDisplayWebViews.first(where: { $0.templateId == templateId }) else { return }
         UIView.animate(
             withDuration: 0.3,
-            animations: { [weak self] in
-                self?.nuguDisplayWebView?.alpha = 0
+            animations: {
+                nuguDisplayWebView.alpha = 0
             },
             completion: { [weak self] _ in
-                self?.nuguDisplayWebView?.removeFromSuperview()
-                self?.nuguDisplayWebView = nil
+                self?.nuguDisplayWebViews.forEach({ displayWebViewToClose in
+                    if let templateId = displayWebViewToClose.templateId {
+                        self?.nuguClient?.displayAgent.displayTemplateViewDidClear(templateId: templateId)
+                    }
+                    displayWebViewToClose.removeFromSuperview()
+                })
+                self?.nuguDisplayWebViews.removeAll()
             }
         )
     }
@@ -292,7 +450,9 @@ extension DisplayWebViewPresenter {
             let newClientInfo = ["theme": notification.theme.rawValue]
             self.clientInfo?.merge(newClientInfo)
             DispatchQueue.main.async { [weak self] in
-                self?.nuguDisplayWebView?.onClientInfoChanged(newClientInfo: newClientInfo)
+                self?.nuguDisplayWebViews.forEach({ nuguDisplayWebView in
+                    nuguDisplayWebView.onClientInfoChanged(newClientInfo: newClientInfo)
+                })
             }
         })
     }

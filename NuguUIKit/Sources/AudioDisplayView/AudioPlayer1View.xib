@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -28,6 +28,7 @@
                 <outlet property="fullAudioPlayerContainerView" destination="XB6-sV-z0B" id="YNP-H4-56c"/>
                 <outlet property="fullLyricsView" destination="MHe-JQ-duj" id="tUO-4e-Ar6"/>
                 <outlet property="idleBar" destination="FcB-0U-tGu" id="pG6-qV-vJY"/>
+                <outlet property="idleBarHeightConstraint" destination="pQ7-qN-hoE" id="tGz-jx-2kJ"/>
                 <outlet property="lyricsView" destination="8Fz-MH-H04" id="VwN-NA-a82"/>
                 <outlet property="nextButton" destination="9Br-Q2-uZs" id="l4m-be-KoT"/>
                 <outlet property="nextLyricsLabel" destination="CCW-Nk-4et" id="EMi-zK-rC7"/>
@@ -324,7 +325,7 @@
                                 </view>
                             </subviews>
                         </stackView>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FcB-0U-tGu" customClass="DisplayIdleBar" customModule="NuguUIKit">
+                        <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FcB-0U-tGu" customClass="DisplayIdleBar" customModule="NuguUIKit">
                             <rect key="frame" x="0.0" y="742" width="390" height="68"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="68" id="pQ7-qN-hoE"/>

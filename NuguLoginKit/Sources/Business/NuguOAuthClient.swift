@@ -116,10 +116,17 @@ public extension NuguOAuthClient {
     func authorize(
         grant: AuthorizationCodeGrant,
         parentViewController: UIViewController,
+        additionalQueries: [URLQueryItem]? = nil,
         theme: WebTheme = .light,
         completion: ((Result<AuthorizationInfo, NuguLoginKitError>) -> Void)?
     ) {
-        presentAuthorize(grant: grant, parentViewController: parentViewController, theme: theme, completion: completion)
+        presentAuthorize(
+            grant: grant,
+            parentViewController: parentViewController,
+            additionalQueries: additionalQueries,
+            theme: theme,
+            completion: completion
+        )
     }
     
     /// Shows web-page where TID information can be modified with `AuthorizationCode` grant type.
@@ -148,7 +155,12 @@ public extension NuguOAuthClient {
     ///   - clientSecret: The `clientSecret` for OAuth authentication.
     ///   - token: The `token` is access-token currently being used.
     ///   - completion: The closure to receive result for getting NUGU member information.
-    func getUserInfo(clientId: String, clientSecret: String, token: String, completion: ((Result<NuguUserInfo, NuguLoginKitError>) -> Void)?) {
+    func getUserInfo(
+        clientId: String,
+        clientSecret: String,
+        token: String,
+        completion: ((Result<NuguUserInfo, NuguLoginKitError>) -> Void)?
+    ) {
         let api = NuguOAuthUtilApi(
             token: token,
             clientId: clientId,
@@ -164,6 +176,40 @@ public extension NuguOAuthClient {
                         return .failure(.parsingFailed(data))
                     }
                     return .success(userInfo)
+                })
+                .mapError({ NuguLoginKitError.apiError(error: $0) })
+            )
+        }
+    }
+    
+    /// Authorize with `AuthorizationCode` grant type without browser.
+    /// - Parameters:
+    ///   - grant: The `grant` information that `AuthorizationCodeGrant`
+    ///   - authorizationCode: code for authorization.
+    ///   - completion: The closure to receive result for authorization.
+    func authorize(
+        grant: AuthorizationCodeGrant,
+        authorizationCode: String,
+        completion: ((Result<AuthorizationInfo, NuguLoginKitError>) -> Void)?
+    ) {
+        // Acquire token
+        let api = NuguOAuthTokenApi(
+            clientId: grant.clientId,
+            clientSecret: grant.clientSecret,
+            deviceUniqueId: self.deviceUniqueId,
+            grantTypeInfo: .authorizationCode(
+                code: authorizationCode,
+                redirectUri: grant.redirectUri
+            )
+        )
+        
+        api.request { (result) in
+            completion?(result
+                .flatMap({ (data) -> Result<AuthorizationInfo, NuguLoginKitError.APIError> in
+                    guard let authorizationInfo = try? JSONDecoder().decode(AuthorizationInfo.self, from: data) else {
+                        return .failure(.parsingFailed(data))
+                    }
+                    return .success(authorizationInfo)
                 })
                 .mapError({ NuguLoginKitError.apiError(error: $0) })
             )

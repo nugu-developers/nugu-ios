@@ -264,7 +264,7 @@ private extension VoiceChromePresenter {
     
     func enableIdleTimer() {
         guard UIApplication.shared.isIdleTimerDisabled == true else { return }
-        guard isMultiturn == false, speechState == .idle else { return }
+        guard isMultiturn == false else { return }
         guard delegate?.voiceChromeShouldEnableIdleTimer() != false else { return }
         
         UIApplication.shared.isIdleTimerDisabled = false
@@ -352,42 +352,49 @@ private extension VoiceChromePresenter {
                     self?.nuguVoiceChrome.changeState(state: .processing)
                 }
             }
+            
+            DispatchQueue.main.async {
+                switch notification.state {
+                case .idle:
+                    self.enableIdleTimer()
+                default:
+                    self.disableIdleTimer()
+                }
+            }
         }
     }
     
     func addSpeechStateObserver() {
-        speechStateObserver = notificationCenter.addObserver(forName: NuguClient.speechStateChangedNotification, object: nuguClient, queue: .main, using: { [weak self] (notification) in
-            guard let self = self,
-                  let state = notification.userInfo?["state"] as? SpeechRecognizerAggregatorState else { return }
-            self.speechState = state
-            switch state {
-            case .result(let result):
-                switch result.type {
-                case .complete:
-                    self.nuguVoiceChrome.setRecognizedText(text: result.value)
-                    self.asrBeepPlayer?.beep(type: .success)
-                case .partial:
-                    self.nuguVoiceChrome.setRecognizedText(text: result.value)
-                }
-            case .error(let error):
-                if let asrError = error as? ASRError, [ASRError.listenFailed, ASRError.recognizeFailed].contains(asrError) == true {
-                    self.asrBeepPlayer?.beep(type: .fail)
-                    self.nuguVoiceChrome.changeState(state: .speakingError)
-                } else if let _ = error as? SpeechRecognizerAggregatorError {
-                    self.dismissVoiceChrome()
-                } else if case ASRError.listeningTimeout(let listenTimeoutFailBeep) = error {
-                    if listenTimeoutFailBeep == true {
-                        self.asrBeepPlayer?.beep(type: .fail)
+        speechStateObserver = notificationCenter.addObserver(
+            forName: NuguClient.speechStateChangedNotification,
+            object: nuguClient,
+            queue: .main,
+            using: { [weak self] (notification) in
+                guard let self = self,
+                      let state = notification.userInfo?["state"] as? SpeechRecognizerAggregatorState else { return }
+                self.speechState = state
+                switch state {
+                case .result(let result):
+                    switch result.type {
+                    case .complete:
+                        self.nuguVoiceChrome.setRecognizedText(text: result.value)
+                        self.asrBeepPlayer?.beep(type: .success)
+                    case .partial:
+                        self.nuguVoiceChrome.setRecognizedText(text: result.value)
                     }
+                case .error(let error):
+                    if let asrError = error as? ASRError, [ASRError.listenFailed, ASRError.recognizeFailed].contains(asrError) == true {
+                        self.asrBeepPlayer?.beep(type: .fail)
+                        self.nuguVoiceChrome.changeState(state: .speakingError)
+                    } else if let _ = error as? SpeechRecognizerAggregatorError {
+                        self.dismissVoiceChrome()
+                    } else if case ASRError.listeningTimeout(let listenTimeoutFailBeep) = error {
+                        if listenTimeoutFailBeep == true {
+                            self.asrBeepPlayer?.beep(type: .fail)
+                        }
+                    }
+                default: break
                 }
-            default: break
-            }
-            
-            if state == .idle {
-                self.enableIdleTimer()
-            } else {
-                self.disableIdleTimer()
-            }
         })
     }
     
@@ -421,7 +428,7 @@ extension VoiceChromePresenter: UIGestureRecognizerDelegate {
     func didTapForStopRecognition() {
         guard let nuguClient = nuguClient else { return }
         
-        guard [.listening, .recognizing].contains(nuguClient.asrAgent.asrState) else { return }
+        guard [.listening(), .recognizing].contains(nuguClient.asrAgent.asrState) else { return }
         nuguClient.asrAgent.stopRecognition()
     }
 }

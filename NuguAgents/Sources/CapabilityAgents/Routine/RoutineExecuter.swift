@@ -103,6 +103,7 @@ class RoutineExecuter {
     private var interruptTimer: DispatchWorkItem?
     
     private var currentActionIndex = -1
+    private var ignoreAfterAction = false
     
     init(
         directiveSequencer: DirectiveSequenceable,
@@ -133,6 +134,7 @@ class RoutineExecuter {
             self.handlingEvent = nil
             self.interruptEvent = nil
             self.currentActionIndex = 0
+            self.ignoreAfterAction = false
             
             self.doFinish()
             
@@ -210,10 +212,10 @@ private extension RoutineExecuter {
         let directivesToken = streamDataRouter.observe(NuguCoreNotification.StreamDataRoute.ReceivedDirectives.self, queue: routineDispatchQueue) { [weak self] (notification) in
             guard let self = self, self.state == .playing else { return }
             
-            // Directive 에 Routine 중단 대상이 포함되어 있으며, 다음 Action 이 있으면 Routine 종료
+            // Directive 에 Routine 중단 대상이 포함되어 있으며, 다음 Action 은 실행되지 않음
             if (notification.directives.contains { self.stopTargets.contains($0.header.type) }), self.hasNextAction {
                 log.debug("")
-                self.doStop()
+                self.ignoreAfterAction = true
             }
             // Interrupt 상태에서 Routine 이 아닌 directive 가 전달될 경우 Routine 종료
             else if self.interruptEvent == notification.directives.first?.header.dialogRequestId,
@@ -283,16 +285,16 @@ private extension RoutineExecuter {
     }
 
     func doNextAction() {
-        guard state == .playing, hasNextAction else {
-            doFinish()
-            return
-        }
-        
         actionWorkItem?.cancel()
+        
         if let delay = currentAction?.postDelay {
             log.debug(delay)
             let workItem = DispatchWorkItem { [weak self] in
                 guard let self = self else { return }
+                guard self.state == .playing, self.hasNextAction else {
+                    self.doFinish()
+                    return
+                }
 
                 self.currentActionIndex += 1
                 self.doAction()
@@ -300,7 +302,13 @@ private extension RoutineExecuter {
             actionWorkItem = workItem
             routineDispatchQueue.asyncAfter(deadline: .now() + delay.dispatchTimeInterval, execute: workItem)
         } else {
+            guard state == .playing, hasNextAction else {
+                doFinish()
+                return
+            }
+            
             log.debug("")
+            
             self.currentActionIndex += 1
             self.doAction()
         }
@@ -343,6 +351,6 @@ private extension RoutineExecuter {
     var hasNextAction: Bool {
         guard let routine = routine, routine.payload.actions.count - 1 > 0 else { return false }
         
-        return (0..<routine.payload.actions.count - 1).contains(currentActionIndex)
+        return (0..<routine.payload.actions.count - 1).contains(currentActionIndex) && ignoreAfterAction == false
     }
 }

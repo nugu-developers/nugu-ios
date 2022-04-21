@@ -19,6 +19,7 @@
 //
 
 import Foundation
+import AVFoundation
 
 import NuguCore
 import NuguUtils
@@ -44,7 +45,7 @@ class OpusPlayer: MediaPlayable {
          So decode it as 24khz and play it slower.
          */
         try player = DataStreamPlayer(decoder: OpusDecoder(sampleRate: 24000.0, channels: 1))
-        player.speed = 0.91875 // == 24000/22050
+        player.speed = Const.defaultSpeed
         player.delegate = self
     }
     
@@ -64,6 +65,11 @@ class OpusPlayer: MediaPlayable {
         set {
             player.volume = newValue
         }
+    }
+    
+    var speed: Float {
+        get { player.speed }
+        set { player.speed = newValue * Const.defaultSpeed }
     }
     
     func play() {
@@ -124,6 +130,23 @@ extension OpusPlayer: DataStreamPlayerDelegate {
         }
         
         delegate?.mediaPlayerStateDidChange(mediaPlayerState, mediaPlayer: self)
+    }
+    
+    func dataStreamPlayerDidPlay(_ chunk: AVAudioPCMBuffer) {
+        if let channelData = chunk.floatChannelData?.pointee {
+            let consumedData = Data(bytes: channelData, count: Int(chunk.frameLength)*4)
+            delegate?.mediaPlayerChunkDidConsume(consumedData)
+        }
+    }
+    
+    func dataStreamPlayerDidComputeDuration(_ duration: Int) {
+        delegate?.mediaPlayerDurationDidChange(NuguTimeInterval(milliseconds: duration), mediaPlayer: self)
+    }
+}
+
+private extension OpusPlayer {
+    enum Const {
+        static let defaultSpeed: Float = 0.91875 // == 22050/24000
     }
 }
 

@@ -94,22 +94,45 @@ public struct PhoneCallAgentContext {
     public let template: PhoneCallAgentContext.Template?
     /// <#Description#>
     public let recipient: PhoneCallAgentContext.Recipient?
+    /// <#Description#>
+    public let numberBlockable: Bool?
     
     /// The initializer for `PhoneCallAgentContext`.
     public init(
         state: PhoneCallState,
         template: PhoneCallAgentContext.Template?,
-        recipient: PhoneCallAgentContext.Recipient?
+        recipient: PhoneCallAgentContext.Recipient?,
+        numberBlockable: Bool?
     ) {
         self.state = state
         self.template = template
         self.recipient = recipient
+        self.numberBlockable = numberBlockable
     }
 }
 
 // MARK: - PhoneCallAgentContext + Codable
 
-extension PhoneCallAgentContext: Codable {}
+extension PhoneCallAgentContext: Codable {
+    enum CodingKeys: String, CodingKey {
+        case state
+        case template
+        case recipient
+        case numberBlockable
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        try container.encodeIfPresent(state, forKey: .state)
+        try container.encodeIfPresent(template, forKey: .template)
+        try container.encodeIfPresent(recipient, forKey: .recipient)
+        
+        if let numberBlockableValue = numberBlockable {
+            try container.encodeIfPresent(numberBlockableValue ? "TRUE": "FALSE", forKey: .numberBlockable)
+        }
+    }
+}
 
 // MARK: - PhoneCallAgentContext.Template + Codable
 
