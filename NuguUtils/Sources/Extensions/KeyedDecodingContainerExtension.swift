@@ -177,7 +177,8 @@ extension UnkeyedDecodingContainer {
                 array.append(value)
             } else if let nestedDictionary = try? decode([String: AnyHashable].self) {
                 array.append(nestedDictionary)
-            } else if let nestedArray = try? decode(Array<AnyHashable>.self) {
+            } else if var container = try? nestedUnkeyedContainer(),
+                      let nestedArray = try? container.decode([AnyHashable].self) {
                 array.append(nestedArray)
             }
         }
@@ -195,7 +196,8 @@ extension UnkeyedDecodingContainer {
                 array.append(value)
             } else if let nestedDictionary = try? decode([String: Any].self) {
                 array.append(nestedDictionary)
-            } else if let nestedArray = try? decode([Any].self) {
+            } else if var container = try? nestedUnkeyedContainer(),
+                      let nestedArray = try? container.decode([Any].self) {
                 array.append(nestedArray)
             }
         }
