@@ -40,17 +40,18 @@ final class NuguCentralManager {
         let nuguBuilder = NuguClient.Builder()
 
         // Set Last WakeUp Keyword
-        // If you don't want to use saved wakeup-word, don't need to be implemented.
-        // Because `aria` is set as a default keyword
         let wakeupDictionary = UserDefaults.Standard.wakeUpWordDictionary
         let wakeupRawValue = Int(wakeupDictionary["rawValue"] ?? "0") ?? 0
+        
+        // If you want to set offered file
         let keywordItem = Keyword(
             rawValue: wakeupRawValue,
             description: wakeupDictionary["description"],
             netFilePath: Bundle.main.url(forResource: wakeupDictionary["netFileName"], withExtension: "raw")?.path,
             searchFilePath: Bundle.main.url(forResource: wakeupDictionary["searchFileName"], withExtension: "raw")?.path
         )
-
+        // Otherwise, you can use default wakeup keyword (Keyword.aria, Keyword.tinkerbell)
+        
         if let keyword = keywordItem {
             nuguBuilder.keywordDetector.keyword = keyword
         }

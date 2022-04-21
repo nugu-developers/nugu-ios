@@ -191,7 +191,13 @@ extension MicInputProvider {
     func addAudioEngineConfigurationObserver() {
         removeAudioEngineConfigurationObserver()
         
-        audioEngineConfigurationObserver = notificationCenter.addObserver(forName: .AVAudioEngineConfigurationChange, object: audioEngine, queue: nil) { [weak self] (_) in
+        audioEngineConfigurationObserver = notificationCenter.addObserver(forName: .AVAudioEngineConfigurationChange, object: audioEngine, queue: nil) { [weak self] notification in
+            log.debug("notification: \(notification)")
+            self?.audioQueue.async { [weak self] in
+                self?.stop()
+                try? self?.start()
+            }
+            
             self?.delegate?.audioEngineConfigurationChanged()
         }
     }

@@ -23,6 +23,7 @@ import Foundation
 struct TextAgentRedirectPayload: Decodable {
     let text: String
     let token: String
+    let source: String?
     let playServiceId: String
     let targetPlayServiceId: String?
     let interactionControl: InteractionControl?

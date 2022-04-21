@@ -198,7 +198,7 @@ public extension ConfigurationStore {
     func registryServerUrl(completion: @escaping (Result<String, Error>) -> Void) {
         configurationMetadata { result in
             guard case let .success(metadata) = result,
-                  let registryServerUrl = metadata.deviceGatewayRegistryUri else {
+                  let registryServerUrl = metadata.deviceGatewayRegistryUri ?? NuguServerInfo.registryServerAddress else {
                 completion(.failure(ConfigurationError.invalidUrl))
                 return
             }

@@ -443,6 +443,7 @@ extension DataStreamPlayer {
             }
             
             os_log("[%@] duration: %@", log: .player, type: .debug, "\(self.id)", "\(self.duration)")
+            self.delegate?.dataStreamPlayerDidComputeDuration(self.duration)
         }
     }
     

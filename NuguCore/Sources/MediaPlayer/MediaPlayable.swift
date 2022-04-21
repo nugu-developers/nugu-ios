@@ -36,6 +36,9 @@ public protocol MediaPlayable: AnyObject {
     /// The audio playback volume for the player.
     var volume: Float { get set }
     
+    /// The audio playback speed for the player
+    var speed: Float { get set }
+    
     /// Begins playback of the current item.
     func play()
     

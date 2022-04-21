@@ -588,7 +588,12 @@ private extension AudioPlayerAgent {
             }
             defer { completion(.finished) }
             
-            self?.audioPlayerDisplayManager.updateMetadata(payload: directive.payload, playServiceId: playServiceId, header: directive.header)
+            guard let payload = try? JSONDecoder().decode(AudioPlayerUpdateMetadataPayload.self, from: directive.payload) else {
+                log.error("invalid payload")
+                return
+            }
+            
+            self?.audioPlayerDisplayManager.updateMetadata(payload: payload, playServiceId: playServiceId, header: directive.header)
         }
     }
     
