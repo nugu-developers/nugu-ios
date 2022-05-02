@@ -302,6 +302,10 @@ public extension ASRAgent {
             if self.asrState != .idle {
                 self.asrResult = .cancel()
             }
+            
+            if self.asrRequest != nil {
+                self.asrResult = nil
+            }
         }
     }
 }
