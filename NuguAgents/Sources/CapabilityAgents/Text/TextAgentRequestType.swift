@@ -20,12 +20,11 @@
 
 import Foundation
 
-public enum TextAgentRequestType {
+public enum TextAgentRequestType: Equatable {
     /// send text request only with "text" and "token" infos
     case normal
     /// send text request only with "text", "token", "playServiceId" infos
     case specific(playServiceId: String)
     /// send text request with "text", "token", "playServiceId", "domainTypes", "asrContext" infos
     case dialog
-    
 }

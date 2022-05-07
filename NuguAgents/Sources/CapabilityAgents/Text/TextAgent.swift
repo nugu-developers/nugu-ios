@@ -26,8 +26,7 @@ import RxSwift
 
 public final class TextAgent: TextAgentProtocol {
     // CapabilityAgentable
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .text, version: "1.5")
-    
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .text, version: "1.7")
     public weak var delegate: TextAgentDelegate?
     
     // Private
@@ -36,7 +35,6 @@ public final class TextAgent: TextAgentProtocol {
     private let directiveSequencer: DirectiveSequenceable
     private let dialogAttributeStore: DialogAttributeStoreable
     private let interactionControlManager: InteractionControlManageable
-    
     private let textDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.text_agent", qos: .userInitiated)
     
     // Handleable Directives
@@ -52,10 +50,33 @@ public final class TextAgent: TextAgentProtocol {
             name: "TextRedirect",
             blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false),
             directiveHandler: handleTextRedirect
+        ),
+        DirectiveHandleInfo(
+            namespace: capabilityAgentProperty.name,
+            name: "ExpectTyping",
+            blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false),
+            directiveHandler: handleExpectTyping
         )
     ]
     
     private var disposeBag = DisposeBag()
+    private var expectTyping: TextAgentExpectTyping? {
+        didSet {
+            guard oldValue?.messageId != expectTyping?.messageId else { return }
+            log.debug("expectTyping is changed from:\(oldValue?.dialogRequestId ?? "nil") to:\(expectTyping?.dialogRequestId ?? "nil")")
+            
+            if let oldMessageId = oldValue?.messageId {
+                // Remove last attributes
+                dialogAttributeStore.removeAttributes(messageId: oldMessageId)
+            }
+            
+            if let messageId = expectTyping?.messageId,
+               let payload = expectTyping?.payload.dictionary {
+                // Store attributes
+                dialogAttributeStore.setAttributes(payload.compactMapValues { $0 }, messageId: messageId)
+            }
+        }
+    }
     
     public init(
         contextManager: ContextManageable,
@@ -107,6 +128,10 @@ extension TextAgent {
             completion: completion
         )
         .dialogRequestId
+    }
+    
+    public func clearAttributes() {
+        dialogAttributeStore.removeAllAttributes()
     }
 }
 
@@ -209,6 +234,28 @@ private extension TextAgent {
             }
         }
     }
+    
+    func handleExpectTyping() -> HandleDirective {
+        return { [weak self] directive, completion in
+            defer { completion(.finished) }
+            self?.expectTyping = nil
+            
+            if self?.delegate?.textAgentShouldTyping(directive: directive) == true {
+                guard let payload = try? JSONDecoder().decode(TextAgentExpectTyping.Payload.self, from: directive.payload) else { return }
+                
+                self?.textDispatchQueue.async { [weak self] in
+                    guard let self = self else { return }
+                    self.expectTyping = TextAgentExpectTyping(
+                        messageId: directive.header.messageId,
+                        dialogRequestId: directive.header.dialogRequestId,
+                        payload: payload
+                    )
+                    
+                    
+                }
+            }
+        }
+    }
 }
 
 // MARK: - Private(Event)
@@ -255,23 +302,40 @@ private extension TextAgent {
         requestType: TextAgentRequestType,
         referrerDialogRequestId: String? = nil
     ) -> Single<Eventable> {
-        var attributes = [String: AnyHashable]()
-        switch requestType {
-        case .specific(let playServiceId):
-            attributes["playServiceId"] = playServiceId
-        case .dialog:
-            attributes.merge(dialogAttributeStore.attributes ?? [:])
-        default:
-            break
-        }
-        
-        if let source = source {
-            attributes["source"] = source
+        var attributes: [String: AnyHashable] {
+            if case let .specific(playServiceId) = requestType {
+                return ["playServiceId": playServiceId]
+            }
+            
+            var attributes = [String: AnyHashable]()
+            if case .dialog = requestType,
+               let expectTypingMessageId = expectTyping?.messageId,
+               let expectTypingAttribute = dialogAttributeStore.requestAttributes(messageId: expectTypingMessageId) {
+                attributes.merge(expectTypingAttribute)
+            }
+            
+            if let source = source {
+                attributes["source"] = source
+            }
+            
+            return attributes
         }
         
         return Event(
             typeInfo: .textInput(text: text, token: token, attributes: attributes),
             referrerDialogRequestId: referrerDialogRequestId
         ).rx
+    }
+}
+
+// MARK: - TextAgentExpectTyping Decorator
+
+private extension TextAgentExpectTyping.Payload {
+    var dictionary: [String: AnyHashable?] {
+        return [
+            "asrContext": asrContext,
+            "domainTypes": domainTypes,
+            "playServiceId": playServiceId
+        ]
     }
 }
