@@ -267,12 +267,19 @@ extension SpeechRecognizerAggregator {
             if let state = SpeechRecognizerAggregatorState(notification.state) {
                 self.state = state
             }
-            if case .listening = notification.state {
+            
+            switch notification.state {
+            case .idle:
+                if self.useKeywordDetector {
+                    // if not restart here, keyword detector will be inactivated during tts speaking
+                    self.keywordDetector.start()
+                } else {
+                    self.stopMicInputProvider()
+                }
+            case .listening:
                 self.keywordDetector.stop()
-            }
-            // if not restarted here, keyword detector is inactive in tts speaking situation
-            if case .idle = notification.state, self.useKeywordDetector == true {
-                self.keywordDetector.start()
+            default:
+                break
             }
         }
     }
