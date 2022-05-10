@@ -35,4 +35,8 @@ public protocol TextAgentDelegate: AnyObject {
     /// - Parameter directive: The directive of `Text.TextRedirect`.
     /// - Returns: true if handled, otherwise return false
     func textAgentShouldHandleTextRedirect(directive: Downstream.Directive) -> Bool
+    
+    /// Tells the delegate that `TextAgent` received result.
+    /// - Parameter directive: The directive of `Text.ExpectTyping`.
+    func textAgentShouldTyping(directive: Downstream.Directive) -> Bool
 }

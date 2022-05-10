@@ -20,9 +20,33 @@
 
 import Foundation
 
-public protocol DialogAttributeStoreable: AnyObject {
-    var attributes: [String: AnyHashable]? { get }
+import NuguUtils
+
+public protocol DialogAttributeStoreable: AnyObject, TypedNotifyable {
+    /**
+     Get specific attributes or nil
+     */
+    func getAttributes(messageId: String) -> [String: AnyHashable]?
     
-    func setAttributes(_ attributes: [String: AnyHashable])
-    func removeAttributes()
+    /**
+     Set attributes
+     */
+    func setAttributes(_ attributes: [String: AnyHashable], messageId: String)
+    
+    /**
+     Request specific attributes.
+     
+     It returns one of lasting attributes if there's no exact attributes
+     */
+    func requestAttributes(messageId: String?) -> [String: AnyHashable]?
+    
+    /**
+     Remove specific attributes for multi-turn
+     */
+    func removeAttributes(messageId: String)
+    
+    /**
+     Remove All attributes for multi-turn
+     */
+    func removeAllAttributes()
 }
