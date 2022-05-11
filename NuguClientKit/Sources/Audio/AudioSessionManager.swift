@@ -103,17 +103,16 @@ public extension AudioSessionManager {
     @discardableResult func updateAudioSessionWhenCarplayConnected(requestingFocus: Bool) -> Bool {
         if requestingFocus == true {
             let options = AVAudioSession.CategoryOptions(arrayLiteral: [])
-            // If audioSession is already has been set properly, resetting audioSession is unnecessary
-            guard AVAudioSession.sharedInstance().category != .playAndRecord ||
-                  AVAudioSession.sharedInstance().categoryOptions != options else {
-                return true
-            }
+            
             do {
-                try AVAudioSession.sharedInstance().setCategory(
-                    .playAndRecord,
-                    mode: .default,
-                    options: []
-                )
+                // If audioSession is already has been set properly, resetting audioSession is unnecessary
+                if AVAudioSession.sharedInstance().category != .playAndRecord || AVAudioSession.sharedInstance().categoryOptions != options {
+                    try AVAudioSession.sharedInstance().setCategory(
+                        .playAndRecord,
+                        mode: .default,
+                        options: []
+                    )
+                }
                 try AVAudioSession.sharedInstance().setActive(true)
                 return true
             } catch {
@@ -137,19 +136,17 @@ public extension AudioSessionManager {
             options.insert(.mixWithOthers)
         }
         
-        // If audioSession is already has been set properly, resetting audioSession is unnecessary
-        guard AVAudioSession.sharedInstance().category != .playAndRecord || AVAudioSession.sharedInstance().categoryOptions != options else {
-            return true
-        }
-        
         do {
-            try AVAudioSession.sharedInstance().setCategory(
-                .playAndRecord,
-                mode: .default,
-                options: options
-            )
+            // If audioSession is already has been set properly, resetting audioSession is unnecessary
+            if AVAudioSession.sharedInstance().category != .playAndRecord || AVAudioSession.sharedInstance().categoryOptions != options {
+                try AVAudioSession.sharedInstance().setCategory(
+                    .playAndRecord,
+                    mode: .default,
+                    options: options
+                )
+                log.debug("set audio session = \(options)")
+            }
             try AVAudioSession.sharedInstance().setActive(true)
-            log.debug("set audio session = \(options)")
             return true
         } catch {
             log.debug("updateAudioSessionCategoryOptions failed: \(error)")
@@ -161,7 +158,6 @@ public extension AudioSessionManager {
         log.debug("")
         // Defer statement for recovering audioSession and MicInputProvider
         defer {
-            updateAudioSession()
             delegate?.audioSessionDidDeactivate()
         }
         do {
