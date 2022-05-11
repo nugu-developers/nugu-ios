@@ -21,6 +21,9 @@ import Foundation
 
 /// State of Stream data.
 public enum StreamDataState {
+    /// Prepared
+    case prepared
+    
     /// Data sent
     case sent
     
