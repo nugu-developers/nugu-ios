@@ -89,15 +89,22 @@ public class MicInputProvider {
     
     /// Stops recording from the microphone.
     public func stop() {
-        log.debug("try to stop")
+        log.debug("Try to stop")
         removeAudioEngineConfigurationObserver()
         
         if let error = UnifiedErrorCatcher.try({
+            guard audioEngine.isRunning else {
+                log.debug("MicInput is not running")
+                return nil
+            }
+            
             audioEngine.inputNode.removeTap(onBus: audioBus)
             audioEngine.stop()
+            log.debug("MicInput is stopped")
             return nil
         }) {
             log.error("stop error: \(error)\n")
+            return
         }
     }
     
