@@ -44,8 +44,8 @@ class BackgroundFocusHolder {
     private var eventWillSendObserver: Any?
     private var eventDidSendObserver: Any?
     private var dialogStateObserver: Any?
-    private var directivePrefetchObseerver: Any?
-    private var directiveCompleteObseerver: Any?
+    private var directivePrefetchObserver: Any?
+    private var directiveCompleteObserver: Any?
     
     init(
         focusManager: FocusManageable,
@@ -76,12 +76,12 @@ class BackgroundFocusHolder {
             notificationCenter.removeObserver(dialogStateObserver)
         }
         
-        if let directivePrefetchObseerver = directivePrefetchObseerver {
-            notificationCenter.removeObserver(directivePrefetchObseerver)
+        if let directivePrefetchObserver = directivePrefetchObserver {
+            notificationCenter.removeObserver(directivePrefetchObserver)
         }
         
-        if let directiveCompleteObseerver = directiveCompleteObseerver {
-            notificationCenter.removeObserver(directiveCompleteObseerver)
+        if let directiveCompleteObserver = directiveCompleteObserver {
+            notificationCenter.removeObserver(directiveCompleteObserver)
         }
     }
 }
@@ -156,7 +156,7 @@ private extension BackgroundFocusHolder {
     }
     
     func addDirectiveSequencerObserver(_ object: DirectiveSequenceable) {
-        directivePrefetchObseerver = object.observe(NuguCoreNotification.DirectiveSquencer.Prefetch.self, queue: nil) { [weak self] notification in
+        directivePrefetchObserver = object.observe(NuguCoreNotification.DirectiveSquencer.Prefetch.self, queue: nil) { [weak self] notification in
             self?.queue.async { [weak self] in
                 guard let self = self else { return }
                 
@@ -167,7 +167,7 @@ private extension BackgroundFocusHolder {
             }
         }
         
-        directiveCompleteObseerver = object.observe(NuguCoreNotification.DirectiveSquencer.Complete.self, queue: nil) { [weak self] notification in
+        directiveCompleteObserver = object.observe(NuguCoreNotification.DirectiveSquencer.Complete.self, queue: nil) { [weak self] notification in
             self?.queue.async { [weak self] in
                 guard let self = self else { return }
                 
