@@ -104,7 +104,6 @@ public class MicInputProvider {
             return nil
         }) {
             log.error("stop error: \(error)\n")
-            return
         }
     }
     
