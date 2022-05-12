@@ -583,6 +583,8 @@ private extension ASRAgent {
             return
         }
         
+        asrRequest.completion?(.prepared)
+        
         var httpHeaderFields = [String: String]()
         if let lastAsrEventTime = UserDefaults.Nugu.lastAsrEventTime {
             httpHeaderFields["Last-Asr-Event-Time"] = lastAsrEventTime
