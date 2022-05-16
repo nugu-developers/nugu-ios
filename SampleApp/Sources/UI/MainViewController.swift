@@ -45,7 +45,7 @@ final class MainViewController: UIViewController {
         viewController: self,
         nuguClient: NuguCentralManager.shared.client,
         themeController: NuguCentralManager.shared.themeController,
-        options: []
+        options: .all
     )
     
     // MARK: Observers
