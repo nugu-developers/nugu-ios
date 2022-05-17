@@ -51,7 +51,7 @@ public class AudioDisplayView: UIView {
     @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var shuffleButton: UIButton!
     
-    @IBOutlet weak var lyricsView: UIView!
+    @IBOutlet weak var lyricsStackView: UIStackView!
     @IBOutlet weak var currentLyricsLabel: UILabel!
     
     @IBOutlet weak var progressView: UIProgressView!

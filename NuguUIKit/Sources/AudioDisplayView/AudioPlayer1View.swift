@@ -55,10 +55,10 @@ final class AudioPlayer1View: AudioDisplayView {
             badgeLabel.isHidden = template.content.badgeMessage == nil
             
             lyricsData = template.content.lyrics
-            lyricsView.isHidden = lyricsData?.lyricsType == .none
-            lyricsView.gestureRecognizers?.forEach { lyricsView.removeGestureRecognizer($0) }
+            lyricsStackView.isHidden = lyricsData?.lyricsType == .none
+            lyricsStackView.gestureRecognizers?.forEach { lyricsStackView.removeGestureRecognizer($0) }
             let tapGestureRecognizeView = UITapGestureRecognizer(target: self, action: #selector(lyricsViewDidTap(_:)))
-            lyricsView.addGestureRecognizer(tapGestureRecognizeView)
+            lyricsStackView.addGestureRecognizer(tapGestureRecognizeView)
             lyricsIndex = lyricsData?.lyricsType == "SYNC" ? 0 : -1
             updateLyrics()
             updateFullLyrics()
@@ -245,11 +245,11 @@ final class AudioPlayer1View: AudioDisplayView {
             guard let lyricsInfoList = self.lyricsData?.lyricsInfoList,
                   let offSet = self.delegate?.requestOffset(),
                   self.lyricsData?.lyricsType != "NONE" else {
-                self.lyricsView.isHidden = true
+                self.lyricsStackView.isHidden = true
                 return
             }
             
-            self.lyricsView.isHidden = false
+            self.lyricsStackView.isHidden = false
                         
             if self.lyricsData?.lyricsType == "NON_SYNC" {
                 self.currentLyricsLabel.textColor = UIColor(red: 0, green: 157/255.0, blue: 1, alpha: 1.0)
