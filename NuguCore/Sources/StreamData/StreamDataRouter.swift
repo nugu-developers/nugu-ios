@@ -172,7 +172,7 @@ public extension StreamDataRouter {
                     }
                     
                     // Restart server initiated directive receiver if it was disconnected with error
-                    if case let .disconnected(error) = self.serverInitiatedDirectiveReceiver.state, error != nil {
+                    if case .disconnected = self.serverInitiatedDirectiveReceiver.state {
                         self.startReceiveServerInitiatedDirective(completion: self.serverInitiatedDirectiveCompletion)
                     }
                     
