@@ -28,7 +28,7 @@ class ServerSideEventReceiver {
     private let stateSubject = PublishSubject<ServerSideEventReceiverState>()
     private let disposeBag = DisposeBag()
     
-    var state: ServerSideEventReceiverState = .disconnected() {
+    private(set) var state: ServerSideEventReceiverState = .unconnected {
         didSet {
             if oldValue != state {
                 log.debug("server side event receiver state changed from: \(oldValue) to: \(state)")
@@ -59,7 +59,12 @@ class ServerSideEventReceiver {
             .do(onError: {
                 error = $0
             }, onDispose: { [weak self] in
-                self?.state = .disconnected(error: error)
+                if let error = error {
+                    self?.state = .disconnected(error: error)
+                    return
+                }
+                
+                self?.state = .unconnected
             })
     }
 

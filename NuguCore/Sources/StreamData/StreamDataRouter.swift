@@ -171,6 +171,11 @@ public extension StreamDataRouter {
                         self?.post(NuguCoreNotification.StreamDataRoute.SentEvent(event: event, error: nil))
                     }
                     
+                    // Restart server initiated directive receiver if it was disconnected with error
+                    if case .disconnected = self.serverInitiatedDirectiveReceiver.state {
+                        self.startReceiveServerInitiatedDirective(completion: self.serverInitiatedDirectiveCompletion)
+                    }
+                    
                     completion?(.finished)
                 }, onDisposed: { [weak self] in
                     self?._eventDisposables.mutate {
