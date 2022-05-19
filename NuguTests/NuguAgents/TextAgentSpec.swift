@@ -90,10 +90,14 @@ class TextAgentSpec: QuickSpec {
 
 class MockTextAgentDelegate: TextAgentDelegate {
     func textAgentShouldHandleTextSource(directive: Downstream.Directive) -> Bool {
-        true
+        return true
     }
     
     func textAgentShouldHandleTextRedirect(directive: Downstream.Directive) -> Bool {
-        true
+        return true
+    }
+    
+    func textAgentShouldTyping(directive: Downstream.Directive) -> Bool {
+        return true
     }
 }
