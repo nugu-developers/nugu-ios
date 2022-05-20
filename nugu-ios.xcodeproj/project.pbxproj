@@ -91,6 +91,15 @@
 		1F9EF1F8248A4BD1000786E5 /* NuguUserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F9EF1F7248A4BD1000786E5 /* NuguUserInfo.swift */; };
 		1FBA3B702459669B001E5828 /* PhoneCallAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBA3B6F2459669B001E5828 /* PhoneCallAgent.swift */; };
 		1FBA3B7624596E1A001E5828 /* PhoneCallAgent+Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBA3B7524596E1A001E5828 /* PhoneCallAgent+Event.swift */; };
+		1FBE3BE2283752BA006D158B /* MessengerAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBE3BD9283752BA006D158B /* MessengerAgentDelegate.swift */; };
+		1FBE3BE3283752BB006D158B /* MessengerPersistentMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBE3BDA283752BA006D158B /* MessengerPersistentMenu.swift */; };
+		1FBE3BE4283752BB006D158B /* MessengerPostback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBE3BDB283752BA006D158B /* MessengerPostback.swift */; };
+		1FBE3BE5283752BB006D158B /* MessengerAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBE3BDC283752BA006D158B /* MessengerAgent.swift */; };
+		1FBE3BE6283752BB006D158B /* MessengerAgent+Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBE3BDD283752BA006D158B /* MessengerAgent+Event.swift */; };
+		1FBE3BE7283752BB006D158B /* MessengerAgentContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBE3BDE283752BA006D158B /* MessengerAgentContext.swift */; };
+		1FBE3BE8283752BB006D158B /* MessengerAgentDirectivePayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBE3BDF283752BA006D158B /* MessengerAgentDirectivePayload.swift */; };
+		1FBE3BE9283752BB006D158B /* MessengerAgentEventPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBE3BE0283752BA006D158B /* MessengerAgentEventPayload.swift */; };
+		1FBE3BEA283752BB006D158B /* MessengerProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBE3BE1283752BA006D158B /* MessengerProfile.swift */; };
 		1FBE3BEC28375423006D158B /* ClientSideLoadBalanceState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBE3BEB28375423006D158B /* ClientSideLoadBalanceState.swift */; };
 		1FCAE15725FF0C59001C8061 /* AlertsAgentDirectivePayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCAE15625FF0C59001C8061 /* AlertsAgentDirectivePayload.swift */; };
 		1FCAE16325FF1168001C8061 /* AlertsAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FCAE16225FF1168001C8061 /* AlertsAsset.swift */; };
@@ -940,6 +949,15 @@
 		1F9EF1F7248A4BD1000786E5 /* NuguUserInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NuguUserInfo.swift; sourceTree = "<group>"; };
 		1FBA3B6F2459669B001E5828 /* PhoneCallAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneCallAgent.swift; sourceTree = "<group>"; };
 		1FBA3B7524596E1A001E5828 /* PhoneCallAgent+Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PhoneCallAgent+Event.swift"; sourceTree = "<group>"; };
+		1FBE3BD9283752BA006D158B /* MessengerAgentDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessengerAgentDelegate.swift; sourceTree = "<group>"; };
+		1FBE3BDA283752BA006D158B /* MessengerPersistentMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessengerPersistentMenu.swift; sourceTree = "<group>"; };
+		1FBE3BDB283752BA006D158B /* MessengerPostback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessengerPostback.swift; sourceTree = "<group>"; };
+		1FBE3BDC283752BA006D158B /* MessengerAgent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessengerAgent.swift; sourceTree = "<group>"; };
+		1FBE3BDD283752BA006D158B /* MessengerAgent+Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MessengerAgent+Event.swift"; sourceTree = "<group>"; };
+		1FBE3BDE283752BA006D158B /* MessengerAgentContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessengerAgentContext.swift; sourceTree = "<group>"; };
+		1FBE3BDF283752BA006D158B /* MessengerAgentDirectivePayload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessengerAgentDirectivePayload.swift; sourceTree = "<group>"; };
+		1FBE3BE0283752BA006D158B /* MessengerAgentEventPayload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessengerAgentEventPayload.swift; sourceTree = "<group>"; };
+		1FBE3BE1283752BA006D158B /* MessengerProfile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessengerProfile.swift; sourceTree = "<group>"; };
 		1FBE3BEB28375423006D158B /* ClientSideLoadBalanceState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientSideLoadBalanceState.swift; sourceTree = "<group>"; };
 		1FCAE15625FF0C59001C8061 /* AlertsAgentDirectivePayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertsAgentDirectivePayload.swift; sourceTree = "<group>"; };
 		1FCAE16225FF1168001C8061 /* AlertsAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertsAsset.swift; sourceTree = "<group>"; };
@@ -1797,6 +1815,7 @@
 				1FFFF3402375707000C9A177 /* Location */,
 				680EF95F24B30D8D003DE266 /* MediaPlayer */,
 				1F9336C825B68CA500CEBF66 /* Message */,
+				1FBE3BD82837527E006D158B /* Messenger */,
 				7E284D9024DD255C00BF9640 /* Interaction */,
 				7ED37D4726043DF3009A0A24 /* Permission */,
 				7E1DDE0B25F894960038D040 /* Routine */,
@@ -1865,6 +1884,22 @@
 				1FD5D17924A99993007BA384 /* PhoneCallRecipientIntended.swift */,
 			);
 			path = PhoneCall;
+			sourceTree = "<group>";
+		};
+		1FBE3BD82837527E006D158B /* Messenger */ = {
+			isa = PBXGroup;
+			children = (
+				1FBE3BDC283752BA006D158B /* MessengerAgent.swift */,
+				1FBE3BDD283752BA006D158B /* MessengerAgent+Event.swift */,
+				1FBE3BDE283752BA006D158B /* MessengerAgentContext.swift */,
+				1FBE3BD9283752BA006D158B /* MessengerAgentDelegate.swift */,
+				1FBE3BDF283752BA006D158B /* MessengerAgentDirectivePayload.swift */,
+				1FBE3BE0283752BA006D158B /* MessengerAgentEventPayload.swift */,
+				1FBE3BDA283752BA006D158B /* MessengerPersistentMenu.swift */,
+				1FBE3BDB283752BA006D158B /* MessengerPostback.swift */,
+				1FBE3BE1283752BA006D158B /* MessengerProfile.swift */,
+			);
+			path = Messenger;
 			sourceTree = "<group>";
 		};
 		1FD1CFD523A388570000FB8C /* Helper */ = {
@@ -4257,6 +4292,7 @@
 				1FD5D17C24A99993007BA384 /* PhoneCallPerson.swift in Sources */,
 				736B3BB023E2D3CA00F49321 /* DispatchQueue+Precondition.swift in Sources */,
 				73152FC823E0415400F843C3 /* TTSSpeakPayload.swift in Sources */,
+				1FBE3BE8283752BB006D158B /* MessengerAgentDirectivePayload.swift in Sources */,
 				A135E6952428B6C8006F82E5 /* AudioPlayerAgent+RequestPlayEvent.swift in Sources */,
 				73152FDC23E0451900F843C3 /* NuguAgents.swift in Sources */,
 				737388C324A46C110018DDD2 /* CapabilityAgentCategory.swift in Sources */,
@@ -4301,6 +4337,7 @@
 				737388D124A46C2B0018DDD2 /* SessionManageable.swift in Sources */,
 				7E1DDE3B25F894E40038D040 /* RoutineError.swift in Sources */,
 				1FD5D18F24C82224007BA384 /* MediaPlayerAgentSong.swift in Sources */,
+				1FBE3BE9283752BB006D158B /* MessengerAgentEventPayload.swift in Sources */,
 				73152FC523E0415400F843C3 /* TTSAgent.swift in Sources */,
 				7E5F489A243C44AF00118054 /* SoundAgent+Event.swift in Sources */,
 				736508662462F7FA00EF4549 /* OpusPlayer.swift in Sources */,
@@ -4319,6 +4356,7 @@
 				E649867C2833681A001AD733 /* AudioPlayerSettingsTemplate.swift in Sources */,
 				A135E66B241F39D9006F82E5 /* AudioPlayerAgent+LyricsEvent.swift in Sources */,
 				E649867D2833681A001AD733 /* AudioPlayerUpdateMetadataPayload.swift in Sources */,
+				1FBE3BE5283752BB006D158B /* MessengerAgent.swift in Sources */,
 				7E2DFE9E24B8510900792529 /* PlayStackControl.swift in Sources */,
 				737388DB24A46C3C0018DDD2 /* SoundAgentDataSource.swift in Sources */,
 				7315307023E1248300F843C3 /* ASRExpectSpeech.swift in Sources */,
@@ -4353,6 +4391,7 @@
 				1FFBC8B425EDFC0D00DFD0D6 /* AlertsAgentProtocol.swift in Sources */,
 				1FFBC8CC25EDFC2D00DFD0D6 /* AlertsAgentDelegate.swift in Sources */,
 				737388F624A46C800018DDD2 /* ASRResult.swift in Sources */,
+				1FBE3BE2283752BA006D158B /* MessengerAgentDelegate.swift in Sources */,
 				1FCAE16325FF1168001C8061 /* AlertsAsset.swift in Sources */,
 				1F93378B25BF135700CEBF66 /* MessageRecipientIntended.swift in Sources */,
 				064FD88125A2CEE000DE6454 /* UtilityAgent.swift in Sources */,
@@ -4361,12 +4400,14 @@
 				737388ED24A46C680018DDD2 /* AudioPlayerDisplayControlPayload.swift in Sources */,
 				1FD5D1A224FF7035007BA384 /* TextAgentRequestType.swift in Sources */,
 				7ED37D6D26043E80009A0A24 /* PermissionAgentContext.swift in Sources */,
+				1FBE3BE7283752BB006D158B /* MessengerAgentContext.swift in Sources */,
 				7373891524A46CB90018DDD2 /* TextAgentProtocol.swift in Sources */,
 				737388FF24A46C930018DDD2 /* SystemAgentExceptionCode.swift in Sources */,
 				7E0E0B082437077F00198FCB /* EndPointDetectable.swift in Sources */,
 				1F93377325BEB95800CEBF66 /* MessageAgentContact.swift in Sources */,
 				064FD86B25A2CEB800DE6454 /* UtilityAgentProtocol.swift in Sources */,
 				1F93375D25BEB8CE00CEBF66 /* MessageAgentContext.swift in Sources */,
+				1FBE3BE4283752BB006D158B /* MessengerPostback.swift in Sources */,
 				1FD5D18024A99993007BA384 /* PhoneCallErrorCode.swift in Sources */,
 				73152FC023E0414700F843C3 /* ASRNotifyResult.swift in Sources */,
 				1FFBC8A825EDFB5100DFD0D6 /* AlertsAgent.swift in Sources */,
@@ -4375,6 +4416,7 @@
 				1F3B2F1D2660C01300D6432B /* RoutineAgentDelegate.swift in Sources */,
 				A135E663241F1925006F82E5 /* AudioPlayerAgent+SettingsEvent.swift in Sources */,
 				737388EE24A46C680018DDD2 /* AudioPlayerDisplayRepeat.swift in Sources */,
+				1FBE3BEA283752BB006D158B /* MessengerProfile.swift in Sources */,
 				06CF293C254816C700CEC3EC /* UpstreamEventSendable+Convenience.swift in Sources */,
 				7E38656624AEE97100E78C6E /* DisplayContext.swift in Sources */,
 				7373890E24A46CAE0018DDD2 /* DisplayTemplate.swift in Sources */,
@@ -4382,6 +4424,7 @@
 				7EF674372499EE3E004FA45C /* DialogAttributeStore.swift in Sources */,
 				7334F47523FD170200EA5E58 /* Eventable+makeEventMessage.swift in Sources */,
 				E649867E2833681A001AD733 /* DisplayCommonTemplate.swift in Sources */,
+				1FBE3BE3283752BB006D158B /* MessengerPersistentMenu.swift in Sources */,
 				73152FC123E0414F00F843C3 /* SystemAgent.swift in Sources */,
 				737388DD24A46C3C0018DDD2 /* SoundBeepName.swift in Sources */,
 				737388C524A46C110018DDD2 /* CapabilityAgentable.swift in Sources */,
@@ -4412,6 +4455,7 @@
 				7ED37D4926043E0D009A0A24 /* PermissionAgent.swift in Sources */,
 				7315306F23E1248300F843C3 /* ASRError.swift in Sources */,
 				1FD5D18224A99993007BA384 /* PhoneCallRecipientIntended.swift in Sources */,
+				1FBE3BE6283752BB006D158B /* MessengerAgent+Event.swift in Sources */,
 				7E1DDE2F25F894D30038D040 /* RoutineAgentProtocol.swift in Sources */,
 				73152FB723E0414700F843C3 /* ClientEndPointDetector.swift in Sources */,
 				7E35D79024622B4E003289A2 /* EventIdentifier.swift in Sources */,
