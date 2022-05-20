@@ -88,29 +88,25 @@ class AudioPlayerAgentSpec: QuickSpec {
 // MARK: - MockAudioPlayerDisplayDelegate
 
 class MockAudioPlayerDisplayDelegate: AudioPlayerDisplayDelegate {
+    
     func audioPlayerDisplayShouldRender(template: AudioPlayerDisplayTemplate, completion: @escaping (AnyObject?) -> Void) {
-        completion(self)
     }
     
     func audioPlayerDisplayDidClear(template: AudioPlayerDisplayTemplate) {
     }
     
-    func audioPlayerDisplayShouldUpdateMetadata(payload: Data, header: Downstream.Header) {
+    func audioPlayerDisplayShouldUpdateMetadata(payload: AudioPlayerUpdateMetadataPayload, header: Downstream.Header) {
     }
     
-    func audioPlayerDisplayShouldShowLyrics(header: Downstream.Header, completion: @escaping (Bool) -> Void) {
-        completion(true)
+    func audioPlayerDisplayShouldShowLyrics(completion: @escaping (Bool) -> Void) {
     }
     
-    func audioPlayerDisplayShouldHideLyrics(header: Downstream.Header, completion: @escaping (Bool) -> Void) {
-        completion(true)
+    func audioPlayerDisplayShouldHideLyrics(completion: @escaping (Bool) -> Void) {
     }
     
-    func audioPlayerDisplayShouldControlLyricsPage(direction: AudioPlayerDisplayControlPayload.Direction, header: Downstream.Header, completion: @escaping (Bool) -> Void) {
-        completion(true)
+    func audioPlayerDisplayShouldControlLyricsPage(direction: AudioPlayerDisplayControlPayload.Direction, completion: @escaping (Bool) -> Void) {
     }
     
     func audioPlayerIsLyricsVisible(completion: @escaping (Bool) -> Void) {
-        completion(true)
     }
 }
