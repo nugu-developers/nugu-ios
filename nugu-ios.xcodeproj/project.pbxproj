@@ -544,6 +544,7 @@
 		A19EC9FE2578CEA5003E53A9 /* NuguAgents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73152F9A23E0405900F843C3 /* NuguAgents.framework */; };
 		A19ECA022578CEA5003E53A9 /* NuguUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7314DF47255E3EA2004882BB /* NuguUtils.framework */; };
 		A19ECA1A2578CED3003E53A9 /* NuguUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7314DF47255E3EA2004882BB /* NuguUtils.framework */; };
+		E6137452283DBDDF00D86855 /* DialogAttributeStoreSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6137451283DBDDF00D86855 /* DialogAttributeStoreSpec.swift */; };
 		E649867C2833681A001AD733 /* AudioPlayerSettingsTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E64986772833681A001AD733 /* AudioPlayerSettingsTemplate.swift */; };
 		E649867D2833681A001AD733 /* AudioPlayerUpdateMetadataPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = E64986782833681A001AD733 /* AudioPlayerUpdateMetadataPayload.swift */; };
 		E649867E2833681A001AD733 /* DisplayCommonTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E64986792833681A001AD733 /* DisplayCommonTemplate.swift */; };
@@ -1401,6 +1402,7 @@
 		A17B06D1239E28DB00D739E9 /* ASRBeepPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASRBeepPlayer.swift; sourceTree = "<group>"; };
 		A17B06D3239E28EB00D739E9 /* LocalTTSAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalTTSAgent.swift; sourceTree = "<group>"; };
 		A19EC83D2575F8C1003E53A9 /* SafeAreaUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeAreaUtil.swift; sourceTree = "<group>"; };
+		E6137451283DBDDF00D86855 /* DialogAttributeStoreSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DialogAttributeStoreSpec.swift; sourceTree = "<group>"; };
 		E64986772833681A001AD733 /* AudioPlayerSettingsTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerSettingsTemplate.swift; sourceTree = "<group>"; };
 		E64986782833681A001AD733 /* AudioPlayerUpdateMetadataPayload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerUpdateMetadataPayload.swift; sourceTree = "<group>"; };
 		E64986792833681A001AD733 /* DisplayCommonTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayCommonTemplate.swift; sourceTree = "<group>"; };
@@ -1913,6 +1915,7 @@
 		1FD1CFD923A75B040000FB8C /* NuguAgents */ = {
 			isa = PBXGroup;
 			children = (
+				E6137450283DBDDF00D86855 /* Dialog */,
 				1F9C5B8723FA82D90086CC04 /* ExtensionAgentSpec.swift */,
 				1F9C5B7B23F4E8C40086CC04 /* LocationAgentSpec.swift */,
 				1F9C5B7A23F4E8C40086CC04 /* SystemAgentSpec.swift */,
@@ -3246,6 +3249,14 @@
 			path = MediaPlayer;
 			sourceTree = "<group>";
 		};
+		E6137450283DBDDF00D86855 /* Dialog */ = {
+			isa = PBXGroup;
+			children = (
+				E6137451283DBDDF00D86855 /* DialogAttributeStoreSpec.swift */,
+			);
+			path = Dialog;
+			sourceTree = "<group>";
+		};
 		E64986762833681A001AD733 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -4241,6 +4252,7 @@
 				1F9C5B8A23FBA3A20086CC04 /* TextAgentSpec.swift in Sources */,
 				7EA53F0F247F583F008731CD /* MockSessionManager.swift in Sources */,
 				1F9C5B7623F2BF560086CC04 /* MockDirectiveSequencer.swift in Sources */,
+				E6137452283DBDDF00D86855 /* DialogAttributeStoreSpec.swift in Sources */,
 				7E284DA324DD533E00BF9640 /* MockInteractionControlManager.swift in Sources */,
 				1F9C5B7D23F4E8C40086CC04 /* LocationAgentSpec.swift in Sources */,
 				1F31FD7C2424CBD8009593EB /* UpstreamSpec.swift in Sources */,
