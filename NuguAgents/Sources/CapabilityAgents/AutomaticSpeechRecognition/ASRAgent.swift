@@ -301,10 +301,6 @@ public extension ASRAgent {
             if self.asrState != .idle {
                 self.asrResult = .cancel()
             }
-            
-            if self.asrRequest != nil {
-                self.asrResult = nil
-            }
         }
     }
 }
@@ -335,6 +331,9 @@ extension ASRAgent: FocusChannelDelegate {
                 self.asrResult = .cancel()
             case (_, .expectingSpeech):
                 self.asrResult = .cancelExpectSpeech
+            case (.nothing, .idle) where self.asrRequest != nil:
+                self.asrResult = .error(ASRError.listenFailed)
+                break
             // Ignore prepare
             default:
                 break
