@@ -138,9 +138,6 @@ public class AudioDisplayView: UIView {
     private var audioProgressTimer: DispatchSourceTimer?
     private let audioProgressTimerQueue = DispatchQueue(label: "com.sktelecom.romaine.AudioDisplayView.audioProgress")
     
-    private var barHeightConstraint: NSLayoutConstraint?
-    private var topConstraint: NSLayoutConstraint?
-    
     override public func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         delegate?.onUserInteraction()
         return super.hitTest(point, with: event)
@@ -304,32 +301,31 @@ public extension AudioDisplayView {
     }
         
     func setBarMode(_ duration: TimeInterval = 0.3) {
-        topConstraint?.isActive = false
         UIView.animate(withDuration: duration) { [weak self] in
             guard let self = self else { return }
             self.audioPlayerBarViewContainerView.isHidden = false
             self.audioPlayerBarViewContainerView.alpha = 1.0
-            self.fullAudioPlayerContainerView.transform = CGAffineTransform(translationX: 0.0, y: self.fullAudioPlayerContainerView.bounds.height)
+            
+            self.fullAudioPlayerContainerView.transform = CGAffineTransform(
+                translationX: 0.0,
+                y: self.fullAudioPlayerContainerView.bounds.height
+            )
             self.fullAudioPlayerContainerView.alpha = 0.0
         } completion: { [weak self] _ in
-            guard let self = self else { return }
-            self.fullAudioPlayerContainerView.isHidden = true
-            self.fullAudioPlayerContainerView.heightAnchor.constraint(equalToConstant: self.audioPlayerBarViewContainerView.frame.size.height).isActive = true
+            self?.fullAudioPlayerContainerView.isHidden = true
         }
     }
     
     func setFullMode(_ duration: TimeInterval = 0.3) {
-        if let superview = superview {
-            topConstraint = topAnchor.constraint(equalTo: superview.topAnchor)
-        }
-        topConstraint?.isActive = true
-        fullAudioPlayerContainerView.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.height).isActive = true
-        
         UIView.animate(withDuration: duration) { [weak self] in
             guard let self = self else { return }
             self.fullAudioPlayerContainerView.isHidden = false
             self.audioPlayerBarViewContainerView.alpha = 0.0
-            self.fullAudioPlayerContainerView.transform = CGAffineTransform(translationX: 0.0, y: 0)
+
+            self.fullAudioPlayerContainerView.transform = CGAffineTransform(
+                translationX: 0.0,
+                y: 0
+            )
             self.fullAudioPlayerContainerView.alpha = 1.0
         } completion: { [weak self] _ in
             self?.audioPlayerBarViewContainerView.isHidden = true
