@@ -44,7 +44,7 @@ class NuguApiProvider: NSObject {
     @Atomic private var serverPolicies = [Policy.ServerPolicy]()
     
     private var resourceServerAddress: String? {
-        if isCSLBEnabled {
+        if cslbState == .activated {
             return loadBalancedUrl
         } else {
             return NuguServerInfo.l4SwitchAddress
@@ -57,11 +57,11 @@ class NuguApiProvider: NSObject {
     // handle received directives by server side event
     private var serverSideEventProcessor: ServerSideEventProcessor?
     
-    // flag of client side load balanceing
-    private var isCSLBEnabled = false {
+    // state of client side load balanceing
+    private(set) public var cslbState: ClientSideLoadBalanceState = .unnecessary {
         didSet {
-            if oldValue != isCSLBEnabled {
-                log.debug("client side load balancing: \(isCSLBEnabled)")
+            if oldValue != cslbState {
+                log.debug("client side load balancing: \(cslbState)")
             }
             
             // To connect last resource server, Comment out clearing loadBalancedUrl codes below.
@@ -80,8 +80,6 @@ class NuguApiProvider: NSObject {
      */
     init(timeout: TimeInterval = 10.0) {
         sessionConfig = URLSessionConfiguration.ephemeral
-        sessionConfig.waitsForConnectivity = true
-        
         requestTimeout = timeout
         super.init()
     }
@@ -110,7 +108,7 @@ class NuguApiProvider: NSObject {
             return disposable
         }
         
-        var request = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 30.0)
+        var request = URLRequest(url: url)
         request.httpMethod = NuguApi.policy.method.rawValue
         request.allHTTPHeaderFields = header
         
@@ -138,9 +136,6 @@ class NuguApiProvider: NSObject {
                     single(.failure(NetworkError.authError))
                     return
                 }
-                
-                // enable client side load balance and find new resource server for directive and event both.
-                self.isCSLBEnabled = true
                 
                 guard let resourceServerUrl = self.resourceServerAddress else {
                     single(.failure(NetworkError.noSuitableResourceServer))
@@ -177,19 +172,17 @@ class NuguApiProvider: NSObject {
                 let serverSideEventProcessor = self.serverSideEventProcessor else {
                     return Observable.error(NetworkError.streamInitializeFailed)
             }
-
+            
             return self.makePart(with: data, processor: serverSideEventProcessor)
         }
         .do(onError: {
             error = $0
         }, onDispose: { [weak self] in
             self?.processorQueue.async {
+                self?.cslbState = error == nil ? .unnecessary : .deactivated
                 self?.serverSideEventProcessor = nil
                 task?.cancel()
                 
-                if error == nil {
-                    self?.isCSLBEnabled = false
-                }
             }
         })
         .share()
@@ -249,7 +242,7 @@ extension NuguApiProvider {
                     streamRequest.allHTTPHeaderFields = streamRequest.allHTTPHeaderFields?.merged(with: httpHeaderFields)
                 }
                 
-                log.debug("request url: \(url)")
+                log.debug("request url: \(url), cslb: \(self.cslbState)")
                 log.debug("request event header: \(streamRequest.allHTTPHeaderFields ?? [:])")
                 
                 uploadTask = self.session.uploadTask(withStreamedRequest: streamRequest)
@@ -282,6 +275,7 @@ extension NuguApiProvider {
     var policies: Single<Policy> {
         return internalPolicies
             .do { [weak self] networkPolicy in
+                log.debug("Server initiated directive policies: \(networkPolicy.serverPolicies)")
                 self?.serverPolicies = networkPolicy.serverPolicies
                 
                 if let currentPolicy = self?.serverPolicies.removeFirst() {
@@ -396,6 +390,11 @@ extension NuguApiProvider: URLSessionDataDelegate, StreamDelegate {
                     completionHandler(.cancel)
                     processor.subject.onError(NetworkError.invalidMessageReceived)
                     return
+            }
+            
+            if processor is ServerSideEventReceiver {
+                // enable client side load balance and find new resource server for directive and event both.
+                self.cslbState = .activated
             }
             
             processor.parser = MultiPartParser(boundary: String(boundary))

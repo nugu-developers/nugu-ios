@@ -137,8 +137,12 @@ public extension AudioSessionManager {
             options.insert(.mixWithOthers)
         }
         
+        log.debug("try to set audio session category from: \(AVAudioSession.sharedInstance().category) to: \(AVAudioSession.Category.playAndRecord)")
+        log.debug("try to set audio session options from: \(AVAudioSession.sharedInstance().categoryOptions) to: \(options)")
+        
         // If audioSession is already has been set properly, resetting audioSession is unnecessary
         guard AVAudioSession.sharedInstance().category != .playAndRecord || AVAudioSession.sharedInstance().categoryOptions != options else {
+            log.debug("audio session and options are set already")
             return true
         }
         
@@ -148,8 +152,11 @@ public extension AudioSessionManager {
                 mode: .default,
                 options: options
             )
+            log.debug("set audio session: \(AVAudioSession.Category.playAndRecord), options: \(options)")
+
             try AVAudioSession.sharedInstance().setActive(true)
-            log.debug("set audio session = \(options)")
+            log.debug("audio session activated")
+            
             return true
         } catch {
             log.debug("updateAudioSessionCategoryOptions failed: \(error)")

@@ -301,10 +301,6 @@ public extension ASRAgent {
             if self.asrState != .idle {
                 self.asrResult = .cancel()
             }
-            
-            if self.asrRequest != nil {
-                self.asrResult = nil
-            }
         }
     }
 }
@@ -323,7 +319,7 @@ extension ASRAgent: FocusChannelDelegate {
         asrDispatchQueue.async { [weak self] in
             guard let self = self else { return }
 
-            log.info("Focus:\(focusState) ASR:\(self.asrState)")
+            log.info("focus: \(focusState) asr state: \(self.asrState)")
             switch (focusState, self.asrState) {
             case (.foreground, let asrState) where [.idle, .expectingSpeech].contains(asrState):
                 self.executeStartCapture()
@@ -335,6 +331,10 @@ extension ASRAgent: FocusChannelDelegate {
                 self.asrResult = .cancel()
             case (_, .expectingSpeech):
                 self.asrResult = .cancelExpectSpeech
+            case (.nothing, .idle) where self.asrRequest != nil:
+                // It might be error when focusState is nothing And AsrRequest does exist.
+                self.asrResult = .error(ASRError.listenFailed)
+                break
             // Ignore prepare
             default:
                 break

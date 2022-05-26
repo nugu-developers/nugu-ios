@@ -29,7 +29,7 @@ NUGU SDK for iOS is composed of following Libraries
 
 ### Run
 We have sample application in `nugu-ios.xcodeproj`.  
-To use it download or clone this repository, and run `carthage update --platform iOS` to install required frameworks.  
+To use it download or clone this repository, and run `carthage update --use-xcframeworks --platform iOS` to install required frameworks.  
 Open `nugu-ios.xcodeproj` and you can run it through `SampleApp` scheme.
 
 ### See also

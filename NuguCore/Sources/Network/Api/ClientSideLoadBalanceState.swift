@@ -1,8 +1,8 @@
 //
-//  MockDialogAttributeStore.swift
-//  NuguTests
+//  ClientSideLoadBalanceState.swift
+//  NuguCore
 //
-//  Created by MinChul Lee on 2020/05/28.
+//  Created by childc on 2020/03/05.
 //  Copyright (c) 2020 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,23 +20,16 @@
 
 import Foundation
 
-import NuguAgents
-
-class MockDialogAttributeStore: DialogAttributeStoreable {
-    func getAttributes(messageId: String) -> [String: AnyHashable]? {
-        return nil
-    }
+/**
+ State of client-side-load-balance
+ */
+enum ClientSideLoadBalanceState {
+    /// Unnecessary
+    case unnecessary
     
-    func setAttributes(_ attributes: [String: AnyHashable], messageId: String) {
-    }
+    /// Working properly
+    case activated
     
-    func requestAttributes(messageId: String?) -> [String: AnyHashable]? {
-        return nil
-    }
-    
-    func removeAttributes(messageId: String) {
-    }
-    
-    func removeAllAttributes() {
-    }
+    /// Out of the order
+    case deactivated
 }

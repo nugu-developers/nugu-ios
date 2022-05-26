@@ -24,32 +24,25 @@ import NuguCore
 import NuguUtils
 
 class MockPlaySyncManager: PlaySyncManageable {
-    let contextInfoProvider: ContextInfoProviderType = { (completion) in
-        completion(nil)
-    }
+    
+    var contextInfoProvider: ContextInfoProviderType = { _ in }
     
     func startPlay(property: PlaySyncProperty, info: PlaySyncInfo) {
-        //
     }
     
     func endPlay(property: PlaySyncProperty) {
-        //
     }
     
-    func stopPlay(dialogRequestId: String) {
-        //
+    func stopPlay(dialogRequestId: String, property: PlaySyncProperty?) {
     }
     
     func startTimer(property: PlaySyncProperty, duration: TimeIntervallic) {
-        //
     }
     
     func resetTimer(property: PlaySyncProperty) {
-        //
     }
     
     func cancelTimer(property: PlaySyncProperty) {
-        //
     }
     
     func pauseTimer(property: PlaySyncProperty) {
