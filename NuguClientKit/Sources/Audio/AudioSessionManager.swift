@@ -132,16 +132,10 @@ public extension AudioSessionManager {
             return updateAudioSessionWhenCarplayConnected(requestingFocus: requestingFocus)
         }
         
-        var options = defaultCategoryOptions
-        if requestingFocus == false {
-            options.insert(.mixWithOthers)
-        }
-        
         log.debug("try to set audio session category from: \(AVAudioSession.sharedInstance().category) to: \(AVAudioSession.Category.playAndRecord)")
-        log.debug("try to set audio session options from: \(AVAudioSession.sharedInstance().categoryOptions) to: \(options)")
         
         // If audioSession is already has been set properly, resetting audioSession is unnecessary
-        guard AVAudioSession.sharedInstance().category != .playAndRecord || AVAudioSession.sharedInstance().categoryOptions != options else {
+        guard AVAudioSession.sharedInstance().category != .playAndRecord else {
             log.debug("audio session and options are set already")
             return true
         }
@@ -150,9 +144,9 @@ public extension AudioSessionManager {
             try AVAudioSession.sharedInstance().setCategory(
                 .playAndRecord,
                 mode: .default,
-                options: options
+                options: defaultCategoryOptions
             )
-            log.debug("set audio session: \(AVAudioSession.Category.playAndRecord), options: \(options)")
+            log.debug("set audio session: \(AVAudioSession.Category.playAndRecord), options: \(defaultCategoryOptions)")
 
             try AVAudioSession.sharedInstance().setActive(true)
             log.debug("audio session activated")
