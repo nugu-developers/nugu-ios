@@ -396,11 +396,8 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
             log.debug("check releasing focus is needed or not. state: \(audioPlayerState.debugDescription), isFocusedPlayer: \(self.latestPlayer === player)")
             if let audioPlayerState = audioPlayerState, self.latestPlayer === player {
                 self.audioPlayerState = audioPlayerState
-                switch audioPlayerState {
-                case .stopped, .finished:
+                if audioPlayerState == .stopped {
                     self.releaseFocusIfNeeded()
-                default:
-                    break
                 }
             }
             if let eventTypeInfo = eventTypeInfo {
