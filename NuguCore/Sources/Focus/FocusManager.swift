@@ -153,6 +153,8 @@ private extension FocusManager {
         // Assign a higher background channel to the foreground with some delay so that it doesn't acquire the focus temporarily.
         focusDispatchQueue.asyncAfter(deadline: .now() + FocusConst.shortLatency) { [weak self] in
             guard let self = self else { return }
+            
+            log.debug("foregroundChannelDelegate: \(self.foregroundChannelDelegate.debugDescription), backgroundChannelDelegate: \(self.backgroundChannelDelegate.debugDescription)")
             guard self.foregroundChannelDelegate == nil,
                 let backgroundChannelDelegate = self.backgroundChannelDelegate else {
                     return
@@ -167,6 +169,7 @@ private extension FocusManager {
         let workItem = DispatchWorkItem { [weak self] in
             guard let self = self else { return }
             
+            log.debug("notifyReleaseFocusIfNeeded, channelInfos: \(self.channelInfos)")
             if self.channelInfos.allSatisfy({ $0.delegate == nil || $0.focusState == .nothing }) {
                 log.debug("")
                 self.delegate?.focusShouldRelease()

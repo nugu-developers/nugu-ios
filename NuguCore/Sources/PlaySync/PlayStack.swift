@@ -29,6 +29,7 @@ struct PlayStack {
             .reduce([]) { $0.contains($1) ? $0 : $0 + [$1] }
             .count > 1
     }
+    
     var playServiceIds: [String] {
         stack
             .compactMap { $0.info.playStackServiceId }
