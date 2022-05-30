@@ -71,9 +71,8 @@ extension MediaPlayer {
     }
     
     public func stop() {
-        guard
-            let mediaPlayer = player,
-            mediaPlayer.currentItem != nil else {
+        guard let mediaPlayer = player,
+              mediaPlayer.currentItem != nil else {
             delegate?.mediaPlayerStateDidChange(.error(error: MediaPlayableError.notPrepareSource), mediaPlayer: self)
             return
         }
