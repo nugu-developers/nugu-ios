@@ -31,9 +31,12 @@ class NuguApiProvider: NSObject {
     private var sessionConfig: URLSessionConfiguration
     private let sessionQueue = OperationQueue()
     private let processorQueue = DispatchQueue(label: "com.skt.Romaine.nugu_api_provider.processor")
-    private lazy var session: URLSession = URLSession(configuration: sessionConfig,
-                                                      delegate: self,
-                                                      delegateQueue: sessionQueue)
+    private lazy var session: URLSession = URLSession(
+        configuration: sessionConfig,
+        delegate: self,
+        delegateQueue: sessionQueue
+    )
+    
     @Atomic var loadBalancedUrl: String? {
         didSet {
             log.debug("loadBalancedUrl: \(loadBalancedUrl ?? "nil")")
@@ -392,7 +395,7 @@ extension NuguApiProvider: URLSessionDataDelegate, StreamDelegate {
                     return
             }
             
-            if processor is ServerSideEventReceiver {
+            if processor is ServerSideEventProcessor {
                 // enable client side load balance and find new resource server for directive and event both.
                 self.cslbState = .activated
             }
