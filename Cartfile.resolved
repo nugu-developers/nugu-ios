@@ -1,5 +1,5 @@
 github "Quick/Nimble" "v9.2.1"
 github "Quick/Quick" "v5.0.1"
 github "ReactiveX/RxSwift" "6.5.0"
-github "airbnb/lottie-ios" "5b8ea6942ac143355b4b152847bc9e33247e4b26"
+github "airbnb/lottie-ios" "ba6df76bfb762b30864e7d3755f6e260a4f7d91e"
 github "nugu-developers/natty-log-ios" "1.2.3"
