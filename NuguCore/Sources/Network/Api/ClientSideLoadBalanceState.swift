@@ -1,8 +1,8 @@
 //
-//  TextAgentRequestType.swift
-//  NuguAgents
+//  ClientSideLoadBalanceState.swift
+//  NuguCore
 //
-//  Created by yonghoonKwon on 2020/09/02.
+//  Created by childc on 2020/03/05.
 //  Copyright (c) 2020 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,11 +20,16 @@
 
 import Foundation
 
-public enum TextAgentRequestType: Equatable {
-    /// send text request only with "text" and "token" infos
-    case normal
-    /// send text request only with "text", "token", "playServiceId" infos
-    case specific(playServiceId: String)
-    /// send text request with "text", "token", "playServiceId", "domainTypes", "asrContext" infos
-    case dialog
+/**
+ State of client-side-load-balance
+ */
+enum ClientSideLoadBalanceState {
+    /// Unnecessary
+    case unnecessary
+    
+    /// Working properly
+    case activated
+    
+    /// Out of the order
+    case deactivated
 }

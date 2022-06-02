@@ -122,7 +122,7 @@ public extension PlaySyncManager {
         }
     }
     
-    func stopPlay(dialogRequestId: String) {
+    func stopPlay(dialogRequestId: String, property: PlaySyncProperty? = nil) {
         playSyncDispatchQueue.async { [weak self] in
             log.debug(dialogRequestId)
             guard let self = self else { return }
@@ -130,6 +130,7 @@ public extension PlaySyncManager {
             // Pop from play stack
             self.playStack
                 .filter { $0.info.dialogRequestId == dialogRequestId }
+                .filter { $0.property == property ?? $0.property }
                 .map { $0.property }
                 .forEach(self.popFromPlayStack)
         }

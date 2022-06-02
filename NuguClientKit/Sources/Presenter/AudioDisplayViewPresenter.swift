@@ -201,6 +201,7 @@ private extension AudioDisplayViewPresenter {
         audioDisplayView.translatesAutoresizingMaskIntoConstraints = false
         audioDisplayView.leadingAnchor.constraint(equalTo: targetView.leadingAnchor).isActive = true
         audioDisplayView.trailingAnchor.constraint(equalTo: targetView.trailingAnchor).isActive = true
+        audioDisplayView.topAnchor.constraint(equalTo: targetView.topAnchor).isActive = true
         audioDisplayView.bottomAnchor.constraint(equalTo: targetView.bottomAnchor).isActive = true
         if let themeController = themeController {
             switch themeController.theme {

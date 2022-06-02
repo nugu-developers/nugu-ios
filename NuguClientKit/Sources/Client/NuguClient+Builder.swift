@@ -201,6 +201,10 @@ public extension NuguClient {
          */
         @discardableResult public func setDelegate<Delegate>(_ delegate: Delegate) -> Self {
             // Because `delegate` instance can be a Multi-Delegator, We don't use switch syntax.
+            if delegate is TextAgentDelegate {
+                textAgent.delegate = delegate as? TextAgentDelegate
+            }
+            
             if delegate is PhoneCallAgentDelegate {
                 phoneCallAgent = PhoneCallAgent(
                     directiveSequencer: directiveSequencer,

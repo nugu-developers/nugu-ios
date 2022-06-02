@@ -115,22 +115,27 @@ public extension SpeechRecognizerAggregator {
             asrAgent.stopRecognition()
         }
         
-        let dialogRequestId = asrAgent.startRecognition(initiator: initiator, completion: completion)
-        startMicInputProvider(requestingFocus: true) { [weak self] success in
-            guard success else {
-                log.error("Start MicInputProvider failed")
-                self?.asrAgent.stopRecognition()
-                self?.state = .error(SpeechRecognizerAggregatorError.cannotOpenMicInputForRecognition)
-                completion?(.error(SpeechRecognizerAggregatorError.cannotOpenMicInputForRecognition))
-                return
+        let dialogRequestId = asrAgent.startRecognition(initiator: initiator) { [weak self] state in
+            if case .prepared = state {
+                self?.startMicInputProvider(requestingFocus: true) { [weak self] success in
+                    guard success else {
+                        log.error("Start MicInputProvider failed")
+                        self?.asrAgent.stopRecognition()
+                        self?.state = .error(SpeechRecognizerAggregatorError.cannotOpenMicInputForRecognition)
+                        completion?(.error(SpeechRecognizerAggregatorError.cannotOpenMicInputForRecognition))
+                        return
+                    }
+                }
             }
+            
+            completion?(state)
         }
         
         return dialogRequestId
     }
     
     func startListeningWithTrigger(completion: ((Result<Void, Error>) -> Void)?) {
-        guard useKeywordDetector == true else { return }
+        guard useKeywordDetector else { return }
         keywordDetector.start()
         _startMicWorkItem.mutate {
             $0?.cancel()
@@ -267,12 +272,28 @@ extension SpeechRecognizerAggregator {
             if let state = SpeechRecognizerAggregatorState(notification.state) {
                 self.state = state
             }
-            if case .listening = notification.state {
-                self.keywordDetector.stop()
-            }
-            // if not restarted here, keyword detector is inactive in tts speaking situation
-            if case .idle = notification.state, self.useKeywordDetector == true {
-                self.keywordDetector.start()
+            
+            switch notification.state {
+            case .idle:
+                if self.useKeywordDetector {
+                    // if not restart here, keyword detector will be inactivated during tts speaking
+                    self.keywordDetector.start()
+                } else {
+                    self.stopMicInputProvider()
+                }
+            case .listening:
+                if self.useKeywordDetector {
+                    self.keywordDetector.stop()
+                }
+            case .expectingSpeech:
+                self.startMicInputProvider(requestingFocus: true) { [weak self] (success) in
+                    if success == false {
+                        log.debug("startMicInputProvider failed!")
+                        self?.asrAgent.stopRecognition()
+                    }
+                }
+            default:
+                break
             }
         }
     }

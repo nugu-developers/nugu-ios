@@ -106,10 +106,9 @@ public final class ASRAgent: ASRAgentProtocol {
             case .cancel:
                 asrState = .idle
                 upstreamDataSender.cancelEvent(dialogRequestId: asrRequest.eventIdentifier.dialogRequestId)
-                
                 sendCompactContextEvent(Event(
                     typeInfo: .stopRecognize,
-                    dialogAttributes: dialogAttributeStore.attributes,
+                    dialogAttributes: expectSpeech?.messageId == nil ? nil : dialogAttributeStore.getAttributes(messageId: expectSpeech!.messageId),
                     referrerDialogRequestId: asrRequest.eventIdentifier.dialogRequestId
                 ).rx)
                 expectSpeech = nil
@@ -117,7 +116,7 @@ public final class ASRAgent: ASRAgentProtocol {
                 asrState = .idle
                 sendCompactContextEvent(Event(
                     typeInfo: .listenFailed,
-                    dialogAttributes: dialogAttributeStore.attributes,
+                    dialogAttributes: expectSpeech?.messageId == nil ? nil : dialogAttributeStore.getAttributes(messageId: expectSpeech!.messageId),
                     referrerDialogRequestId: asrRequest.referrerDialogRequestId
                 ).rx)
                 expectSpeech = nil
@@ -127,21 +126,21 @@ public final class ASRAgent: ASRAgentProtocol {
                 case NetworkError.timeout:
                     sendCompactContextEvent(Event(
                         typeInfo: .responseTimeout,
-                        dialogAttributes: dialogAttributeStore.attributes,
+                        dialogAttributes: expectSpeech?.messageId == nil ? nil : dialogAttributeStore.getAttributes(messageId: expectSpeech!.messageId),
                         referrerDialogRequestId: asrRequest.eventIdentifier.dialogRequestId
                     ).rx)
                 case ASRError.listeningTimeout:
                     upstreamDataSender.cancelEvent(dialogRequestId: asrRequest.eventIdentifier.dialogRequestId)
                     sendFullContextEvent(Event(
                         typeInfo: .listenTimeout,
-                        dialogAttributes: dialogAttributeStore.attributes,
+                        dialogAttributes: expectSpeech?.messageId == nil ? nil : dialogAttributeStore.getAttributes(messageId: expectSpeech!.messageId),
                         referrerDialogRequestId: asrRequest.eventIdentifier.dialogRequestId
                     ).rx)
                 case ASRError.listenFailed:
                     upstreamDataSender.cancelEvent(dialogRequestId: asrRequest.eventIdentifier.dialogRequestId)
                     sendCompactContextEvent(Event(
                         typeInfo: .listenFailed,
-                        dialogAttributes: dialogAttributeStore.attributes,
+                        dialogAttributes: expectSpeech?.messageId == nil ? nil : dialogAttributeStore.getAttributes(messageId: expectSpeech!.messageId),
                         referrerDialogRequestId: asrRequest.eventIdentifier.dialogRequestId
                     ).rx)
                 case ASRError.recognizeFailed:
@@ -169,9 +168,9 @@ public final class ASRAgent: ASRAgentProtocol {
             if let dialogRequestId = expectSpeech?.dialogRequestId {
                 sessionManager.activate(dialogRequestId: dialogRequestId, category: .automaticSpeechRecognition)
                 interactionControlManager.start(mode: .multiTurn, category: capabilityAgentProperty.category)
-            } else if oldValue?.dialogRequestId != nil {
+            } else if let messageId = oldValue?.messageId {
                 playSyncManager.endPlay(property: playSyncProperty)
-                dialogAttributeStore.removeAttributes()
+                dialogAttributeStore.removeAttributes(messageId: messageId)
                 interactionControlManager.finish(mode: .multiTurn, category: capabilityAgentProperty.category)
             }
             if let dialogRequestId = oldValue?.dialogRequestId {
@@ -320,7 +319,7 @@ extension ASRAgent: FocusChannelDelegate {
         asrDispatchQueue.async { [weak self] in
             guard let self = self else { return }
 
-            log.info("Focus:\(focusState) ASR:\(self.asrState)")
+            log.info("focus: \(focusState) asr state: \(self.asrState)")
             switch (focusState, self.asrState) {
             case (.foreground, let asrState) where [.idle, .expectingSpeech].contains(asrState):
                 self.executeStartCapture()
@@ -332,6 +331,10 @@ extension ASRAgent: FocusChannelDelegate {
                 self.asrResult = .cancel()
             case (_, .expectingSpeech):
                 self.asrResult = .cancelExpectSpeech
+            case (.nothing, .idle) where self.asrRequest != nil:
+                // It might be error when focusState is nothing And AsrRequest does exist.
+                self.asrResult = .error(ASRError.listenFailed)
+                break
             // Ignore prepare
             default:
                 break
@@ -433,7 +436,7 @@ private extension ASRAgent {
                     "domainTypes": payload.domainTypes,
                     "playServiceId": payload.playServiceId
                 ]
-                self.dialogAttributeStore.setAttributes(attributes.compactMapValues { $0 })
+                self.dialogAttributeStore.setAttributes(attributes.compactMapValues { $0 }, messageId: directive.header.messageId)
             }
         }
     }
@@ -580,6 +583,8 @@ private extension ASRAgent {
             return
         }
         
+        asrRequest.completion?(.prepared)
+        
         var httpHeaderFields = [String: String]()
         if let lastAsrEventTime = UserDefaults.Nugu.lastAsrEventTime {
             httpHeaderFields["Last-Asr-Event-Time"] = lastAsrEventTime
@@ -587,7 +592,7 @@ private extension ASRAgent {
         upstreamDataSender.sendStream(
             Event(
                 typeInfo: .recognize(initiator: asrRequest.initiator, options: asrRequest.options),
-                dialogAttributes: dialogAttributeStore.attributes,
+                dialogAttributes: dialogAttributeStore.requestAttributes(messageId: expectSpeech?.messageId),
                 referrerDialogRequestId: asrRequest.referrerDialogRequestId
             ).makeEventMessage(
                 property: self.capabilityAgentProperty,

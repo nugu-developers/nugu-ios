@@ -35,7 +35,7 @@ public protocol PlaySyncManageable: ContextInfoProvidable, TypedNotifyable {
     
     /// <#Description#>
     /// - Parameter dialogRequestId: <#dialogRequestId description#>
-    func stopPlay(dialogRequestId: String)
+    func stopPlay(dialogRequestId: String, property: PlaySyncProperty?)
     
     /// Start new timer to release `PlaySyncProperty`.
     ///
@@ -64,4 +64,10 @@ public protocol PlaySyncManageable: ContextInfoProvidable, TypedNotifyable {
     ///
     /// - Parameter property: The object to resume timer.
     func resumeTimer(property: PlaySyncProperty)
+}
+
+public extension PlaySyncManageable {
+    func stopPlay(dialogRequestId: String) {
+        stopPlay(dialogRequestId: dialogRequestId, property: nil)
+    }
 }

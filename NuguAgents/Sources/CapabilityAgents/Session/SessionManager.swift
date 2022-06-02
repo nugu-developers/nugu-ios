@@ -36,7 +36,7 @@ final public class SessionManager: SessionManageable {
     public var activeSessions = [Session]() {
         didSet {
             if oldValue != activeSessions {
-                log.debug(activeSessions)
+                log.debug("activeSessions: \(activeSessions)")
             }
         }
     }
@@ -72,7 +72,7 @@ final public class SessionManager: SessionManageable {
     public func activate(dialogRequestId: String, category: CapabilityAgentCategory) {
         sessionDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            log.debug(dialogRequestId)
+            log.debug("activate dialogRequestId: \(dialogRequestId), category: \(category)")
             self.removeTimer(dialogRequestId: dialogRequestId)
             
             if self.activeList[dialogRequestId] == nil {
@@ -86,7 +86,7 @@ final public class SessionManager: SessionManageable {
     public func deactivate(dialogRequestId: String, category: CapabilityAgentCategory) {
         sessionDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            log.debug(dialogRequestId)
+            log.debug("deactivate dialogRequestId: \(dialogRequestId), category: \(category)")
             self.activeList[dialogRequestId]?.remove(category)
             if self.activeList[dialogRequestId]?.count == 0 {
                 self.activeList[dialogRequestId] = nil

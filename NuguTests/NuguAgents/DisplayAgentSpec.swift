@@ -90,23 +90,19 @@ class DisplayAgentSpec: QuickSpec {
 // MARK: - MockDisplayAgentDelegate
 
 class MockDisplayAgentDelegate: DisplayAgentDelegate {
-    func displayAgentShouldRender(template: DisplayTemplate, completion: @escaping (AnyObject?) -> Void) {
-        completion(self)
+    func displayAgentShouldRender(template: DisplayTemplate, historyControl: HistoryControl?, completion: @escaping (AnyObject?) -> Void) {
     }
     
     func displayAgentDidClear(templateId: String) {
     }
     
     func displayAgentShouldMoveFocus(templateId: String, direction: DisplayControlPayload.Direction, header: Downstream.Header, completion: @escaping (Bool) -> Void) {
-        completion(true)
     }
     
     func displayAgentShouldScroll(templateId: String, direction: DisplayControlPayload.Direction, header: Downstream.Header, completion: @escaping (Bool) -> Void) {
-        completion(true)
     }
     
     func displayAgentRequestContext(templateId: String, completion: @escaping (DisplayContext?) -> Void) {
-        completion(DisplayContext(focusedItemToken: nil, visibleTokenList: nil))
     }
     
     func displayAgentShouldUpdate(templateId: String, template: DisplayTemplate) {
