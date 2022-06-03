@@ -283,6 +283,7 @@ extension NuguApiProvider {
                 
                 if let currentPolicy = self?.serverPolicies.removeFirst() {
                     self?.loadBalancedUrl = "https://\(currentPolicy.hostname):\(currentPolicy.port)"
+                    self?.cslbState = .activated
                 }
             }
     }
@@ -393,11 +394,6 @@ extension NuguApiProvider: URLSessionDataDelegate, StreamDelegate {
                     completionHandler(.cancel)
                     processor.subject.onError(NetworkError.invalidMessageReceived)
                     return
-            }
-            
-            if processor is ServerSideEventProcessor {
-                // enable client side load balance and find new resource server for directive and event both.
-                self.cslbState = .activated
             }
             
             processor.parser = MultiPartParser(boundary: String(boundary))
