@@ -23,6 +23,7 @@ import Foundation
 public class DataBoundInputStream: InputStream {
     @Atomic private var data: Data
     @Atomic var isLastDataAppended = false
+    @Atomic private var internalProperty: [Stream.PropertyKey: Any?] = [:]
     private var runLoop = RunLoop.main
     private var runLoopMode = RunLoop.Mode.default
     
@@ -119,6 +120,17 @@ public class DataBoundInputStream: InputStream {
     public override func remove(from aRunLoop: RunLoop, forMode mode: RunLoop.Mode) {
         runLoop = RunLoop.main
         runLoopMode = RunLoop.Mode.default
+    }
+    
+    public override func property(forKey key: Stream.PropertyKey) -> Any? {
+        return internalProperty[key] ?? nil
+    }
+    
+    public override func setProperty(_ property: Any?, forKey key: Stream.PropertyKey) -> Bool {
+        _internalProperty.mutate {
+            $0.updateValue(property, forKey: key)
+        }
+        return true
     }
 
     func notify(event: Stream.Event) {
