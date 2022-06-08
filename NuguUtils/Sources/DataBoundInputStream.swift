@@ -23,7 +23,7 @@ import Foundation
 public class DataBoundInputStream: InputStream {
     @Atomic private var data: Data
     @Atomic var isLastDataAppended = false
-    @Atomic private var internalProperty: [Stream.PropertyKey: Any?] = [:]
+    @Atomic private var internalProperty = [Stream.PropertyKey: Any?]()
     private var runLoop = RunLoop.main
     private var runLoopMode = RunLoop.Mode.default
     
