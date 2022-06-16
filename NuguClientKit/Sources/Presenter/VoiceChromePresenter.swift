@@ -386,7 +386,7 @@ private extension VoiceChromePresenter {
                     if let asrError = error as? ASRError, [ASRError.listenFailed, ASRError.recognizeFailed].contains(asrError) == true {
                         self.asrBeepPlayer?.beep(type: .fail)
                         self.nuguVoiceChrome.changeState(state: .speakingError)
-                    } else if let _ = error as? SpeechRecognizerAggregatorError {
+                    } else if error as? SpeechRecognizerAggregatorError != nil {
                         self.dismissVoiceChrome()
                     } else if case ASRError.listeningTimeout(let listenTimeoutFailBeep) = error {
                         if listenTimeoutFailBeep == true {

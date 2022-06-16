@@ -568,7 +568,7 @@ public extension NuguAgentNotification {
             public static var name: Notification.Name = .ttsAgentDurationDidComputed
             public let duration: Int
             
-            public static func make(from: [String : Any]) -> NuguAgentNotification.TTS.Duration? {
+            public static func make(from: [String: Any]) -> NuguAgentNotification.TTS.Duration? {
                 guard let duration = from["duration"] as? Int else { return nil }
                 return Duration(duration: duration)
             }

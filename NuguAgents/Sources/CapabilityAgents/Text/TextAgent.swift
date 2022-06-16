@@ -250,8 +250,6 @@ private extension TextAgent {
                         dialogRequestId: directive.header.dialogRequestId,
                         payload: payload
                     )
-                    
-                    
                 }
             }
         }
