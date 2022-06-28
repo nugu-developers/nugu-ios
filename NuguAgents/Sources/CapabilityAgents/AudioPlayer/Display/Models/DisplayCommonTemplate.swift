@@ -18,8 +18,8 @@
 //  limitations under the License.
 //
 
-public struct DisplayCommonTemplate: Decodable {
-    public struct Common {
+public enum DisplayCommonTemplate {
+    public enum Common {
         public struct Image: Decodable {
             public let contentDescription: String?
             public let sources: [Source]

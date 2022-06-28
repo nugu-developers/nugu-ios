@@ -22,7 +22,7 @@ import Foundation
 import NuguCore
 
 /// <#Description#>
-public struct AlertsAgentDirectivePayload {
+public enum AlertsAgentDirectivePayload {
     
     /// <#Description#>
     public struct SetAlert: Codable {
