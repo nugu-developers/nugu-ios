@@ -21,7 +21,7 @@
 import Foundation
 
 /// <#Description#>
-public struct MediaPlayerAgentDirectivePayload {
+public enum MediaPlayerAgentDirectivePayload {
     
     // MARK: Play
     

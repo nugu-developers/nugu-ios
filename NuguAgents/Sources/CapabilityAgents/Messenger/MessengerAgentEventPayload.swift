@@ -20,7 +20,7 @@
 
 import Foundation
 
-public struct MessengerAgentEventPayload {
+public enum MessengerAgentEventPayload {
     
     // MARK: Sync
     

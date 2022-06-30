@@ -20,7 +20,7 @@
 
 import Foundation
 
-public struct MessengerAgentDirectivePayload {
+public enum MessengerAgentDirectivePayload {
     
     // MARK: CreateSucceeded
     

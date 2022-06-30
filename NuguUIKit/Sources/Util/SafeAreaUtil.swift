@@ -20,7 +20,7 @@
 
 import UIKit
 
-public struct SafeAreaUtil {
+public enum SafeAreaUtil {
     public static var topSafeAreaHeight: CGFloat {
         guard let rootViewController = UIApplication.shared.windows.filter({ $0.isKeyWindow }).first?.rootViewController else { return 0 }
         return rootViewController.view.safeAreaInsets.top

@@ -21,7 +21,7 @@
 import Foundation
 
 /// <#Description#>
-public struct MessageAgentDirectivePayload {
+public enum MessageAgentDirectivePayload {
     /// An Item received through the 'SendCandidates' directive in `MessageAgent`.
     public struct SendCandidates {
         /// The unique identifier to specify play service.
