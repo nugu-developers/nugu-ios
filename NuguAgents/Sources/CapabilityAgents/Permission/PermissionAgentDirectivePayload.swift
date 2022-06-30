@@ -20,7 +20,7 @@
 
 import Foundation
 
-public struct PermissionAgentDirectivePayload {
+public enum PermissionAgentDirectivePayload {
     public struct RequestPermission: Codable {
         public let permissions: [PermissionAgentContext.Permission.Name]
         public let playServiceId: String

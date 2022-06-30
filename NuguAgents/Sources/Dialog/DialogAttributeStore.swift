@@ -20,16 +20,65 @@
 
 import Foundation
 
+import NuguUtils
+import NattyLog
+
 public final class DialogAttributeStore: DialogAttributeStoreable {
-    public var attributes: [String: AnyHashable]?
+    @Atomic private var attributeDic = [String: AnyHashable]() {
+        didSet {
+            log.debug("attributes changed: \(attributeDic)")
+            post(NuguAgentNotification.DialogAttribute(attribute: attributeDic))
+        }
+    }
     
     public init() {}
     
-    public func setAttributes(_ attributes: [String: AnyHashable]) {
-        self.attributes = attributes
+    public func setAttributes(_ attributes: [String: AnyHashable], messageId: String) {
+        _attributeDic.mutate { $0[messageId] = attributes }
     }
     
-    public func removeAttributes() {
-        attributes = nil
+    public func requestAttributes(messageId: String? = nil) -> [String: AnyHashable]? {
+        var lastingAttributes: [String: AnyHashable]? {
+            guard let key = attributeDic.keys.first else {
+                return nil
+            }
+            
+            return attributeDic[key] as? [String: AnyHashable]
+        }
+        
+        guard let messageId = messageId else {
+            return lastingAttributes
+        }
+
+        let specificAttributes = attributeDic[messageId] as? [String: AnyHashable]
+        return specificAttributes ?? lastingAttributes
     }
+    
+    public func getAttributes(messageId: String) -> [String: AnyHashable]? {
+        attributeDic[messageId] as? [String: AnyHashable]
+    }
+    
+    public func removeAttributes(messageId: String) {
+        _attributeDic.mutate { $0[messageId] = nil }
+    }
+    
+    public func removeAllAttributes() {
+        _attributeDic.mutate { $0.removeAll() }
+    }
+}
+
+public extension NuguAgentNotification {
+    struct DialogAttribute: TypedNotification {
+        public static let name: Notification.Name = .dialogAttributeDidChange
+        public let attribute: [String: AnyHashable]?
+        
+        public static func make(from: [String: Any]) -> NuguAgentNotification.DialogAttribute? {
+            guard let attribute = from["attribute"] as? [String: AnyHashable] else { return nil }
+            return DialogAttribute(attribute: attribute)
+        }
+    }
+}
+
+extension Notification.Name {
+    static let dialogAttributeDidChange = Notification.Name("com.sktelecom.romaine.notification.name.dialog_attribute_did_chage")
 }

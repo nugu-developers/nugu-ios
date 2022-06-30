@@ -20,7 +20,7 @@
 
 import Foundation
 
-public struct PhoneCallAgentDirectivePayload {
+public enum PhoneCallAgentDirectivePayload {
     
     /// An Item received through the 'SendCandidates' directive in `PhoneCallAgent`.
     public struct SendCandidates {

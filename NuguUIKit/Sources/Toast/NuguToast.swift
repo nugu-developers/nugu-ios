@@ -134,8 +134,7 @@ public extension NuguToast {
                 self.hideAnimationWorkItem = nil
                 UIView.animate(
                     withDuration: ToastConst.animationDuration,
-                    animations: {
-                        [weak self] in
+                    animations: { [weak self] in
                         self?.toastView.alpha = 0
                     },
                     completion: { [weak self] _ in

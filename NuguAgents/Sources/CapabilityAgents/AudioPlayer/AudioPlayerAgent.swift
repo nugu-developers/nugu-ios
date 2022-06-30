@@ -127,12 +127,14 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     // Players
     private var currentPlayer: AudioPlayer? {
         didSet {
+            log.debug("current player did set")
             currentPlayer?.volume = volume
             prefetchPlayer = nil
         }
     }
     private var prefetchPlayer: AudioPlayer? {
         didSet {
+            log.debug("prefetch player did set")
             prefetchPlayer?.delegate = self
             prefetchPlayer?.progressDelegate = self
         }
@@ -314,7 +316,7 @@ extension AudioPlayerAgent: FocusChannelDelegate {
         audioPlayerDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             
-            log.info("\(focusState) \(self.audioPlayerState)")
+            log.info("focusState: \(focusState), playerState: \(self.audioPlayerState)")
             switch (focusState, self.audioPlayerState) {
             // Directive 에 의한 Pause 인경우 재생하지 않음.
             case (.foreground, .paused):
@@ -353,7 +355,7 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
         guard let player = mediaPlayer as? AudioPlayer else { return }
         
         audioPlayerDispatchQueue.async { [weak self] in
-            log.info("\(state) \(player.header.messageId)")
+            log.info("media player state: \(state), messageId: \(player.header.messageId)")
             guard let self = self else { return }
             
             var audioPlayerState: AudioPlayerState?
@@ -391,13 +393,11 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
             }
             
             // `AudioPlayerState` -> `FocusState` -> Event
+            log.debug("check releasing focus is needed or not. state: \(audioPlayerState.debugDescription), isFocusedPlayer: \(self.latestPlayer === player)")
             if let audioPlayerState = audioPlayerState, self.latestPlayer === player {
                 self.audioPlayerState = audioPlayerState
-                switch audioPlayerState {
-                case .stopped, .finished:
+                if audioPlayerState == .stopped {
                     self.releaseFocusIfNeeded()
-                default:
-                    break
                 }
             }
             if let eventTypeInfo = eventTypeInfo {
@@ -840,12 +840,12 @@ private extension AudioPlayerAgent {
     func addPlaySyncObserver(_ object: PlaySyncManageable) {
         playSyncObserver = object.observe(NuguCoreNotification.PlaySync.ReleasedProperty.self, queue: nil) { [weak self] (notification) in
             self?.audioPlayerDispatchQueue.async { [weak self] in
+                log.debug("Released property: \(notification)")
                 guard let self = self else { return }
-                
                 guard notification.property == self.playSyncProperty,
                       let player = self.latestPlayer, player.header.messageId == notification.messageId else { return }
                 
-                log.debug(notification.messageId)
+                log.debug("Stop player by messageId: \(notification.messageId)")
                 self.stop(player: player, cancelAssociation: true)
             }
         }

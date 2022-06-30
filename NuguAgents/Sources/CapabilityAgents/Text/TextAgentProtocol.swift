@@ -39,6 +39,11 @@ public protocol TextAgentProtocol: CapabilityAgentable {
         requestType: TextAgentRequestType,
         completion: ((StreamDataState) -> Void)?
     ) -> String
+    
+    /**
+     Clear All attributes for mult-turn
+     */
+    func clearAttributes()
 }
 
 // MARK: - Default

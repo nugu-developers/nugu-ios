@@ -230,7 +230,6 @@ private extension DisplayAgent {
                     })
                     .disposed(by: self.disposeBag)
 
-                
                 self.playSyncManager.stopPlay(dialogRequestId: item.dialogRequestId)
                 self.sendCompactContextEvent(Event(
                     typeInfo: .closeSucceeded,
