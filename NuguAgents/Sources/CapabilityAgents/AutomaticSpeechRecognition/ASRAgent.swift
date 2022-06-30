@@ -334,7 +334,6 @@ extension ASRAgent: FocusChannelDelegate {
             case (.nothing, .idle) where self.asrRequest != nil:
                 // It might be error when focusState is nothing And AsrRequest does exist.
                 self.asrResult = .error(ASRError.listenFailed)
-                break
             // Ignore prepare
             default:
                 break

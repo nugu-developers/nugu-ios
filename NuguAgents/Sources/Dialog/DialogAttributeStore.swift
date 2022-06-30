@@ -72,7 +72,7 @@ public extension NuguAgentNotification {
         public static let name: Notification.Name = .dialogAttributeDidChange
         public let attribute: [String: AnyHashable]?
         
-        public static func make(from: [String : Any]) -> NuguAgentNotification.DialogAttribute? {
+        public static func make(from: [String: Any]) -> NuguAgentNotification.DialogAttribute? {
             guard let attribute = from["attribute"] as? [String: AnyHashable] else { return nil }
             return DialogAttribute(attribute: attribute)
         }

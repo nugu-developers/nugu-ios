@@ -2,7 +2,6 @@
 included:
   - NuguInterface/Sources
   - NuguCore/Sources
-  - NuguCore/Interface
   - NuguClientKit/Sources
   - NuguLoginKit/Sources
   - NuguUIKit/Sources
@@ -11,7 +10,6 @@ included:
   - KeenSense/Sources
   - SampleApp/Sources
   - NuguAgents/Sources
-  - NuguAgents/Interface
 
 excluded: # paths to ignore during linting. Takes precedence over `included`.
   - NuguTests

@@ -48,7 +48,7 @@ extension UserDefaults {
             userDefaults: .standard,
             key: "wakeUpWordDictionary",
             defaultValue: [
-                "rawValue": String(Keyword.aria.rawValue),
+                "rawValue": String(Keyword.aria.rawValue)
 //                "description": "",
 //                "netFileName": "",
 //                "searchFileName": ""
