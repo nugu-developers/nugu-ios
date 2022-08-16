@@ -445,7 +445,7 @@ public extension NuguClient {
     @discardableResult func requestTextInput(
         text: String,
         token: String? = nil,
-        source: String? = nil,
+        source: TextInputSource? = nil,
         requestType: TextAgentRequestType,
         completion: ((StreamDataState) -> Void)? = nil
     ) -> String {

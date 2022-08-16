@@ -30,7 +30,7 @@ extension TextAgent {
         enum TypeInfo {
             case textInput(text: String, token: String?, attributes: [String: AnyHashable]?)
             case textSourceFailed(token: String, playServiceId: String?, errorCode: String)
-            case textRedirectFailed(token: String, playServiceId: String, errorCode: String)
+            case textRedirectFailed(token: String, playServiceId: String, errorCode: String, interactionControl: InteractionControl?)
         }
     }
 }
@@ -53,12 +53,17 @@ extension TextAgent.Event: Eventable {
                 "playServiceId": playServiceId,
                 "errorCode": errorCode
             ]
-        case .textRedirectFailed(let token, let playServiceId, let errorCode):
+        case .textRedirectFailed(let token, let playServiceId, let errorCode, let interactionControl):
             payload = [
                 "token": token,
                 "playServiceId": playServiceId,
                 "errorCode": errorCode
             ]
+            
+            if let interactionControl = interactionControl,
+               let interactionControlPayload = try? JSONEncoder().encode(interactionControl) {
+                payload["interactionControl"] = interactionControlPayload
+            }
         }
         
         return payload.compactMapValues { $0 }

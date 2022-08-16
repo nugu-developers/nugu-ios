@@ -20,14 +20,32 @@
 
 import Foundation
 
-/// <#Description#>
+/**
+ interactionControl 필드를 포함하는 directive 에서 사용하는 자료구조
+ */
 public struct InteractionControl: Codable {
-    /// <#Description#>
+    /**
+     multi-turn 이 진행 중인가에 대한 정보
+     
+     (a)directive->(b)event 에 대한 응답 (c)directive 는 Play 구현에 의존하므로
+     (c) 가 내려올 수 있음을 클라이언트에 알려주기 위한 목적
+     */
     public let mode: Mode
     
-    /// <#Description#>
+    /**
+     전달받은 InteractionControl를 event 통해 전달하기위한 임시 저장소
+     */
+    public let referrerEvent: ReferrerEvent?
+    
     public enum Mode: String, Codable {
         case none = "NONE"
         case multiTurn = "MULTI_TURN"
+    }
+    
+    public struct ReferrerEvent: Codable {
+        /**
+         Event로 return해야 하는 agent의 type
+         */
+        public let type: String
     }
 }

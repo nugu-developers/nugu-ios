@@ -37,6 +37,8 @@ public final class TextAgent: TextAgentProtocol {
     private let interactionControlManager: InteractionControlManageable
     private let textDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.text_agent", qos: .userInitiated)
     
+    private var currentInteractionControl: InteractionControl?
+    
     // Handleable Directives
     private lazy var handleableDirectiveInfos = [
         DirectiveHandleInfo(
@@ -114,7 +116,7 @@ extension TextAgent {
     @discardableResult public func requestTextInput(
         text: String,
         token: String?,
-        source: String?,
+        source: TextInputSource?,
         requestType: TextAgentRequestType,
         completion: ((StreamDataState) -> Void)?
     ) -> String {
@@ -175,7 +177,6 @@ private extension TextAgent {
                 self.sendFullContextEvent(self.textInput(
                     text: payload.text,
                     token: payload.token,
-                    source: payload.source,
                     requestType: requestType,
                     referrerDialogRequestId: directive.header.dialogRequestId
                 ))
@@ -195,8 +196,10 @@ private extension TextAgent {
                 guard let self = self else { return }
                 
                 if let interactionControl = payload.interactionControl {
+                    self.currentInteractionControl = interactionControl
                     self.interactionControlManager.start(mode: interactionControl.mode, category: self.capabilityAgentProperty.category)
                 }
+                
                 let completion = { [weak self] (state: StreamDataState) in
                     guard let self = self else { return }
                     
@@ -205,13 +208,21 @@ private extension TextAgent {
                         if let interactionControl = payload.interactionControl {
                             self.interactionControlManager.finish(mode: interactionControl.mode, category: self.capabilityAgentProperty.category)
                         }
+                        
+                        self.currentInteractionControl = nil
                     default:
                         break
                     }
                 }
+                
                 guard self.delegate?.textAgentShouldHandleTextRedirect(directive: directive) != false else {
                     self.sendCompactContextEvent(Event(
-                        typeInfo: .textRedirectFailed(token: payload.token, playServiceId: payload.playServiceId, errorCode: "NOT_SUPPORTED_STATE"),
+                        typeInfo: .textRedirectFailed(
+                            token: payload.token,
+                            playServiceId: payload.playServiceId,
+                            errorCode: "NOT_SUPPORTED_STATE",
+                            interactionControl: self.currentInteractionControl
+                        ),
                         referrerDialogRequestId: directive.header.dialogRequestId
                     ).rx, completion: completion)
                     return
@@ -227,7 +238,6 @@ private extension TextAgent {
                 self.sendFullContextEvent(self.textInput(
                     text: payload.text,
                     token: payload.token,
-                    source: payload.source,
                     requestType: requestType,
                     referrerDialogRequestId: directive.header.dialogRequestId
                 ), completion: completion)
@@ -296,33 +306,50 @@ private extension TextAgent {
     func textInput(
         text: String,
         token: String?,
-        source: String?,
+        source: TextInputSource? = nil,
         requestType: TextAgentRequestType,
         referrerDialogRequestId: String? = nil
     ) -> Single<Eventable> {
-        var attributes: [String: AnyHashable] {
-            if case let .specific(playServiceId) = requestType {
-                return ["playServiceId": playServiceId]
+        return Single<[String: AnyHashable]>.create { [weak self] single in
+            let disposable = Disposables.create()
+            guard let self = self else { return disposable }
+            
+            self.textDispatchQueue.async { [weak self] in
+                var attributes: [String: AnyHashable] {
+                    if case let .specific(playServiceId) = requestType {
+                        return ["playServiceId": playServiceId]
+                    }
+                    
+                    var attributes = [String: AnyHashable]()
+                    if case .dialog = requestType,
+                       let expectTypingMessageId = self?.expectTyping?.messageId,
+                       let expectTypingAttribute = self?.dialogAttributeStore.requestAttributes(messageId: expectTypingMessageId) {
+                        attributes.merge(expectTypingAttribute)
+                    }
+                    
+                    if let source = source {
+                        attributes["source"] = source.description
+                    }
+                    
+                    if let interactionControl = self?.currentInteractionControl,
+                       let interactionControlDic = try? JSONEncoder().encode(interactionControl) {
+                        attributes["interactionControl"] = interactionControlDic
+                    }
+                    
+                    return attributes
+                }
+                
+                single(.success(attributes))
             }
             
-            var attributes = [String: AnyHashable]()
-            if case .dialog = requestType,
-               let expectTypingMessageId = expectTyping?.messageId,
-               let expectTypingAttribute = dialogAttributeStore.requestAttributes(messageId: expectTypingMessageId) {
-                attributes.merge(expectTypingAttribute)
-            }
-            
-            if let source = source {
-                attributes["source"] = source
-            }
-            
-            return attributes
+            return disposable
         }
-        
-        return Event(
-            typeInfo: .textInput(text: text, token: token, attributes: attributes),
-            referrerDialogRequestId: referrerDialogRequestId
-        ).rx
+        .flatMap { attributes in
+            Event(
+                typeInfo: .textInput(text: text, token: token, attributes: attributes),
+                referrerDialogRequestId: referrerDialogRequestId
+            ).rx
+        }
     }
 }
 
