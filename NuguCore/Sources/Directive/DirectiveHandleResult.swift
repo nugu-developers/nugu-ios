@@ -21,9 +21,24 @@
 import Foundation
 
 /// <#Description#>
-public enum DirectiveHandleResult {
+public enum DirectiveHandleResult: Equatable {
     case failed(_ description: String)
     case canceled
     case stopped(directiveCancelPolicy: DirectiveCancelPolicy)
     case finished
+    
+    public static func == (lhs: DirectiveHandleResult, rhs: DirectiveHandleResult) -> Bool {
+        switch (lhs, rhs) {
+        case (.failed(let lhsMessage), .failed(let rhsMessage)):
+            return lhsMessage == rhsMessage
+        case (.canceled, .canceled):
+            return true
+        case (.stopped(let lhsPolicy), .stopped(let rhsPolicy)):
+            return lhsPolicy == rhsPolicy
+        case (.finished, .finished):
+            return true
+        default:
+            return false
+        }
+    }
 }
