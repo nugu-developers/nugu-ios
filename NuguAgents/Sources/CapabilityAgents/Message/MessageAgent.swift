@@ -34,7 +34,9 @@ public final class MessageAgent: MessageAgentProtocol {
     private let directiveSequencer: DirectiveSequenceable
     private let contextManager: ContextManageable
     private let upstreamDataSender: UpstreamDataSendable
+    private let messageDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.message_agent", qos: .userInitiated)
     private let interactionControlManager: InteractionControlManageable
+    private var currentInteractionControl: InteractionControl?
     
     private lazy var disposeBag = DisposeBag()
     
@@ -89,24 +91,28 @@ public extension MessageAgent {
         completion: ((StreamDataState) -> Void)?
     ) -> String {
         let event = Event(
-            typeInfo: .candidatesListed,
+            typeInfo: .candidatesListed(interactionControl: currentInteractionControl),
             playServiceId: payload.playServiceId,
             referrerDialogRequestId: header?.dialogRequestId
         )
         
         return sendFullContextEvent(event.rx) { [weak self] state in
             completion?(state)
-            guard let self = self else { return }
-            switch state {
-            case .finished, .error:
-                if let interactionControl = payload.interactionControl {
-                    self.interactionControlManager.finish(
-                        mode: interactionControl.mode,
-                        category: self.capabilityAgentProperty.category
-                    )
+            
+            self?.messageDispatchQueue.async {
+                guard let self = self else { return }
+                switch state {
+                case .finished, .error:
+                    if let interactionControl = payload.interactionControl {
+                        self.currentInteractionControl = nil
+                        self.interactionControlManager.finish(
+                            mode: interactionControl.mode,
+                            category: self.capabilityAgentProperty.category
+                        )
+                    }
+                default:
+                    break
                 }
-            default:
-                break
             }
         }.dialogRequestId
     }
@@ -117,61 +123,68 @@ public extension MessageAgent {
 private extension MessageAgent {
     func handleSendCandidates() -> HandleDirective {
         return { [weak self] directive, completion in
-            guard let self = self, let delegate = self.delegate else {
-                completion(.canceled)
-                return
-            }
             
-            guard let candidatesItem = try? JSONDecoder().decode(MessageAgentDirectivePayload.SendCandidates.self, from: directive.payload) else {
-                completion(.failed("Invalid payload"))
-                return
-            }
             
-            defer { completion(.finished) }
-            
-            if let interactionControl = candidatesItem.interactionControl {
-                self.interactionControlManager.start(
-                    mode: interactionControl.mode,
-                    category: self.capabilityAgentProperty.category
+            self?.messageDispatchQueue.async { [weak self] in
+                guard let self = self, let delegate = self.delegate else {
+                    completion(.canceled)
+                    return
+                }
+                
+                guard let candidatesItem = try? JSONDecoder().decode(MessageAgentDirectivePayload.SendCandidates.self, from: directive.payload) else {
+                    completion(.failed("Invalid payload"))
+                    return
+                }
+                
+                if let interactionControl = candidatesItem.interactionControl {
+                    self.currentInteractionControl = interactionControl
+                    self.interactionControlManager.start(
+                        mode: interactionControl.mode,
+                        category: self.capabilityAgentProperty.category
+                    )
+                }
+                
+                delegate.messageAgentDidReceiveSendCandidates(
+                    payload: candidatesItem,
+                    header: directive.header
                 )
+                
+                completion(.finished)
             }
-            
-            delegate.messageAgentDidReceiveSendCandidates(
-                payload: candidatesItem,
-                header: directive.header
-            )
         }
     }
     
     func handleSendMessage() -> HandleDirective {
         return { [weak self] directive, completion in
-            guard let self = self, let delegate = self.delegate else {
-                completion(.canceled)
-                return
+            self?.messageDispatchQueue.async { [weak self] in
+                guard let self = self, let delegate = self.delegate else {
+                    completion(.canceled)
+                    return
+                }
+                
+                guard let sendMessageItem = try? JSONDecoder().decode(MessageAgentDirectivePayload.SendMessage.self, from: directive.payload) else {
+                    completion(.failed("Invalid payload"))
+                    return
+                }
+                
+                var typeInfo: Event.TypeInfo {
+                    if let errorCode = delegate.messageAgentDidReceiveSendMessage(payload: sendMessageItem, header: directive.header) {
+                        return .sendMessageFailed(recipient: sendMessageItem.recipient, errorCode: errorCode)
+                    }
+                    
+                    return .sendMessageSucceeded(recipient: sendMessageItem.recipient)
+                }
+                
+                self.sendCompactContextEvent(
+                    Event(
+                        typeInfo: typeInfo,
+                        playServiceId: sendMessageItem.playServiceId,
+                        referrerDialogRequestId: directive.header.dialogRequestId
+                    ).rx
+                )
+                
+                completion(.finished)
             }
-            
-            guard let sendMessageItem = try? JSONDecoder().decode(MessageAgentDirectivePayload.SendMessage.self, from: directive.payload) else {
-                completion(.failed("Invalid payload"))
-                return
-            }
-            
-            defer { completion(.finished) }
-            
-            let typeInfo: Event.TypeInfo
-
-            if let errorCode = delegate.messageAgentDidReceiveSendMessage(payload: sendMessageItem, header: directive.header) {
-                typeInfo = .sendMessageFailed(recipient: sendMessageItem.recipient, errorCode: errorCode)
-            } else {
-                typeInfo = .sendMessageSucceeded(recipient: sendMessageItem.recipient)
-            }
-            
-            self.sendCompactContextEvent(
-                Event(
-                    typeInfo: typeInfo,
-                    playServiceId: sendMessageItem.playServiceId,
-                    referrerDialogRequestId: directive.header.dialogRequestId
-                ).rx
-            )
         }
     }
 }

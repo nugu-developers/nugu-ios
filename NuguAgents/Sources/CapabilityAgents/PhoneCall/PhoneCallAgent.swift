@@ -35,6 +35,7 @@ public class PhoneCallAgent: PhoneCallAgentProtocol {
     private let contextManager: ContextManageable
     private let upstreamDataSender: UpstreamDataSendable
     private let interactionControlManager: InteractionControlManageable
+    private var currentInteractionControl: InteractionControl?
     
     private let phoneCallDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.phonecall_agent", qos: .userInitiated)
     
@@ -101,24 +102,28 @@ public extension PhoneCallAgent {
         completion: ((StreamDataState) -> Void)?
     ) -> String {
         let event = Event(
-            typeInfo: .candidatesListed,
+            typeInfo: .candidatesListed(interactionControl: currentInteractionControl),
             playServiceId: payload.playServiceId,
             referrerDialogRequestId: header?.dialogRequestId
         )
         
         return sendFullContextEvent(event.rx) { [weak self] state in
             completion?(state)
-            guard let self = self else { return }
-            switch state {
-            case .finished, .error:
-                if let interactionControl = payload.interactionControl {
-                    self.interactionControlManager.finish(
-                        mode: interactionControl.mode,
-                        category: self.capabilityAgentProperty.category
-                    )
+            
+            self?.phoneCallDispatchQueue.async { [weak self] in
+                guard let self = self else { return }
+                switch state {
+                case .finished, .error:
+                    if let interactionControl = payload.interactionControl {
+                        self.currentInteractionControl = nil
+                        self.interactionControlManager.finish(
+                            mode: interactionControl.mode,
+                            category: self.capabilityAgentProperty.category
+                        )
+                    }
+                default:
+                    break
                 }
-            default:
-                break
             }
         }.dialogRequestId
     }
@@ -129,12 +134,7 @@ public extension PhoneCallAgent {
 private extension PhoneCallAgent {
     func handleSendCandidates() -> HandleDirective {
         return { [weak self] directive, completion in
-            guard let self = self else {
-                completion(.canceled)
-                return
-            }
-            
-            self.phoneCallDispatchQueue.async { [weak self] in
+            self?.phoneCallDispatchQueue.async { [weak self] in
                 guard let self = self, let delegate = self.delegate else {
                     completion(.canceled)
                     return
@@ -145,9 +145,8 @@ private extension PhoneCallAgent {
                     return
                 }
                 
-                defer { completion(.finished) }
-                
                 if let interactionControl = candidatesItem.interactionControl {
+                    self.currentInteractionControl = interactionControl
                     self.interactionControlManager.start(
                         mode: interactionControl.mode,
                         category: self.capabilityAgentProperty.category
@@ -158,6 +157,8 @@ private extension PhoneCallAgent {
                     payload: candidatesItem,
                     header: directive.header
                 )
+                
+                completion(.finished)
             }
         }
     }
