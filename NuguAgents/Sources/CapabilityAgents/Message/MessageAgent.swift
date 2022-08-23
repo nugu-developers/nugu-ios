@@ -99,12 +99,13 @@ public extension MessageAgent {
         return sendFullContextEvent(event.rx) { [weak self] state in
             completion?(state)
             
-            self?.messageDispatchQueue.async {
+            self?.messageDispatchQueue.async { [weak self] in
                 guard let self = self else { return }
                 switch state {
                 case .finished, .error:
+                    self.currentInteractionControl = nil
+                    
                     if let interactionControl = payload.interactionControl {
-                        self.currentInteractionControl = nil
                         self.interactionControlManager.finish(
                             mode: interactionControl.mode,
                             category: self.capabilityAgentProperty.category

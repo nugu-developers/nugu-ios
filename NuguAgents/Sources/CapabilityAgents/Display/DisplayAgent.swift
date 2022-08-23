@@ -317,8 +317,9 @@ private extension DisplayAgent {
                         guard let self = self else { return }
                         switch state {
                         case .finished, .error:
+                            self.currentInteractionControl = nil
+                            
                             if let interactionControl = payload.interactionControl {
-                                self.currentInteractionControl = nil
                                 self.interactionControlManager.finish(mode: interactionControl.mode, category: self.capabilityAgentProperty.category)
                             }
                         default:

@@ -186,30 +186,33 @@ private extension TextAgent {
     
     func handleTextRedirect() -> HandleDirective {
         return { [weak self] directive, completion in
-            guard let payload = try? JSONDecoder().decode(TextAgentRedirectPayload.self, from: directive.payload) else {
-                completion(.failed("Invalid payload"))
-                return
-            }
-            defer { completion(.finished) }
-            
             self?.textDispatchQueue.async { [weak self] in
-                guard let self = self else { return }
+                guard let self = self else {
+                    completion(.canceled)
+                    return
+                }
+                
+                guard let payload = try? JSONDecoder().decode(TextAgentRedirectPayload.self, from: directive.payload) else {
+                    completion(.failed("Invalid payload"))
+                    return
+                }
+                defer { completion(.finished) }
                 
                 if let interactionControl = payload.interactionControl {
                     self.currentInteractionControl = interactionControl
                     self.interactionControlManager.start(mode: interactionControl.mode, category: self.capabilityAgentProperty.category)
                 }
                 
-                let completion = { [weak self] (state: StreamDataState) in
+                let interactionHandler = { [weak self] (state: StreamDataState) in
                     guard let self = self else { return }
                     
                     switch state {
                     case .finished, .error:
+                        self.currentInteractionControl = nil
+                        
                         if let interactionControl = payload.interactionControl {
                             self.interactionControlManager.finish(mode: interactionControl.mode, category: self.capabilityAgentProperty.category)
                         }
-                        
-                        self.currentInteractionControl = nil
                     default:
                         break
                     }
@@ -224,7 +227,7 @@ private extension TextAgent {
                             interactionControl: self.currentInteractionControl
                         ),
                         referrerDialogRequestId: directive.header.dialogRequestId
-                    ).rx, completion: completion)
+                    ).rx, completion: interactionHandler)
                     return
                 }
                 
@@ -240,7 +243,7 @@ private extension TextAgent {
                     token: payload.token,
                     requestType: requestType,
                     referrerDialogRequestId: directive.header.dialogRequestId
-                ), completion: completion)
+                ), completion: interactionHandler)
             }
         }
     }
