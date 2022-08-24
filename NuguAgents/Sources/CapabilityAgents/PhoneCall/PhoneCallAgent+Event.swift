@@ -29,7 +29,7 @@ extension PhoneCallAgent {
         let referrerDialogRequestId: String?
         
         enum TypeInfo {
-            case candidatesListed
+            case candidatesListed(interactionControl: InteractionControl?)
             case makeCallFailed(errorCode: PhoneCallErrorCode, callType: PhoneCallType)
             case makeCallSucceeded(recipient: PhoneCallPerson)
         }
@@ -45,8 +45,11 @@ extension PhoneCallAgent.Event: Eventable {
         ]
         
         switch typeInfo {
-        case .candidatesListed:
-            break
+        case .candidatesListed(let interactionControl):
+            if let interactionControl = interactionControl,
+               let interactionControlPayload = try? JSONEncoder().encode(interactionControl) {
+                payload["interactionControl"] = interactionControlPayload
+            }
         case .makeCallFailed(let errorCode, let callType):
             payload["errorCode"] = errorCode.rawValue
             payload["callType"] = callType.rawValue

@@ -1,8 +1,8 @@
 //
-//  TextAgentSourceItem.swift
+//  TextInputSource.swift
 //  NuguAgents
 //
-//  Created by yonghoonKwon on 2020/03/05.
+//  Created by childc on 2022/08/16.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,8 +20,22 @@
 
 import Foundation
 
-struct TextAgentSourceItem: Decodable {
-    let text: String
-    let token: String
-    let playServiceId: String?
+public enum TextInputSource: CustomStringConvertible {
+    case user
+    case deepLink
+    case dynamic(_ source: String)
+    case unknown
+
+    public var description: String {
+        switch self {
+        case .user:
+            return "USERINPUT"
+        case .deepLink:
+            return "DEEPLINK"
+        case let .dynamic(source):
+            return source
+        default:
+            return "UNKNOWN"
+        }
+    }
 }

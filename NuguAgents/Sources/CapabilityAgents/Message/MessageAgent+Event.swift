@@ -29,7 +29,7 @@ extension MessageAgent {
         let referrerDialogRequestId: String?
         
         enum TypeInfo {
-            case candidatesListed
+            case candidatesListed(interactionControl: InteractionControl?)
             case sendMessageSucceeded(recipient: MessageAgentContact)
             case sendMessageFailed(recipient: MessageAgentContact, errorCode: String)
         }
@@ -43,8 +43,11 @@ extension MessageAgent.Event: Eventable {
         ]
         
         switch typeInfo {
-        case .candidatesListed:
-            break
+        case .candidatesListed(let interactionControl):
+            if let interactionControl = interactionControl,
+               let interactionControlPayload = try? JSONEncoder().encode(interactionControl) {
+                payload["interactionControl"] = interactionControlPayload
+            }
         case .sendMessageSucceeded(let recipient):
             if let recipientData = try? JSONEncoder().encode(recipient),
                 let recipientDictionary = try? JSONSerialization.jsonObject(with: recipientData, options: []) as? [String: AnyHashable] {

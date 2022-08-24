@@ -34,8 +34,8 @@ extension DisplayAgent {
             case closeFailed
             case controlFocusSucceeded(direction: DisplayControlPayload.Direction)
             case controlFocusFailed(direction: DisplayControlPayload.Direction)
-            case controlScrollSucceeded(direction: DisplayControlPayload.Direction)
-            case controlScrollFailed(direction: DisplayControlPayload.Direction)
+            case controlScrollSucceeded(direction: DisplayControlPayload.Direction, interactionControl: InteractionControl?)
+            case controlScrollFailed(direction: DisplayControlPayload.Direction, interactionControl: InteractionControl?)
             case triggerChild(parentToken: String, data: [String: AnyHashable])
         }
     }
@@ -55,10 +55,16 @@ extension DisplayAgent.Event: Eventable {
                 payload["postback"] = postback
             }
         case .controlFocusSucceeded(let direction),
-             .controlFocusFailed(let direction),
-             .controlScrollSucceeded(let direction),
-             .controlScrollFailed(let direction):
+                .controlFocusFailed(let direction):
             payload["direction"] = direction
+        case .controlScrollSucceeded(let direction, let interactionControl),
+             .controlScrollFailed(let direction, let interactionControl):
+            payload["direction"] = direction
+            
+            if let interactionControl = interactionControl,
+               let interactionControlPayload = try? JSONEncoder().encode(interactionControl) {
+                payload["interactionControl"] = interactionControlPayload
+            }
         case .triggerChild(let parentToken, let data):
             payload["parentToken"] = parentToken
             payload["data"] = data
