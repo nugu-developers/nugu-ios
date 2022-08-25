@@ -353,6 +353,10 @@ private extension TextAgent {
                 referrerDialogRequestId: referrerDialogRequestId
             ).rx
         }
+        .do(onDispose: { [weak self] in
+            self?.expectTyping = nil
+        })
+
     }
 }
 
