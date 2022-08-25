@@ -28,12 +28,7 @@ enum NetworkConst {
 
 private extension NetworkConst {
     static func openSdkVersion() -> String {
-        #if DEPLOY_OTHER_PACKAGE_MANAGER
-        return "OpenSDK/" + (Bundle(for: AuthorizationStore.self).object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0")
-        #else
-        // FIXME: 현재는 SPM에서 버전을 가져올 방법이 없다.
-        return "OpenSDK/1.7.4"
-        #endif
+        return "OpenSDK/" + nuguSDKVersion
     }
     
     static func clientVersion() -> String {
