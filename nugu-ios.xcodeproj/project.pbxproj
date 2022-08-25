@@ -555,13 +555,13 @@
 		E649868628336CED001AD733 /* DisplayRedirectTriggerChildPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = E649868528336CED001AD733 /* DisplayRedirectTriggerChildPayload.swift */; };
 		E649868828336E8D001AD733 /* AudioDisplayViewPresenterOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E649868728336E8D001AD733 /* AudioDisplayViewPresenterOptions.swift */; };
 		E649868A28337649001AD733 /* ControlCenterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E649868928337649001AD733 /* ControlCenterManager.swift */; };
-		E66F997D28ACE65D000B8F76 /* RoutineAgentSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66F997C28ACE65D000B8F76 /* RoutineAgentSpec.swift */; };
 		E66F998228AD2AC4000B8F76 /* DummyASRAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66F998128AD2AC4000B8F76 /* DummyASRAgent.swift */; };
 		E66F998A28AD2F90000B8F76 /* DummyStreamDataRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66F998928AD2F90000B8F76 /* DummyStreamDataRouter.swift */; };
 		E66F998D28AD355D000B8F76 /* FakeDirectiveSequencer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66F998C28AD355D000B8F76 /* FakeDirectiveSequencer.swift */; };
 		E66F998F28ADBECC000B8F76 /* MockUpstreamDataSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66F998E28ADBECC000B8F76 /* MockUpstreamDataSender.swift */; };
 		E66F999128ADC957000B8F76 /* FakeContextManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66F999028ADC957000B8F76 /* FakeContextManager.swift */; };
 		E66F999328ADD49E000B8F76 /* MockTextAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66F999228ADD49E000B8F76 /* MockTextAgent.swift */; };
+		E68D470728B318840042EB20 /* RoutineAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E68D470628B318840042EB20 /* RoutineAgentTests.swift */; };
 		F778C001261B096A00B69B32 /* EnumTypedNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = F778C000261B096A00B69B32 /* EnumTypedNotification.swift */; };
 		F78CB7CC25FF2EA000DC3103 /* NudgeAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F78CB7CB25FF2EA000DC3103 /* NudgeAgent.swift */; };
 		F78CB7E225FF2EA800DC3103 /* NudgeAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = F78CB7E125FF2EA800DC3103 /* NudgeAgentProtocol.swift */; };
@@ -1420,13 +1420,13 @@
 		E649868528336CED001AD733 /* DisplayRedirectTriggerChildPayload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayRedirectTriggerChildPayload.swift; sourceTree = "<group>"; };
 		E649868728336E8D001AD733 /* AudioDisplayViewPresenterOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioDisplayViewPresenterOptions.swift; sourceTree = "<group>"; };
 		E649868928337649001AD733 /* ControlCenterManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControlCenterManager.swift; sourceTree = "<group>"; };
-		E66F997C28ACE65D000B8F76 /* RoutineAgentSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineAgentSpec.swift; sourceTree = "<group>"; };
 		E66F998128AD2AC4000B8F76 /* DummyASRAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DummyASRAgent.swift; sourceTree = "<group>"; };
 		E66F998928AD2F90000B8F76 /* DummyStreamDataRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DummyStreamDataRouter.swift; sourceTree = "<group>"; };
 		E66F998C28AD355D000B8F76 /* FakeDirectiveSequencer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeDirectiveSequencer.swift; sourceTree = "<group>"; };
 		E66F998E28ADBECC000B8F76 /* MockUpstreamDataSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockUpstreamDataSender.swift; sourceTree = "<group>"; };
 		E66F999028ADC957000B8F76 /* FakeContextManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeContextManager.swift; sourceTree = "<group>"; };
 		E66F999228ADD49E000B8F76 /* MockTextAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockTextAgent.swift; sourceTree = "<group>"; };
+		E68D470628B318840042EB20 /* RoutineAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineAgentTests.swift; sourceTree = "<group>"; };
 		F778C000261B096A00B69B32 /* EnumTypedNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnumTypedNotification.swift; sourceTree = "<group>"; };
 		F78CB7CB25FF2EA000DC3103 /* NudgeAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NudgeAgent.swift; sourceTree = "<group>"; };
 		F78CB7E125FF2EA800DC3103 /* NudgeAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NudgeAgentProtocol.swift; sourceTree = "<group>"; };
@@ -1941,7 +1941,7 @@
 				1F5DD4B2240CFC8800719FBC /* TTSAgentSpec.swift */,
 				1F5DD4B4240CFEEB00719FBC /* DisplayAgentSpec.swift */,
 				7EBB2EAD2444052A00FBBBEA /* SoundAgentSpec.swift */,
-				E66F997C28ACE65D000B8F76 /* RoutineAgentSpec.swift */,
+				E68D470628B318840042EB20 /* RoutineAgentTests.swift */,
 			);
 			path = NuguAgents;
 			sourceTree = "<group>";
@@ -4523,7 +4523,6 @@
 				7EA073E6253569EC000D923A /* XDirectiveSequencerTest.swift in Sources */,
 				1F9C5B8A23FBA3A20086CC04 /* TextAgentSpec.swift in Sources */,
 				7EA53F0F247F583F008731CD /* MockSessionManager.swift in Sources */,
-				E66F997D28ACE65D000B8F76 /* RoutineAgentSpec.swift in Sources */,
 				1F9C5B7623F2BF560086CC04 /* MockDirectiveSequencer.swift in Sources */,
 				E6137452283DBDDF00D86855 /* DialogAttributeStoreSpec.swift in Sources */,
 				7E284DA324DD533E00BF9640 /* MockInteractionControlManager.swift in Sources */,
@@ -4532,6 +4531,7 @@
 				1F5DD4B3240CFC8800719FBC /* TTSAgentSpec.swift in Sources */,
 				E66F998D28AD355D000B8F76 /* FakeDirectiveSequencer.swift in Sources */,
 				1F9C5B7C23F4E8C40086CC04 /* SystemAgentSpec.swift in Sources */,
+				E68D470728B318840042EB20 /* RoutineAgentTests.swift in Sources */,
 				7EBB2EAE2444052A00FBBBEA /* SoundAgentSpec.swift in Sources */,
 				1F5DD4AE240CF7D100719FBC /* ASRAgentSpec.swift in Sources */,
 				1F9C5B8823FA82D90086CC04 /* ExtensionAgentSpec.swift in Sources */,
