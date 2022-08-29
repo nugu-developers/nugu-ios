@@ -166,9 +166,18 @@ class RoutineExecuter {
         }
     }
     
-    func move(position: Int) {
+    func move(position: Int, completion: @escaping (Bool) -> Void) {
         routineDispatchQueue.async { [weak self] in
-            // TODO
+            guard let self = self else { return }
+            guard self.state == .playing,
+                  let routine = self.routine, position >= 0, position < routine.payload.actions.count else {
+                completion(false)
+                return
+            }
+            
+            self.currentActionIndex = position
+            self.doAction()
+            completion(true)
         }
     }
 }

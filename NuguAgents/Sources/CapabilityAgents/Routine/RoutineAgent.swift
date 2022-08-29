@@ -238,7 +238,16 @@ private extension RoutineAgent {
                 return
             }
 
-            self?.routineExecuter.move(position: position)
+            self?.routineExecuter.move(position: position) { [weak self] isSuccess in
+                // TODO: - add error code
+                let typeInfo: Event.TypeInfo = isSuccess ? .moveSucceeded : .moveFailed(errorCode: "")
+                
+                self?.sendCompactContextEvent(Event(
+                    typeInfo: typeInfo,
+                    playServiceId: playServiceId,
+                    referrerDialogRequestId: directive.header.dialogRequestId
+                ).rx)
+            }
         }
     }
 }
