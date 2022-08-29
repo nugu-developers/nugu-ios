@@ -26,6 +26,7 @@ public enum RoutineState: Equatable {
     case interrupted
     case finished
     case stopped
+    case suspended
 }
 
 public extension RoutineState {
@@ -36,6 +37,7 @@ public extension RoutineState {
         case .interrupted: return "INTERRUPTED"
         case .finished: return "FINISHED"
         case .stopped: return "STOPPED"
+        case .suspended: return "SUSPENDED"
         }
     }
 }

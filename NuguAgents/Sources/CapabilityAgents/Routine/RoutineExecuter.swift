@@ -79,6 +79,8 @@ class RoutineExecuter {
                     directiveSequencer.cancelDirective(dialogRequestId: dialogRequestId)
                 }
                 actionWorkItem?.cancel()
+            case .suspended:
+                break
             }
             
             delegate?.routineExecuterDidChange(state: state)
@@ -294,6 +296,8 @@ private extension RoutineExecuter {
             if let eventIdentifier = delegate?.routineExecuterShouldRequestAction(action: action, referrerDialogRequestId: routine.dialogRequestId, completion: completion) {
                 handlingEvent = eventIdentifier.dialogRequestId
             }
+        case .break:
+            doBreak()
         case .none:
             doNextAction()
         }
@@ -324,14 +328,14 @@ private extension RoutineExecuter {
             
             log.debug("")
             
-            self.currentActionIndex += 1
-            self.doAction()
+            currentActionIndex += 1
+            doAction()
         }
     }
 
     @discardableResult
     func doInterrupt() -> Bool {
-        guard state == .playing else { return false }
+        guard [.playing, .suspended].contains(state) else { return false }
         
         log.debug("")
         state = .interrupted
@@ -340,17 +344,53 @@ private extension RoutineExecuter {
     }
     
     func doStop() {
-        guard [.playing, .interrupted].contains(state) else { return }
+        guard [.playing, .interrupted, .suspended].contains(state) else { return }
         
         log.debug("")
         state = .stopped
     }
 
     func doFinish() {
-        guard state == .playing else { return }
+        guard [.playing, .suspended].contains(state) else { return }
         
         log.debug("")
         state = .finished
+    }
+    
+    func doBreak() {
+        guard state == .playing else { return }
+        
+        actionWorkItem?.cancel()
+        state = .suspended
+        
+        if let delay = currentAction?.muteDelay {
+            log.debug(delay)
+            let workItem = DispatchWorkItem { [weak self] in
+                guard let self = self else { return }
+                guard self.state == .suspended, self.hasNextAction else {
+                    self.doFinish()
+                    return
+                }
+                
+                self.currentActionIndex += 1
+                self.state = .playing
+                self.doAction()
+            }
+            actionWorkItem = workItem
+            routineDispatchQueue.asyncAfter(deadline: .now() + delay.dispatchTimeInterval, execute: workItem)
+        } else {
+            guard state == .suspended, hasNextAction else {
+                doFinish()
+                return
+            }
+            
+            log.debug("")
+            
+            currentActionIndex += 1
+            state = .playing
+            doAction()
+        }
+        
     }
 }
 

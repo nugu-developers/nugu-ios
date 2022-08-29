@@ -137,6 +137,8 @@ extension RoutineAgent: RoutineExecuterDelegate {
                 playServiceId: routine.payload.playServiceId,
                 referrerDialogRequestId: routine.dialogRequestId
             ).rx)
+        case .suspended:
+            break
         }
         
         delegate?.routineAgentDidChange(state: state, item: routine)
