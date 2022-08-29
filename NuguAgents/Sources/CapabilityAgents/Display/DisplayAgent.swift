@@ -38,6 +38,7 @@ public final class DisplayAgent: DisplayAgentProtocol {
     private let upstreamDataSender: UpstreamDataSendable
     private let sessionManager: SessionManageable
     private let interactionControlManager: InteractionControlManageable
+    private var currentInteractionControl: InteractionControl?
     
     private let displayDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.display_agent", qos: .userInitiated)
     private lazy var displayScheduler = SerialDispatchQueueScheduler(
@@ -286,20 +287,28 @@ private extension DisplayAgent {
                 guard let self = self, let delegate = self.delegate else { return }
                 guard let item = self.templateList.first(where: { $0.template.playServiceId == payload.playServiceId }) else {
                     self.sendCompactContextEvent(Event(
-                        typeInfo: .controlScrollFailed(direction: payload.direction),
+                        typeInfo: .controlScrollFailed(direction: payload.direction, interactionControl: payload.interactionControl),
                         playServiceId: payload.playServiceId,
                         referrerDialogRequestId: directive.header.dialogRequestId
                     ).rx)
                     return
                 }
                 if let interactionControl = payload.interactionControl {
+                    self.currentInteractionControl = interactionControl
                     self.interactionControlManager.start(mode: interactionControl.mode, category: self.capabilityAgentProperty.category)
                 }
                 delegate.displayAgentShouldScroll(templateId: item.templateId, direction: payload.direction, header: directive.header) { [weak self] scrollResult in
                     guard let self = self else { return }
-                    
                     self.playSyncManager.resetTimer(property: item.template.playSyncProperty)
-                    let typeInfo: Event.TypeInfo = scrollResult ? .controlScrollSucceeded(direction: payload.direction) : .controlScrollFailed(direction: payload.direction)
+                    
+                    var typeInfo: Event.TypeInfo {
+                        guard scrollResult else {
+                            return .controlScrollFailed(direction: payload.direction, interactionControl: payload.interactionControl)
+                        }
+                        
+                        return .controlScrollSucceeded(direction: payload.direction, interactionControl: payload.interactionControl)
+                    }
+                    
                     self.sendCompactContextEvent(Event(
                         typeInfo: typeInfo,
                         playServiceId: payload.playServiceId,
@@ -308,6 +317,8 @@ private extension DisplayAgent {
                         guard let self = self else { return }
                         switch state {
                         case .finished, .error:
+                            self.currentInteractionControl = nil
+                            
                             if let interactionControl = payload.interactionControl {
                                 self.interactionControlManager.finish(mode: interactionControl.mode, category: self.capabilityAgentProperty.category)
                             }

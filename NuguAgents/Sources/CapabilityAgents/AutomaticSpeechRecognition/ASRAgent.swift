@@ -30,7 +30,7 @@ import RxSwift
 public final class ASRAgent: ASRAgentProtocol {
     // CapabilityAgentable
     // TODO: ASR interface version 1.1 -> ASR.Recognize(wakeup/power)
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .automaticSpeechRecognition, version: "1.6")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .automaticSpeechRecognition, version: "1.7")
     private let playSyncProperty = PlaySyncProperty(layerType: .asr, contextType: .sound)
     
     // Private
@@ -149,6 +149,13 @@ public final class ASRAgent: ASRAgentProtocol {
                     break
                 }
                 expectSpeech = nil
+            }
+            
+            switch asrResult {
+            case .none, .complete, .error:
+                dialogAttributeStore.removeAllAttributes()
+            default:
+                break
             }
             
             post(NuguAgentNotification.ASR.Result(result: asrResult, dialogRequestId: asrRequest.eventIdentifier.dialogRequestId))

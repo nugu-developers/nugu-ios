@@ -1,8 +1,8 @@
 //
-//  NetworkConst.swift
-//  NuguCore
+//  TextInputSource.swift
+//  NuguAgents
 //
-//  Created by jin kim on 29/04/2019.
+//  Created by childc on 2022/08/16.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,18 +20,22 @@
 
 import Foundation
 
-enum NetworkConst {
-    static var userAgent: String {
-        return [openSdkVersion(), clientVersion()].joined(separator: " ")
-    }
-}
+public enum TextInputSource: CustomStringConvertible {
+    case user
+    case deepLink
+    case dynamic(_ source: String)
+    case unknown
 
-private extension NetworkConst {
-    static func openSdkVersion() -> String {
-        return "OpenSDK/" + nuguSDKVersion
-    }
-    
-    static func clientVersion() -> String {
-        return "Client/" + (Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0")
+    public var description: String {
+        switch self {
+        case .user:
+            return "USERINPUT"
+        case .deepLink:
+            return "DEEPLINK"
+        case let .dynamic(source):
+            return source
+        default:
+            return "UNKNOWN"
+        }
     }
 }
