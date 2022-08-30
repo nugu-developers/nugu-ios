@@ -29,12 +29,11 @@ class NuguApiProvider: NSObject {
     private var candidateResourceServers: [String]?
     private var disposeBag = DisposeBag()
     private var sessionConfig: URLSessionConfiguration
-    private let sessionQueue = OperationQueue()
     private let processorQueue = DispatchQueue(label: "com.skt.Romaine.nugu_api_provider.processor")
     private lazy var session: URLSession = URLSession(
         configuration: sessionConfig,
         delegate: self,
-        delegateQueue: sessionQueue
+        delegateQueue: nil
     )
     
     @Atomic var loadBalancedUrl: String? {
