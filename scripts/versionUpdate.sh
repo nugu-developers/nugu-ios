@@ -21,8 +21,6 @@ POD_VERSION_NAME="s.version ="
 
 find ${PROJECT_PATH} -name "*.podspec" -maxdepth 1 -exec sed -i '' "s/${POD_VERSION_NAME} '.*'/${POD_VERSION_NAME} '${VERSION}'/g" {} \;
 
-# find ./ -name "*.podspec" -maxdepth 1 -exec sed -i '' "s/${POD_VERSION_NAME} '.*'/${POD_VERSION_NAME} '${VERSION}'/g" {} \;
-
 ############# pbxproj update
 
 MARKETING_VERSION_NAME="MARKETING_VERSION \="
