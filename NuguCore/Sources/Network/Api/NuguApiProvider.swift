@@ -28,10 +28,9 @@ class NuguApiProvider: NSObject {
     private let requestTimeout: TimeInterval
     private var candidateResourceServers: [String]?
     private var disposeBag = DisposeBag()
-    private var sessionConfig: URLSessionConfiguration
     private let processorQueue = DispatchQueue(label: "com.skt.Romaine.nugu_api_provider.processor")
     private lazy var session: URLSession = URLSession(
-        configuration: sessionConfig,
+        configuration: .ephemeral,
         delegate: self,
         delegateQueue: nil
     )
@@ -81,7 +80,6 @@ class NuguApiProvider: NSObject {
      - Parameter options: api options.
      */
     init(timeout: TimeInterval = 10.0) {
-        sessionConfig = URLSessionConfiguration.ephemeral
         requestTimeout = timeout
         super.init()
     }
