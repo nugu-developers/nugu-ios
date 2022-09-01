@@ -172,7 +172,7 @@ class RoutineExecuter {
         routineDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             guard self.state == .playing,
-                  let routine = self.routine, position >= 0, position < routine.payload.actions.count else {
+                  let routine = self.routine, (0..<routine.payload.actions.count).contains(position) else {
                 completion(false)
                 return
             }
@@ -364,7 +364,7 @@ private extension RoutineExecuter {
         state = .suspended
         
         if let delay = currentAction?.muteDelay {
-            log.debug(delay)
+            log.debug("currentAction muteDelay: \(delay)")
             let workItem = DispatchWorkItem { [weak self] in
                 guard let self = self else { return }
                 guard self.state == .suspended, self.hasNextAction else {

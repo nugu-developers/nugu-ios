@@ -137,7 +137,7 @@ extension RoutineAgent: RoutineExecuterDelegate {
                 playServiceId: routine.payload.playServiceId,
                 referrerDialogRequestId: routine.dialogRequestId
             ).rx)
-        case .suspended:
+        default:
             break
         }
         
@@ -229,7 +229,6 @@ private extension RoutineAgent {
                 completion(.failed("Invalid payload"))
                 return
             }
-            defer { completion(.finished) }
             
             guard self?.routineExecuter.routine?.payload.token == token else {
                 self?.sendCompactContextEvent(Event(
@@ -237,9 +236,10 @@ private extension RoutineAgent {
                     playServiceId: playServiceId,
                     referrerDialogRequestId: directive.header.dialogRequestId
                 ).rx)
+                completion(.failed("Invalid request"))
                 return
             }
-
+            
             self?.routineExecuter.move(position: position) { [weak self] isSuccess in
                 // TODO: - add error code
                 let typeInfo: Event.TypeInfo = isSuccess ? .moveSucceeded : .moveFailed(errorCode: "")
@@ -250,6 +250,8 @@ private extension RoutineAgent {
                     referrerDialogRequestId: directive.header.dialogRequestId
                 ).rx)
             }
+            
+            completion(.finished)
         }
     }
 }
