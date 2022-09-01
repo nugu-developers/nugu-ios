@@ -50,7 +50,7 @@ public class KeywordDetector: ContextInfoProvidable {
     }
     
     // Observers
-    let observerQueue = OperationQueue()
+    let observerQueue = DispatchQueue(label: "com.sktelecom.romaine.keensense.tyche_observers")
     var tycheKeywordDetectorStateObserver: Any?
     var tycheKeywordDetectorErrorObserver: Any?
     var tycheKeywordDetectorDetectedInfoObserver: Any?
@@ -99,24 +99,30 @@ public class KeywordDetector: ContextInfoProvidable {
 
 extension KeywordDetector {
     func addObservers() {
-        tycheKeywordDetectorStateObserver = engine.observe(TycheKeywordDetectorEngine.State.self, queue: observerQueue) { [weak self] notification in
-            log.debug("tyche keyword detector engine state changed to \(notification)")
-            self?.state = notification.keywordDetectorState
+        tycheKeywordDetectorStateObserver = engine.observe(TycheKeywordDetectorEngine.State.self, queue: nil) { [weak self] notification in
+            self?.observerQueue.async { [weak self] in
+                log.debug("tyche keyword detector engine state changed to \(notification)")
+                self?.state = notification.keywordDetectorState
+            }
         }
         
-        tycheKeywordDetectorErrorObserver = engine.observe(TycheKeywordDetectorEngine.KeywordDetectorError.self, queue: observerQueue) { [weak self] notification in
-            log.debug("tyche keyword detector engine error: \(notification)")
-            
-            self?.delegate?.keywordDetectorDidError(notification)
-            self?.stop()
+        tycheKeywordDetectorErrorObserver = engine.observe(TycheKeywordDetectorEngine.KeywordDetectorError.self, queue: nil) { [weak self] notification in
+            self?.observerQueue.async { [weak self] in
+                log.debug("tyche keyword detector engine error: \(notification)")
+                
+                self?.delegate?.keywordDetectorDidError(notification)
+                self?.stop()
+            }
         }
         
-        tycheKeywordDetectorDetectedInfoObserver = engine.observe(TycheKeywordDetectorEngine.DetectedInfo.self, queue: observerQueue) { [weak self] notification in
-            guard let self = self else { return }
-            log.debug("tyche keyword detector engine detected: \(notification))")
-            
-            self.delegate?.keywordDetectorDidDetect(keyword: self.keyword.description, data: notification.data, start: notification.start, end: notification.end, detection: notification.detection)
-            self.stop()
+        tycheKeywordDetectorDetectedInfoObserver = engine.observe(TycheKeywordDetectorEngine.DetectedInfo.self, queue: nil) { [weak self] notification in
+            self?.observerQueue.async { [weak self] in
+                guard let self = self else { return }
+                log.debug("tyche keyword detector engine detected: \(notification))")
+                
+                self.delegate?.keywordDetectorDidDetect(keyword: self.keyword.description, data: notification.data, start: notification.start, end: notification.end, detection: notification.detection)
+                self.stop()
+            }
         }
     }
     

@@ -69,7 +69,6 @@ public class DataStreamPlayer {
     private let audioQueue = DispatchQueue(label: "com.sktelecom.romain.silver_tray.player_queue")
     private let notificationCenter = NotificationCenter.default
     private var audioBufferObserver: Any?
-    private let audioBufferObserverQueue = OperationQueue()
     private var audioBufferCancelItem: DispatchWorkItem?
     
     #if DEBUG
@@ -585,19 +584,22 @@ private extension DataStreamPlayer {
                     os_log("[%@] waiting for next audio data.", log: .player, type: .debug, "\(self.id)")
                     self.bufferState = .bufferEmpty
                     
-                    self.audioBufferObserver = self.notificationCenter.addObserver(forName: .audioBufferChange, object: self, queue: self.audioBufferObserverQueue) { [weak self] (notification) in
-                        guard let self = self else { return }
-                        guard self.bufferState == .bufferEmpty else { return }
-                        guard let nextBuffer = self.audioBuffers[safe: self.scheduleBufferIndex] else { return }
-                        
-                        os_log("[%@] Try to restart scheduler.", log: .player, type: .debug, "\(self.id)")
-                        self.bufferState = .likelyToKeepUp
-                        self.scheduleBuffer(audioBuffer: nextBuffer)
-                        
-                        if let audioBufferObserver = self.audioBufferObserver {
-                            self.notificationCenter.removeObserver(audioBufferObserver)
+                    self.audioBufferObserver = self.notificationCenter.addObserver(forName: .audioBufferChange, object: self, queue: nil) { [weak self] (notification) in
+                        self?.audioQueue.async { [weak self] in
+                            guard let self = self else { return }
+                            guard self.bufferState == .bufferEmpty else { return }
+                            guard let nextBuffer = self.audioBuffers[safe: self.scheduleBufferIndex] else { return }
+                            
+                            os_log("[%@] Try to restart scheduler.", log: .player, type: .debug, "\(self.id)")
+                            self.bufferState = .likelyToKeepUp
+                            self.scheduleBuffer(audioBuffer: nextBuffer)
+                            
+                            if let audioBufferObserver = self.audioBufferObserver {
+                                self.notificationCenter.removeObserver(audioBufferObserver)
+                            }
                         }
                     }
+                    
                     return
                 }
                 

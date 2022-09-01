@@ -6,7 +6,7 @@ PODS:
     - NattyLog (~> 1)
     - NuguUtils (= 1.7.3)
     - TycheSDK (= 1.7.3)
-  - lottie-ios (3.3.0)
+  - lottie-ios (3.4.3)
   - NattyLog (1.2.2)
   - NuguAgents (1.7.3):
     - JadeMarble (= 1.7.3)
@@ -100,7 +100,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   JadeMarble: 96db992c99f16164774795ceee222012e046d77f
   KeenSense: 9c32bbd577b86a5091c4f4768c91ec1f52eae78b
-  lottie-ios: 6ac74dcc09904798f59b18cb3075c089d76be9ae
+  lottie-ios: 9ae750cdc7820fecbd3c2f0cfc493038208fcdc4
   NattyLog: 1a54981676b1dee3018b5e6cefed03b029212baa
   NuguAgents: ee065d7335367922905df84eab13d655f13e1dc8
   NuguClientKit: a1b27f07793d62a96b4bdf7e12f9eab92fb25095
