@@ -10,7 +10,7 @@ import NuguObjcUtils
 
 class AudioEngineManager<Observer: AudioEngineObservable> {
     @Atomic private var audioEngine = AVAudioEngine()
-    private let audioEngineQueue = OperationQueue()
+    private let audioEngineQueue = DispatchQueue(label: "com.sktelecom.romain.silver_tray.audio_engine_notification")
     @Atomic private var audioEngineObservers = Set<Observer>()
     
     private let notificationCenter = NotificationCenter.default
@@ -30,10 +30,6 @@ class AudioEngineManager<Observer: AudioEngineObservable> {
     
     var isRunning: Bool {
         audioEngine.isRunning
-    }
-    
-    init() {
-        audioEngineQueue.name = "com.sktelecom.romain.silver_tray.audio_engine_notification"
     }
     
     func startAudioEngine() throws {
@@ -67,8 +63,10 @@ class AudioEngineManager<Observer: AudioEngineObservable> {
             notificationCenter.removeObserver(audioEngineConfigurationObserver)
         }
         
-        audioEngineConfigurationObserver = notificationCenter.addObserver(forName: .AVAudioEngineConfigurationChange, object: audioEngine, queue: audioEngineQueue) { [weak self] (notification) in
-            self?.engineConfigurationChange(notification: notification)
+        audioEngineConfigurationObserver = notificationCenter.addObserver(forName: .AVAudioEngineConfigurationChange, object: audioEngine, queue: nil) { [weak self] (notification) in
+            self?.audioEngineQueue.async { [weak self] in
+                self?.engineConfigurationChange(notification: notification)
+            }
         }
     }
     
