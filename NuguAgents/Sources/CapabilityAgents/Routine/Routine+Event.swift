@@ -33,6 +33,10 @@ extension RoutineAgent {
             case finished
             case stopped
             case actionTriggered(data: [String: AnyHashable]?)
+            case moveSucceeded
+            case moveFailed(errorCode: String)
+            case moveControl
+            case actionTimeoutTriggered
         }
     }
 }
@@ -48,6 +52,8 @@ extension RoutineAgent.Event: Eventable {
             payload["errorCode"] = errorCode
         case .actionTriggered(let data):
             payload["data"] = data
+        case .moveFailed(let errorCode):
+            payload["errorCode"] = errorCode
         default:
             break
         }
@@ -66,6 +72,14 @@ extension RoutineAgent.Event: Eventable {
             return "Stopped"
         case .actionTriggered:
             return "ActionTriggered"
+        case .moveSucceeded:
+            return "MoveSucceeded"
+        case .moveFailed:
+            return "MoveFailed"
+        case .moveControl:
+            return "MoveControl"
+        case .actionTimeoutTriggered:
+            return "ActionTimeoutTriggered"
         }
     }
 }

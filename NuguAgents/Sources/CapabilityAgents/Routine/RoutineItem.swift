@@ -39,6 +39,7 @@ public struct RoutineItem {
             public let playServiceId: String?
             public let token: String?
             public let postDelayInMilliseconds: Int?
+            public let muteDelayInMilliseconds: Int?
 
             public var actionType: Type? {
                 Type.init(rawValue: type)
@@ -47,6 +48,7 @@ public struct RoutineItem {
             public enum `Type`: String, Decodable {
                 case text = "TEXT"
                 case data = "DATA"
+                case `break` = "BREAK"
             }
         }
     }
@@ -57,6 +59,12 @@ extension RoutineItem.Payload.Action {
         guard let postDelayInMilliseconds = postDelayInMilliseconds else { return nil }
 
         return NuguTimeInterval(milliseconds: postDelayInMilliseconds)
+    }
+    
+    var muteDelay: TimeIntervallic? {
+        guard let muteDelayInMilliseconds = muteDelayInMilliseconds else { return nil }
+        
+        return NuguTimeInterval(milliseconds: muteDelayInMilliseconds)
     }
 }
 
@@ -69,6 +77,7 @@ extension RoutineItem.Payload.Action: Decodable {
         case playServiceId
         case token
         case postDelayInMilliseconds
+        case muteDelayInMilliseconds
     }
 
     public init(from decoder: Decoder) throws {
@@ -80,5 +89,6 @@ extension RoutineItem.Payload.Action: Decodable {
         playServiceId = try? container.decode(String.self, forKey: .playServiceId)
         token = try? container.decode(String.self, forKey: .token)
         postDelayInMilliseconds = try? container.decode(Int.self, forKey: .postDelayInMilliseconds)
+        muteDelayInMilliseconds = try? container.decode(Int.self, forKey: .muteDelayInMilliseconds)
     }
 }

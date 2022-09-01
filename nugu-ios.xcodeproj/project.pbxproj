@@ -556,6 +556,13 @@
 		E649868628336CED001AD733 /* DisplayRedirectTriggerChildPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = E649868528336CED001AD733 /* DisplayRedirectTriggerChildPayload.swift */; };
 		E649868828336E8D001AD733 /* AudioDisplayViewPresenterOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E649868728336E8D001AD733 /* AudioDisplayViewPresenterOptions.swift */; };
 		E649868A28337649001AD733 /* ControlCenterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E649868928337649001AD733 /* ControlCenterManager.swift */; };
+		E66F998228AD2AC4000B8F76 /* DummyASRAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66F998128AD2AC4000B8F76 /* DummyASRAgent.swift */; };
+		E66F998A28AD2F90000B8F76 /* DummyStreamDataRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66F998928AD2F90000B8F76 /* DummyStreamDataRouter.swift */; };
+		E66F998D28AD355D000B8F76 /* FakeDirectiveSequencer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66F998C28AD355D000B8F76 /* FakeDirectiveSequencer.swift */; };
+		E66F998F28ADBECC000B8F76 /* MockUpstreamDataSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66F998E28ADBECC000B8F76 /* MockUpstreamDataSender.swift */; };
+		E66F999128ADC957000B8F76 /* FakeContextManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66F999028ADC957000B8F76 /* FakeContextManager.swift */; };
+		E66F999328ADD49E000B8F76 /* MockTextAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66F999228ADD49E000B8F76 /* MockTextAgent.swift */; };
+		E68D470728B318840042EB20 /* RoutineAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E68D470628B318840042EB20 /* RoutineAgentTests.swift */; };
 		F778C001261B096A00B69B32 /* EnumTypedNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = F778C000261B096A00B69B32 /* EnumTypedNotification.swift */; };
 		F78CB7CC25FF2EA000DC3103 /* NudgeAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F78CB7CB25FF2EA000DC3103 /* NudgeAgent.swift */; };
 		F78CB7E225FF2EA800DC3103 /* NudgeAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = F78CB7E125FF2EA800DC3103 /* NudgeAgentProtocol.swift */; };
@@ -1415,6 +1422,13 @@
 		E649868528336CED001AD733 /* DisplayRedirectTriggerChildPayload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayRedirectTriggerChildPayload.swift; sourceTree = "<group>"; };
 		E649868728336E8D001AD733 /* AudioDisplayViewPresenterOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioDisplayViewPresenterOptions.swift; sourceTree = "<group>"; };
 		E649868928337649001AD733 /* ControlCenterManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControlCenterManager.swift; sourceTree = "<group>"; };
+		E66F998128AD2AC4000B8F76 /* DummyASRAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DummyASRAgent.swift; sourceTree = "<group>"; };
+		E66F998928AD2F90000B8F76 /* DummyStreamDataRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DummyStreamDataRouter.swift; sourceTree = "<group>"; };
+		E66F998C28AD355D000B8F76 /* FakeDirectiveSequencer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeDirectiveSequencer.swift; sourceTree = "<group>"; };
+		E66F998E28ADBECC000B8F76 /* MockUpstreamDataSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockUpstreamDataSender.swift; sourceTree = "<group>"; };
+		E66F999028ADC957000B8F76 /* FakeContextManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeContextManager.swift; sourceTree = "<group>"; };
+		E66F999228ADD49E000B8F76 /* MockTextAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockTextAgent.swift; sourceTree = "<group>"; };
+		E68D470628B318840042EB20 /* RoutineAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineAgentTests.swift; sourceTree = "<group>"; };
 		F778C000261B096A00B69B32 /* EnumTypedNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnumTypedNotification.swift; sourceTree = "<group>"; };
 		F78CB7CB25FF2EA000DC3103 /* NudgeAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NudgeAgent.swift; sourceTree = "<group>"; };
 		F78CB7E125FF2EA800DC3103 /* NudgeAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NudgeAgentProtocol.swift; sourceTree = "<group>"; };
@@ -1854,6 +1868,8 @@
 				7EA53F0E247F583F008731CD /* MockSessionManager.swift */,
 				7EA53F10247F5904008731CD /* MockDialogAttributeStore.swift */,
 				7E284DA224DD533E00BF9640 /* MockInteractionControlManager.swift */,
+				E66F998E28ADBECC000B8F76 /* MockUpstreamDataSender.swift */,
+				E66F999228ADD49E000B8F76 /* MockTextAgent.swift */,
 			);
 			path = Mock;
 			sourceTree = "<group>";
@@ -1927,6 +1943,7 @@
 				1F5DD4B2240CFC8800719FBC /* TTSAgentSpec.swift */,
 				1F5DD4B4240CFEEB00719FBC /* DisplayAgentSpec.swift */,
 				7EBB2EAD2444052A00FBBBEA /* SoundAgentSpec.swift */,
+				E68D470628B318840042EB20 /* RoutineAgentTests.swift */,
 			);
 			path = NuguAgents;
 			sourceTree = "<group>";
@@ -2597,6 +2614,8 @@
 		1FFFF524237676BE00C9A177 /* NuguTests */ = {
 			isa = PBXGroup;
 			children = (
+				E66F997E28AD29CD000B8F76 /* Dummy */,
+				E66F998B28AD353B000B8F76 /* Fake */,
 				1F9C5B7023F27A8F0086CC04 /* Mock */,
 				1F9C5B7923F2D7440086CC04 /* NuguCore */,
 				1FD1CFD923A75B040000FB8C /* NuguAgents */,
@@ -3270,6 +3289,24 @@
 				E649867B2833681A001AD733 /* AudioPlayer1Template.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		E66F997E28AD29CD000B8F76 /* Dummy */ = {
+			isa = PBXGroup;
+			children = (
+				E66F998128AD2AC4000B8F76 /* DummyASRAgent.swift */,
+				E66F998928AD2F90000B8F76 /* DummyStreamDataRouter.swift */,
+			);
+			path = Dummy;
+			sourceTree = "<group>";
+		};
+		E66F998B28AD353B000B8F76 /* Fake */ = {
+			isa = PBXGroup;
+			children = (
+				E66F999028ADC957000B8F76 /* FakeContextManager.swift */,
+				E66F998C28AD355D000B8F76 /* FakeDirectiveSequencer.swift */,
+			);
+			path = Fake;
 			sourceTree = "<group>";
 		};
 		F78CB7CA25FF2E9400DC3103 /* Nudge */ = {
@@ -4475,9 +4512,14 @@
 				1F9C5B8C23FBA7400086CC04 /* MockFocusManager.swift in Sources */,
 				1F10099A2387994B00D90FEE /* TimeIntervallicTests.swift in Sources */,
 				1F5DD4AC240CF0D600719FBC /* MockPlaySyncManager.swift in Sources */,
+				E66F998F28ADBECC000B8F76 /* MockUpstreamDataSender.swift in Sources */,
 				1F5DD4AA240CEAF500719FBC /* AudioPlayerAgentSpec.swift in Sources */,
+				E66F999328ADD49E000B8F76 /* MockTextAgent.swift in Sources */,
+				E66F999128ADC957000B8F76 /* FakeContextManager.swift in Sources */,
+				E66F998A28AD2F90000B8F76 /* DummyStreamDataRouter.swift in Sources */,
 				1F9C5B7423F2B3270086CC04 /* MockStreamDataRouter.swift in Sources */,
 				7EE6233124D2B7F5004B89D7 /* FocusManagerSpec.swift in Sources */,
+				E66F998228AD2AC4000B8F76 /* DummyASRAgent.swift in Sources */,
 				7EDE17832456638400F6CEC2 /* CryptoUtilSpec.swift in Sources */,
 				7EA53F11247F5904008731CD /* MockDialogAttributeStore.swift in Sources */,
 				1F9C5B7823F2BF8B0086CC04 /* MockContextManager.swift in Sources */,
@@ -4490,7 +4532,9 @@
 				1F9C5B7D23F4E8C40086CC04 /* LocationAgentSpec.swift in Sources */,
 				1F31FD7C2424CBD8009593EB /* UpstreamSpec.swift in Sources */,
 				1F5DD4B3240CFC8800719FBC /* TTSAgentSpec.swift in Sources */,
+				E66F998D28AD355D000B8F76 /* FakeDirectiveSequencer.swift in Sources */,
 				1F9C5B7C23F4E8C40086CC04 /* SystemAgentSpec.swift in Sources */,
+				E68D470728B318840042EB20 /* RoutineAgentTests.swift in Sources */,
 				7EBB2EAE2444052A00FBBBEA /* SoundAgentSpec.swift in Sources */,
 				1F5DD4AE240CF7D100719FBC /* ASRAgentSpec.swift in Sources */,
 				1F9C5B8823FA82D90086CC04 /* ExtensionAgentSpec.swift in Sources */,

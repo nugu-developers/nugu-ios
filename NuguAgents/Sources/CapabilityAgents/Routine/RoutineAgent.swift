@@ -45,7 +45,8 @@ public final class RoutineAgent: RoutineAgentProtocol {
     private lazy var handleableDirectiveInfos = [
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Start", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleStart),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Stop", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleStop),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Continue", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: false), directiveHandler: handleContinue)
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Continue", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: false), directiveHandler: handleContinue),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Move", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: false), directiveHandler: handleMove)
     ]
 
     private var disposeBag = DisposeBag()
@@ -136,6 +137,8 @@ extension RoutineAgent: RoutineExecuterDelegate {
                 playServiceId: routine.payload.playServiceId,
                 referrerDialogRequestId: routine.dialogRequestId
             ).rx)
+        default:
+            break
         }
         
         delegate?.routineAgentDidChange(state: state, item: routine)
@@ -213,6 +216,42 @@ private extension RoutineAgent {
             }
 
             self?.routineExecuter.resume()
+        }
+    }
+    
+    func handleMove() -> HandleDirective {
+        return { [weak self] directive, completion in
+            log.debug("")
+            guard let payloadDictionary = directive.payloadDictionary,
+                  let token = payloadDictionary["token"] as? String,
+                  let playServiceId = payloadDictionary["playServiceId"] as? String,
+                  let position = payloadDictionary["position"] as? Int else {
+                completion(.failed("Invalid payload"))
+                return
+            }
+            
+            guard self?.routineExecuter.routine?.payload.token == token else {
+                self?.sendCompactContextEvent(Event(
+                    typeInfo: .failed(errorCode: "Invalid request"),
+                    playServiceId: playServiceId,
+                    referrerDialogRequestId: directive.header.dialogRequestId
+                ).rx)
+                completion(.failed("Invalid request"))
+                return
+            }
+            
+            self?.routineExecuter.move(position: position) { [weak self] isSuccess in
+                // TODO: - add error code
+                let typeInfo: Event.TypeInfo = isSuccess ? .moveSucceeded : .moveFailed(errorCode: "")
+                
+                self?.sendCompactContextEvent(Event(
+                    typeInfo: typeInfo,
+                    playServiceId: playServiceId,
+                    referrerDialogRequestId: directive.header.dialogRequestId
+                ).rx)
+            }
+            
+            completion(.finished)
         }
     }
 }
