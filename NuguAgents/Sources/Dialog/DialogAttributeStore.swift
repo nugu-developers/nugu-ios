@@ -33,11 +33,11 @@ public final class DialogAttributeStore: DialogAttributeStoreable {
     
     public init() {}
     
-    public func setAttributes(_ attributes: [String: AnyHashable], messageId: String) {
-        _attributeDic.mutate { $0[messageId] = attributes }
+    public func setAttributes(_ attributes: [String: AnyHashable], key: String) {
+        _attributeDic.mutate { $0[key] = attributes }
     }
     
-    public func requestAttributes(messageId: String? = nil) -> [String: AnyHashable]? {
+    public func requestAttributes(key: String? = nil) -> [String: AnyHashable]? {
         var lastingAttributes: [String: AnyHashable]? {
             guard let key = attributeDic.keys.first else {
                 return nil
@@ -46,20 +46,20 @@ public final class DialogAttributeStore: DialogAttributeStoreable {
             return attributeDic[key] as? [String: AnyHashable]
         }
         
-        guard let messageId = messageId else {
+        guard let key = key else {
             return lastingAttributes
         }
 
-        let specificAttributes = attributeDic[messageId] as? [String: AnyHashable]
+        let specificAttributes = attributeDic[key] as? [String: AnyHashable]
         return specificAttributes ?? lastingAttributes
     }
     
-    public func getAttributes(messageId: String) -> [String: AnyHashable]? {
-        attributeDic[messageId] as? [String: AnyHashable]
+    public func getAttributes(key: String) -> [String: AnyHashable]? {
+        attributeDic[key] as? [String: AnyHashable]
     }
     
-    public func removeAttributes(messageId: String) {
-        _attributeDic.mutate { $0[messageId] = nil }
+    public func removeAttributes(key: String) {
+        _attributeDic.mutate { $0[key] = nil }
     }
     
     public func removeAllAttributes() {

@@ -108,7 +108,7 @@ public final class ASRAgent: ASRAgentProtocol {
                 upstreamDataSender.cancelEvent(dialogRequestId: asrRequest.eventIdentifier.dialogRequestId)
                 sendCompactContextEvent(Event(
                     typeInfo: .stopRecognize,
-                    dialogAttributes: expectSpeech?.messageId == nil ? nil : dialogAttributeStore.getAttributes(messageId: expectSpeech!.messageId),
+                    dialogAttributes: expectSpeech?.messageId == nil ? nil : dialogAttributeStore.getAttributes(key: expectSpeech!.messageId),
                     referrerDialogRequestId: asrRequest.eventIdentifier.dialogRequestId
                 ).rx)
                 expectSpeech = nil
@@ -116,7 +116,7 @@ public final class ASRAgent: ASRAgentProtocol {
                 asrState = .idle
                 sendCompactContextEvent(Event(
                     typeInfo: .listenFailed,
-                    dialogAttributes: expectSpeech?.messageId == nil ? nil : dialogAttributeStore.getAttributes(messageId: expectSpeech!.messageId),
+                    dialogAttributes: expectSpeech?.messageId == nil ? nil : dialogAttributeStore.getAttributes(key: expectSpeech!.messageId),
                     referrerDialogRequestId: asrRequest.referrerDialogRequestId
                 ).rx)
                 expectSpeech = nil
@@ -126,21 +126,21 @@ public final class ASRAgent: ASRAgentProtocol {
                 case NetworkError.timeout:
                     sendCompactContextEvent(Event(
                         typeInfo: .responseTimeout,
-                        dialogAttributes: expectSpeech?.messageId == nil ? nil : dialogAttributeStore.getAttributes(messageId: expectSpeech!.messageId),
+                        dialogAttributes: expectSpeech?.messageId == nil ? nil : dialogAttributeStore.getAttributes(key: expectSpeech!.messageId),
                         referrerDialogRequestId: asrRequest.eventIdentifier.dialogRequestId
                     ).rx)
                 case ASRError.listeningTimeout:
                     upstreamDataSender.cancelEvent(dialogRequestId: asrRequest.eventIdentifier.dialogRequestId)
                     sendFullContextEvent(Event(
                         typeInfo: .listenTimeout,
-                        dialogAttributes: expectSpeech?.messageId == nil ? nil : dialogAttributeStore.getAttributes(messageId: expectSpeech!.messageId),
+                        dialogAttributes: expectSpeech?.messageId == nil ? nil : dialogAttributeStore.getAttributes(key: expectSpeech!.messageId),
                         referrerDialogRequestId: asrRequest.eventIdentifier.dialogRequestId
                     ).rx)
                 case ASRError.listenFailed:
                     upstreamDataSender.cancelEvent(dialogRequestId: asrRequest.eventIdentifier.dialogRequestId)
                     sendCompactContextEvent(Event(
                         typeInfo: .listenFailed,
-                        dialogAttributes: expectSpeech?.messageId == nil ? nil : dialogAttributeStore.getAttributes(messageId: expectSpeech!.messageId),
+                        dialogAttributes: expectSpeech?.messageId == nil ? nil : dialogAttributeStore.getAttributes(key: expectSpeech!.messageId),
                         referrerDialogRequestId: asrRequest.eventIdentifier.dialogRequestId
                     ).rx)
                 case ASRError.recognizeFailed:
@@ -170,7 +170,7 @@ public final class ASRAgent: ASRAgentProtocol {
                 interactionControlManager.start(mode: .multiTurn, category: capabilityAgentProperty.category)
             } else if let messageId = oldValue?.messageId {
                 playSyncManager.endPlay(property: playSyncProperty)
-                dialogAttributeStore.removeAttributes(messageId: messageId)
+                dialogAttributeStore.removeAttributes(key: messageId)
                 interactionControlManager.finish(mode: .multiTurn, category: capabilityAgentProperty.category)
             }
             if let dialogRequestId = oldValue?.dialogRequestId {
@@ -435,7 +435,7 @@ private extension ASRAgent {
                     "domainTypes": payload.domainTypes,
                     "playServiceId": payload.playServiceId
                 ]
-                self.dialogAttributeStore.setAttributes(attributes.compactMapValues { $0 }, messageId: directive.header.messageId)
+                self.dialogAttributeStore.setAttributes(attributes.compactMapValues { $0 }, key: directive.header.messageId)
             }
         }
     }
@@ -591,7 +591,7 @@ private extension ASRAgent {
         upstreamDataSender.sendStream(
             Event(
                 typeInfo: .recognize(initiator: asrRequest.initiator, options: asrRequest.options),
-                dialogAttributes: dialogAttributeStore.requestAttributes(messageId: expectSpeech?.messageId),
+                dialogAttributes: dialogAttributeStore.requestAttributes(key: expectSpeech?.messageId),
                 referrerDialogRequestId: asrRequest.referrerDialogRequestId
             ).makeEventMessage(
                 property: self.capabilityAgentProperty,
