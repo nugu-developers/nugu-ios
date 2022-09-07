@@ -28,7 +28,7 @@ class DialogAttributeStoreSpec: QuickSpec {
             
             context("request attributes") {
                 it("attributes not found") {
-                    expect(sut.requestAttributes(messageId: nil)).to(beNil())
+                    expect(sut.requestAttributes(key: nil)).to(beNil())
                 }
             }
         }
@@ -39,7 +39,7 @@ class DialogAttributeStoreSpec: QuickSpec {
             let expectedMessageId = "expectedMessageId"
             beforeEach {
                 sut = DialogAttributeStore()
-                sut.setAttributes(expectedAttributes, messageId: expectedMessageId)
+                sut.setAttributes(expectedAttributes, key: expectedMessageId)
             }
             
             afterEach {
@@ -48,32 +48,32 @@ class DialogAttributeStoreSpec: QuickSpec {
             
             context("request attributes") {
                 it("get the attributes") {
-                    expect(sut.requestAttributes(messageId: expectedMessageId)).to(equal(expectedAttributes))
+                    expect(sut.requestAttributes(key: expectedMessageId)).to(equal(expectedAttributes))
                 }
             }
             
             context("request attributes by wrong messageId") {
                 it("get last set attributes") {
-                    expect(sut.requestAttributes(messageId: "wrong messageId")).to(equal(expectedAttributes))
+                    expect(sut.requestAttributes(key: "wrong messageId")).to(equal(expectedAttributes))
                 }
             }
             
             context("request attributes by nil messageId") {
                 it("get last set attributes") {
-                    expect(sut.requestAttributes(messageId: nil)).to(equal(expectedAttributes))
+                    expect(sut.requestAttributes(key: nil)).to(equal(expectedAttributes))
                 }
             }
             
             it("get the attributes") {
-                expect(sut.getAttributes(messageId: expectedMessageId)).to(equal(expectedAttributes))
+                expect(sut.getAttributes(key: expectedMessageId)).to(equal(expectedAttributes))
             }
             
             context("remove attributes") {
                 beforeEach {
-                    sut.removeAttributes(messageId: expectedMessageId)
+                    sut.removeAttributes(key: expectedMessageId)
                 }
                 it("attributes not found") {
-                    expect(sut.requestAttributes(messageId: nil)).to(beNil())
+                    expect(sut.requestAttributes(key: nil)).to(beNil())
                 }
             }
             
@@ -82,7 +82,7 @@ class DialogAttributeStoreSpec: QuickSpec {
                     sut.removeAllAttributes()
                 }
                 it("attributes not found") {
-                    expect(sut.requestAttributes(messageId: nil)).to(beNil())
+                    expect(sut.requestAttributes(key: nil)).to(beNil())
                 }
             }
         }
