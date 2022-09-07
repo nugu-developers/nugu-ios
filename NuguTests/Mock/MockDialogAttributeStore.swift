@@ -23,18 +23,18 @@ import Foundation
 import NuguAgents
 
 class MockDialogAttributeStore: DialogAttributeStoreable {
-    func getAttributes(messageId: String) -> [String: AnyHashable]? {
+    func getAttributes(key: String) -> [String: AnyHashable]? {
         return nil
     }
     
-    func setAttributes(_ attributes: [String: AnyHashable], messageId: String) {
+    func setAttributes(_ attributes: [String: AnyHashable], key: String) {
     }
     
-    func requestAttributes(messageId: String?) -> [String: AnyHashable]? {
+    func requestAttributes(key: String?) -> [String: AnyHashable]? {
         return nil
     }
     
-    func removeAttributes(messageId: String) {
+    func removeAttributes(key: String) {
     }
     
     func removeAllAttributes() {
