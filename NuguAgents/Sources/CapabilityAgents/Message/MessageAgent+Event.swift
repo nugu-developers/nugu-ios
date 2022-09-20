@@ -45,8 +45,9 @@ extension MessageAgent.Event: Eventable {
         switch typeInfo {
         case .candidatesListed(let interactionControl):
             if let interactionControl = interactionControl,
-               let interactionControlPayload = try? JSONEncoder().encode(interactionControl) {
-                payload["interactionControl"] = interactionControlPayload
+               let interactionControlData = try? JSONEncoder().encode(interactionControl),
+               let interactionControlDictionary = try? JSONSerialization.jsonObject(with: interactionControlData, options: []) as? [String: AnyHashable] {
+                payload["interactionControl"] = interactionControlDictionary
             }
         case .sendMessageSucceeded(let recipient):
             if let recipientData = try? JSONEncoder().encode(recipient),

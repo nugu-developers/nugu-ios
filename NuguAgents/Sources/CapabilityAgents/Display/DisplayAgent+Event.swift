@@ -62,8 +62,9 @@ extension DisplayAgent.Event: Eventable {
             payload["direction"] = direction
             
             if let interactionControl = interactionControl,
-               let interactionControlPayload = try? JSONEncoder().encode(interactionControl) {
-                payload["interactionControl"] = interactionControlPayload
+               let interactionControlData = try? JSONEncoder().encode(interactionControl),
+               let interactionControlDictionary = try? JSONSerialization.jsonObject(with: interactionControlData, options: []) as? [String: AnyHashable] {
+                payload["interactionControl"] = interactionControlDictionary
             }
         case .triggerChild(let parentToken, let data):
             payload["parentToken"] = parentToken

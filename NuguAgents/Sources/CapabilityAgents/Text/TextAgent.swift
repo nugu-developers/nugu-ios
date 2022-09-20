@@ -332,8 +332,9 @@ private extension TextAgent {
                     }
                     
                     if let interactionControl = self?.currentInteractionControl,
-                       let interactionControlDic = try? JSONEncoder().encode(interactionControl) {
-                        attributes["interactionControl"] = interactionControlDic
+                       let interactionControlData = try? JSONEncoder().encode(interactionControl),
+                       let interactionControlDictionary = try? JSONSerialization.jsonObject(with: interactionControlData, options: []) as? [String: AnyHashable] {
+                        attributes["interactionControl"] = interactionControlDictionary
                     }
                     
                     return attributes
