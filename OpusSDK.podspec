@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'OpusSDK'
-  s.version = '1.7.6'
+  s.version = '1.7.7'
   s.license = 'Apache License, Version 2.0'
   s.summary = 'Opus codec wrapper'
   s.description = <<-DESC
