@@ -118,7 +118,7 @@ public extension SpeechRecognizerAggregator {
         let dialogRequestId = asrAgent.startRecognition(initiator: initiator) { [weak self] state in
             if case .prepared = state {
                 self?.startMicInputProvider(requestingFocus: true) { [weak self] success in
-                    guard success else {
+                    if success == false {
                         log.error("Start MicInputProvider failed")
                         self?.asrAgent.stopRecognition()
                         self?.state = .error(SpeechRecognizerAggregatorError.cannotOpenMicInputForRecognition)
@@ -136,7 +136,6 @@ public extension SpeechRecognizerAggregator {
     
     func startListeningWithTrigger(completion: ((Result<Void, Error>) -> Void)?) {
         guard useKeywordDetector else { return }
-        keywordDetector.start()
         _startMicWorkItem.mutate {
             $0?.cancel()
             $0 = DispatchWorkItem(block: { [weak self] in
@@ -148,6 +147,8 @@ public extension SpeechRecognizerAggregator {
                         completion?(.failure(SpeechRecognizerAggregatorError.cannotOpenMicInputForWakeup))
                         return
                     }
+                    
+                    self?.keywordDetector.start()
                     completion?(.success(()))
                 }
             })
