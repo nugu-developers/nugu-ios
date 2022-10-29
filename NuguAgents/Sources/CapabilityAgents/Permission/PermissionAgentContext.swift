@@ -37,6 +37,9 @@ public struct PermissionAgentContext: Codable {
             case message = "MESSAGE"
             case phonebook = "PHONEBOOK"
             case callHistory = "CALL_HISTORY"
+            case alarm = "ALARM"
+            case camera = "CAMERA"
+            case album = "ALBUM"
         }
         
         public enum State: String, Codable {

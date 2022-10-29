@@ -24,7 +24,7 @@ import NuguCore
 
 public class PermissionAgent: PermissionAgentProtocol {
     // CapabilityAgentable
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .permission, version: "1.0")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .permission, version: "1.2")
     
     // PermissionAgentProtocol
     public weak var delegate: PermissionAgentDelegate?
