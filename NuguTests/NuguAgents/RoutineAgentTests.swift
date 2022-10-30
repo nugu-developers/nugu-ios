@@ -222,6 +222,7 @@ private extension Downstream {
     
     static func makeDataAction(playServiceId: String, data: [String: AnyHashable]) -> [String: AnyHashable] {
         return [
+            "token": "",
             "type": "DATA",
             "playServiceId": playServiceId,
             "data": data
