@@ -278,9 +278,9 @@ private extension RoutineExecuter {
             }
         }
         
-        log.debug(action.actionType)
+        log.debug(action.type)
         // Actin 규격에 문제가 있는 경우 다음 Action 으로 넘어감
-        switch action.actionType {
+        switch action.type {
         case .text:
             guard let text = action.text else {
                 doNextAction()
@@ -298,8 +298,6 @@ private extension RoutineExecuter {
             }
         case .break:
             doBreak()
-        case .none:
-            doNextAction()
         }
     }
 
