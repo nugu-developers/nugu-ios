@@ -27,7 +27,7 @@ import RxSwift
 
 public final class RoutineAgent: RoutineAgentProtocol {
     // CapabilityAgentable
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .routine, version: "1.2")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .routine, version: "1.3")
 
     // RoutineAgentProtocol
     public weak var delegate: RoutineAgentDelegate?
@@ -97,6 +97,10 @@ public final class RoutineAgent: RoutineAgentProtocol {
         let payload: [String: AnyHashable?] = [
             "version": self.capabilityAgentProperty.version,
             "token": routine?.payload.token,
+            "name": routine?.payload.name,
+            "routineId": routine?.payload.routineId,
+            "routineType": routine?.payload.routineType,
+            "routineListType": routine?.payload.routineListType,
             "routineActivity": self.routineExecuter.state.routineActivity,
             "currentAction": self.routineExecuter.routineActionIndex?.advanced(by: 1),
             "actions": actions
