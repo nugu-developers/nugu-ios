@@ -92,7 +92,7 @@ final public class NuguVoiceChrome: UIView {
     @IBOutlet private weak var animationContainerView: UIView!
     @IBOutlet private weak var chipsView: NuguChipsView!
     
-    private var animationView = AnimationView()
+    private var animationView = LottieAnimationView()
     
     private let speechGuideText = "말씀해주세요"
     
@@ -259,18 +259,18 @@ public extension NuguVoiceChrome {
 private extension NuguVoiceChrome {
     func playAnimationByState() {
         #if DEPLOY_OTHER_PACKAGE_MANAGER
-        animationView.animation = Animation.named(currentState.transitionFileName, bundle: Bundle(for: NuguVoiceChrome.self))
+        animationView.animation = LottieAnimation.named(currentState.transitionFileName, bundle: Bundle(for: NuguVoiceChrome.self))
         #else
-        animationView.animation = Animation.named(currentState.transitionFileName, bundle: Bundle.module)
+        animationView.animation = LottieAnimation.named(currentState.transitionFileName, bundle: Bundle.module)
         #endif
         animationView.loopMode = .playOnce
         animationView.play { [weak self] (finished) in
             guard let self = self else { return }
             if finished {
                 #if DEPLOY_OTHER_PACKAGE_MANAGER
-                self.animationView.animation = Animation.named(self.currentState.animationFileName, bundle: Bundle(for: NuguVoiceChrome.self))
+                self.animationView.animation = LottieAnimation.named(self.currentState.animationFileName, bundle: Bundle(for: NuguVoiceChrome.self))
                 #else
-                self.animationView.animation = Animation.named(self.currentState.animationFileName, bundle: Bundle.module)
+                self.animationView.animation = LottieAnimation.named(self.currentState.animationFileName, bundle: Bundle.module)
                 #endif
                 
                 self.animationView.loopMode = .loop

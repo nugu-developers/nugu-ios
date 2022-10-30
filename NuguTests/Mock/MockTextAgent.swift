@@ -38,7 +38,7 @@ class MockTextAgent: TextAgentProtocol {
         // Nothing to do.
     }
     
-    func requestTextInput(text: String, token: String?, source: String?, requestType: TextAgentRequestType, completion: ((StreamDataState) -> Void)?) -> String {
+    func requestTextInput(text: String, token: String?, source: TextInputSource?, requestType: TextAgentRequestType, completion: ((StreamDataState) -> Void)?) -> String {
         receivedText = text
         receivedToken = token
         receivedType = requestType
