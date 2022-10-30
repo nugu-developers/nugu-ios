@@ -30,6 +30,10 @@ public struct RoutineItem {
     public struct Payload: Decodable {
         public let playServiceId: String
         public let token: String
+        public let name: String?
+        public let routineId: String?
+        public let routineType: String?
+        public let routineListType: String?
         public let actions: [Action]
 
         public struct Action {
