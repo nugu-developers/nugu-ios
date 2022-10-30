@@ -7,7 +7,7 @@ on:
 
 jobs:
   push:
-    runs-on: macOS-latest
+    runs-on: self-hosted
 
     steps:
       - uses: actions/checkout@v2
