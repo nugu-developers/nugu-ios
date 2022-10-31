@@ -83,7 +83,7 @@ public class DataStreamPlayer {
     public var state: DataStreamPlayerState = .idle {
         didSet {
             if oldValue != state {
-                os_log("[%@] state changed: %@", log: .player, type: .debug, "\(id)", "\(state)")
+                os_log("[%@] state changed: %@", log: .player, "\(id)", "\(state)")
                 delegate?.dataStreamPlayerStateDidChange(state)
             }
         }
@@ -93,7 +93,7 @@ public class DataStreamPlayer {
     @Atomic public var bufferState: DataStreamPlayerBufferState = .bufferEmpty {
         didSet {
             if bufferState != oldValue {
-                os_log("[%@] buffer state changed: %@", log: .player, type: .debug, "\(id)", "\(bufferState)")
+                os_log("[%@] buffer state changed: %@", log: .player, "\(id)", "\(bufferState)")
                 delegate?.dataStreamPlayerBufferStateDidChange(bufferState)
                 
                 if bufferState == .likelyToKeepUp {
@@ -269,7 +269,7 @@ public class DataStreamPlayer {
      - You can call this method anytime you want. (this player doesn't care whether entire audio data was appened or not)
      */
     public func play() {
-        os_log("[%@] try to play data stream", log: .player, type: .debug, "\(id)")
+        os_log("[%@] try to play data stream", log: .player, "\(id)")
 
         audioQueue.async { [weak self] in
             self?.internalPlay()
@@ -280,12 +280,12 @@ public class DataStreamPlayer {
         do {
             try Self.audioEngineManager.startAudioEngine()
         } catch {
-             os_log("[%@] audioEngine start failed", log: .audioEngine, type: .debug, "\(id)")
+             os_log("[%@] audioEngine start failed", log: .audioEngine, "\(id)")
         }
         
         if let error = (UnifiedErrorCatcher.try {
             player.play()
-            os_log("[%@] player started", log: .player, type: .debug, "\(id)")
+            os_log("[%@] player started", log: .player, "\(id)")
             
             state = .start
             return nil
@@ -299,7 +299,7 @@ public class DataStreamPlayer {
     }
     
     public func pause() {
-        os_log("[%@] try to pause", log: .player, type: .debug, "\(id)")
+        os_log("[%@] try to pause", log: .player, "\(id)")
         audioQueue.async { [weak self] in
             self?.player.pause()
             self?.state = .pause
@@ -311,7 +311,7 @@ public class DataStreamPlayer {
     }
     
     public func stop() {
-        os_log("[%@] try to stop", log: .player, type: .debug, "\(id)")
+        os_log("[%@] try to stop", log: .player, "\(id)")
         
         audioQueue.async { [weak self] in
             guard let self = self else { return }
@@ -353,9 +353,7 @@ public class DataStreamPlayer {
         tempAudioArray.removeAll()
         audioBuffers.removeAll()
         
-        if Self.audioEngineManager.removeObserver(self) == nil {
-            os_log("[%@] removing observer failed", log: .player, type: .default, "\(id)")
-        }
+        Self.audioEngineManager.removeObserver(self)
         
         #if DEBUG
         let appendedFilename = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("silver_tray_appended.encoded")
@@ -365,8 +363,8 @@ public class DataStreamPlayer {
             try self.appendedData.write(to: appendedFilename)
             try self.consumedData.write(to: consumedFilename)
             
-            os_log("[%@] appended data to file: %{private}@", log: .player, type: .debug, "\(id)", "\(appendedFilename)")
-            os_log("[%@] consumed data to file: %{private}@", log: .player, type: .debug, "\(id)", "\(consumedFilename)")
+            os_log("[%@] appended data to file: %{private}@", log: .player, "\(id)", "\(appendedFilename)")
+            os_log("[%@] consumed data to file: %{private}@", log: .player, "\(id)", "\(consumedFilename)")
         } catch {
             os_log("[%@] file write failed: %@", log: .player, type: .error, "\(id)", "\(error)")
         }
@@ -381,7 +379,7 @@ public class DataStreamPlayer {
      - parameter to: seek time (millisecond)
      */
     public func seek(to offset: Int, completion: ((Result<Void, Error>) -> Void)?) {
-        os_log("[%@] try to seek: %@", log: .player, type: .debug, "\(id)", "\(offset)")
+        os_log("[%@] try to seek: %@", log: .player, "\(id)", "\(offset)")
 
         audioQueue.async { [weak self] in
             guard let self = self else { return }
@@ -393,7 +391,7 @@ public class DataStreamPlayer {
             
             let chunkTime = Int((Float(self.chunkSize) / Float(self.audioFormat.sampleRate)) * 1000)
             self.scheduleBufferIndex = offset / chunkTime
-            os_log("[%@] seek to index: %@", log: .player, type: .debug, "\(self.id)", "\(self.scheduleBufferIndex)")
+            os_log("[%@] seek to index: %@", log: .player, "\(self.id)", "\(self.scheduleBufferIndex)")
             completion?(.success(()))
         }
     }
@@ -408,7 +406,7 @@ extension DataStreamPlayer {
      - Player can calculate duration of TTS.
      */
     public func lastDataAppended() throws {
-        os_log("[%@] last data appended. No data can be appended any longer.", log: .player, type: .debug, "\(id)")
+        os_log("[%@] last data appended. No data can be appended any longer.", log: .player, "\(id)")
         
         try audioQueue.sync {
             guard lastBuffer == nil else {
@@ -420,7 +418,7 @@ extension DataStreamPlayer {
             guard let self = self else { return }
 
             if 0 < self.tempAudioArray.count, let lastPcmData = self.tempAudioArray.pcmBuffer(format: self.audioFormat) {
-                os_log("[%@] temp audio data will be scheduled. Because it is last data.", log: .player, type: .debug, "\(self.id)")
+                os_log("[%@] temp audio data will be scheduled. Because it is last data.", log: .player, "\(self.id)")
                 self.audioBuffers.append(lastPcmData)
             }
             
@@ -441,7 +439,7 @@ extension DataStreamPlayer {
                 }
             }
             
-            os_log("[%@] duration: %@", log: .player, type: .debug, "\(self.id)", "\(self.duration)")
+            os_log("[%@] duration: %@", log: .player, "\(self.id)", "\(self.duration)")
             self.delegate?.dataStreamPlayerDidComputeDuration(self.duration)
         }
     }
@@ -581,7 +579,7 @@ private extension DataStreamPlayer {
                 
                 guard let nextBuffer = self.audioBuffers[safe: self.scheduleBufferIndex] else {
                     guard self.lastBuffer == nil else { return }
-                    os_log("[%@] waiting for next audio data.", log: .player, type: .debug, "\(self.id)")
+                    os_log("[%@] waiting for next audio data.", log: .player, "\(self.id)")
                     self.bufferState = .bufferEmpty
                     
                     self.audioBufferObserver = self.notificationCenter.addObserver(forName: .audioBufferChange, object: self, queue: nil) { [weak self] (notification) in
@@ -590,7 +588,7 @@ private extension DataStreamPlayer {
                             guard self.bufferState == .bufferEmpty else { return }
                             guard let nextBuffer = self.audioBuffers[safe: self.scheduleBufferIndex] else { return }
                             
-                            os_log("[%@] Try to restart scheduler.", log: .player, type: .debug, "\(self.id)")
+                            os_log("[%@] Try to restart scheduler.", log: .player, "\(self.id)")
                             self.bufferState = .likelyToKeepUp
                             self.scheduleBuffer(audioBuffer: nextBuffer)
                             
@@ -651,7 +649,7 @@ extension DataStreamPlayer: Hashable {
 
 extension DataStreamPlayer: AudioEngineObservable {
     func engineConfigurationChange(notification: Notification) {
-        os_log("[%@] player will be paused by changed engine configuration", log: .player, type: .debug, "\(id)")
+        os_log("[%@] player will be paused by changed engine configuration", log: .player, "\(id)")
         
         audioQueue.async { [weak self] in
             guard let self = self else { return }
@@ -663,7 +661,7 @@ extension DataStreamPlayer: AudioEngineObservable {
 
             self.player.pause()
 //            let resumeIndex = (self.consumedBufferIndex ?? -1) + 1
-//            os_log("[%@] resume index: %@", log: .player, type: .debug, "\(self.id)", "\(resumeIndex)")
+//            os_log("[%@] resume index: %@", log: .player, "\(self.id)", "\(resumeIndex)")
 //
 //            let resumeTime = Int((Float(self.chunkSize) / Float(self.audioFormat.sampleRate)) * 1000) * resumeIndex
 //            self.seek(to: resumeTime, completion: { [weak self] _ in
