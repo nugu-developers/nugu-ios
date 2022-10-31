@@ -24,9 +24,14 @@ import Foundation
 final public class Atomic<Value> {
     private var value: Value
     private let queue = DispatchQueue(label: "com.sktelecom.romaine.atomic.queue")
+    private var thread: Thread!
 
     public init(wrappedValue value: Value) {
         self.value = value
+        
+        queue.async { [weak self] in
+            self?.thread = Thread.current
+        }
     }
 
     public var wrappedValue: Value {
@@ -35,18 +40,30 @@ final public class Atomic<Value> {
     }
 
     private func load() -> Value {
+        guard Thread.current != thread else {
+            fatalError("You load same thread on synchronization. queue: \(queue.label) \nbt: \(Thread.callStackSymbols.joined(separator: "\n"))")
+        }
+        
         return queue.sync { () -> Value in
             return value
         }
     }
 
     private func store(value: Value) {
+        guard Thread.current != thread else {
+            fatalError("You store same thread on synchronization. \nbt: \(Thread.callStackSymbols.joined(separator: "\n"))")
+        }
+        
         queue.sync {
             self.value = value
         }
     }
     
     public func mutate(_ transform: (inout Value) -> Void) {
+        guard Thread.current != thread else {
+            fatalError("You transform same thread on synchronization. \nbt: \(Thread.callStackSymbols.joined(separator: "\n"))")
+        }
+        
         queue.sync {
             transform(&value)
         }
