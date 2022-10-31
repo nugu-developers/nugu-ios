@@ -28,7 +28,7 @@ public class DirectiveSequencer: DirectiveSequenceable {
     private var handlingDirectives = [(directive: Downstream.Directive, blockingPolicy: BlockingPolicy)]()
     private var blockedDirectives = [(directive: Downstream.Directive, blockingPolicy: BlockingPolicy)]()
     
-    private var directiveHandleInfos = DirectiveHandleInfos()
+    @Atomic private var directiveHandleInfos = DirectiveHandleInfos()
     private var directiveCancelPolicies = [(dialogRequestId: String, policy: DirectiveCancelPolicy)]()
     private let directiveSequencerDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.directive_sequencer", qos: .utility)
     private let disposeBag = DisposeBag()
@@ -41,18 +41,16 @@ public class DirectiveSequencer: DirectiveSequenceable {
 public extension DirectiveSequencer {
     func add(directiveHandleInfos: DirectiveHandleInfos) {
         log.debug(directiveHandleInfos)
-        
-        directiveSequencerDispatchQueue.async { [weak self] in
-            self?.directiveHandleInfos.merge(directiveHandleInfos)
+        _directiveHandleInfos.mutate { (infos) in
+            infos.merge(directiveHandleInfos)
         }
     }
     
     func remove(directiveHandleInfos: DirectiveHandleInfos) {
         log.debug(directiveHandleInfos)
-        
-        directiveSequencerDispatchQueue.async { [weak self] in
+        _directiveHandleInfos.mutate { (infos) in
             directiveHandleInfos.keys.forEach { key in
-                self?.directiveHandleInfos.removeValue(forKey: key)
+                infos.removeValue(forKey: key)
             }
         }
     }
