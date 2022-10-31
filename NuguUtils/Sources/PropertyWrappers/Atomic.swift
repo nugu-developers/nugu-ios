@@ -23,7 +23,7 @@ import Foundation
 @propertyWrapper
 final public class Atomic<Value> {
     private var value: Value
-    private let queue = DispatchQueue(label: "com.sktelecom.romaine.atomic.queue")
+    private let lock = NSRecursiveLock()
 
     public init(wrappedValue value: Value) {
         self.value = value
@@ -35,19 +35,19 @@ final public class Atomic<Value> {
     }
 
     private func load() -> Value {
-        return queue.sync { () -> Value in
+        return lock.withLock {
             return value
         }
     }
 
     private func store(value: Value) {
-        queue.sync {
+        lock.withLock {
             self.value = value
         }
     }
     
     public func mutate(_ transform: (inout Value) -> Void) {
-        queue.sync {
+        lock.withLock {
             transform(&value)
         }
     }
