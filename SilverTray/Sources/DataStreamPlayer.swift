@@ -277,11 +277,7 @@ public class DataStreamPlayer {
     }
     
     private func internalPlay() {
-        do {
-            try Self.audioEngineManager.startAudioEngine()
-        } catch {
-             os_log("[%@] audioEngine start failed", log: .audioEngine, "\(id)")
-        }
+        Self.audioEngineManager.startAudioEngine()
         
         if let error = (UnifiedErrorCatcher.try {
             player.play()
