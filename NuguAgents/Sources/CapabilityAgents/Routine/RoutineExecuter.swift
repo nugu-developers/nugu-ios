@@ -170,15 +170,16 @@ class RoutineExecuter {
     }
     
     func move(position: Int, completion: @escaping (Bool) -> Void) {
+        let index = position - 1
         routineDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             guard self.state == .playing,
-                  let routine = self.routine, (0..<routine.payload.actions.count).contains(position) else {
+                  let routine = self.routine, (0..<routine.payload.actions.count).contains(index) else {
                 completion(false)
                 return
             }
             
-            self.currentActionIndex = position
+            self.currentActionIndex = index
             self.doAction()
             completion(true)
         }
@@ -279,7 +280,8 @@ private extension RoutineExecuter {
             }
         }
         
-        if let actionTimeout = action.actionTimeoutInMilliseconds {
+        if let actionTimeout = action.actionTimeoutInMilliseconds,
+           .zero < actionTimeout {
             DispatchQueue.global().asyncAfter(deadline: .now() + NuguTimeInterval(milliseconds: actionTimeout).seconds) { [weak self] in
                 self?.delegate?.routineExecuterShouldSendActionTriggerTimout(token: action.token)
             }
