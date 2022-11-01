@@ -26,6 +26,7 @@ import NuguUtils
 protocol RoutineExecuterDelegate: AnyObject {
     func routineExecuterDidChange(state: RoutineState)
     func routineExecuterShouldSendActionTriggerTimout(token: String)
+    func routineExecuterWillProcessAction(_ action: RoutineItem.Payload.Action)
 
     func routineExecuterShouldRequestAction(
         action: RoutineItem.Payload.Action,
@@ -169,8 +170,7 @@ class RoutineExecuter {
         }
     }
     
-    func move(position: Int, completion: @escaping (Bool) -> Void) {
-        let index = position - 1
+    func move(to index: Int, completion: @escaping (Bool) -> Void) {
         routineDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             guard self.state == .playing,
@@ -272,6 +272,7 @@ private extension RoutineExecuter {
 private extension RoutineExecuter {
     func doAction() {
         guard state == .playing, let routine = routine, let action = currentAction else { return }
+        delegate?.routineExecuterWillProcessAction(action)
         
         let completion: ((StreamDataState) -> Void) = { [weak self] result in
             log.debug(result)

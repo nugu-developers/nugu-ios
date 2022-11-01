@@ -111,6 +111,10 @@ public final class RoutineAgent: RoutineAgentProtocol {
         )
     }
     
+    public func move(to index: Int, completion: @escaping (Bool) -> Void) {
+        routineExecuter.move(to: index, completion: completion)
+    }
+    
     public func stop() {
         routineExecuter.stop()
         
@@ -166,6 +170,10 @@ extension RoutineAgent: RoutineExecuterDelegate {
             playServiceId: routine.payload.playServiceId,
             referrerDialogRequestId: routine.dialogRequestId
         ).rx)
+    }
+    
+    func routineExecuterWillProcessAction(_ action: RoutineItem.Payload.Action) {
+        delegate?.routineAgentWillProcessAction(action)
     }
     
     func routineExecuterShouldRequestAction(
@@ -264,7 +272,7 @@ private extension RoutineAgent {
                 return
             }
             
-            self?.routineExecuter.move(position: position) { [weak self] isSuccess in
+            self?.routineExecuter.move(to: position - 1) { [weak self] isSuccess in
                 // TODO: - add error code
                 let typeInfo: Event.TypeInfo = isSuccess ? .moveSucceeded : .moveFailed(errorCode: "")
                 
