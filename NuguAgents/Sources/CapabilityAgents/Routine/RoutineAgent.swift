@@ -85,7 +85,7 @@ public final class RoutineAgent: RoutineAgentProtocol {
         let routine = self.routineExecuter.routine
         let actions = routine?.payload.actions.map { action -> [String: AnyHashable?] in
             [
-                "type": action.type,
+                "type": action.type.rawValue,
                 "text": action.text,
                 "data": action.data,
                 "playServiceId": action.playServiceId,
@@ -99,8 +99,8 @@ public final class RoutineAgent: RoutineAgentProtocol {
             "token": routine?.payload.token,
             "name": routine?.payload.name,
             "routineId": routine?.payload.routineId,
-            "routineType": routine?.payload.routineType,
-            "routineListType": routine?.payload.routineListType,
+            "routineType": routine?.payload.routineType?.rawValue,
+            "routineListType": routine?.payload.routineListType?.rawValue,
             "routineActivity": self.routineExecuter.state.routineActivity,
             "currentAction": self.routineExecuter.routineActionIndex?.advanced(by: 1),
             "actions": actions
@@ -146,6 +146,15 @@ extension RoutineAgent: RoutineExecuterDelegate {
         }
         
         delegate?.routineAgentDidChange(state: state, item: routine)
+    }
+    
+    func routineExecuterShouldSendActionTriggerTimout(token: String) {
+        guard let routine = routineExecuter.routine else { return }
+        sendCompactContextEvent(Event(
+            typeInfo: .actionTimeoutTriggered(token: token),
+            playServiceId: routine.payload.playServiceId,
+            referrerDialogRequestId: routine.dialogRequestId
+        ).rx)
     }
 
     func routineExecuterShouldRequestAction(

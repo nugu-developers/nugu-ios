@@ -25,6 +25,7 @@ import NuguUtils
 
 protocol RoutineExecuterDelegate: AnyObject {
     func routineExecuterDidChange(state: RoutineState)
+    func routineExecuterShouldSendActionTriggerTimout(token: String)
 
     func routineExecuterShouldRequestAction(
         action: RoutineItem.Payload.Action,
@@ -275,6 +276,12 @@ private extension RoutineExecuter {
             log.debug(result)
             if case .error = result {
                 self?.doNextAction()
+            }
+        }
+        
+        if let actionTimeout = action.actionTimeoutInMilliseconds {
+            DispatchQueue.global().asyncAfter(deadline: .now() + NuguTimeInterval(milliseconds: actionTimeout).seconds) { [weak self] in
+                self?.delegate?.routineExecuterShouldSendActionTriggerTimout(token: action.token)
             }
         }
         

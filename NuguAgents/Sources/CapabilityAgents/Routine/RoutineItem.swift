@@ -50,7 +50,7 @@ public struct RoutineItem {
 }
 
 public extension RoutineItem.Payload {
-    struct Action {
+    struct Action: Decodable {
         public let type: ActionType
         public let text: String?
         public let data: [String: AnyHashable]?
@@ -67,6 +67,30 @@ public extension RoutineItem.Payload {
             case text = "TEXT"
             case data = "DATA"
             case `break` = "BREAK"
+        }
+        
+        enum CodingKeys: String, CodingKey {
+            case type
+            case text
+            case data
+            case playServiceId
+            case token
+            case postDelayInMilliseconds
+            case muteDelayInMilliseconds
+            case actionTimeoutInMilliseconds
+        }
+
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+
+            type = try container.decode(ActionType.self, forKey: .type)
+            text = try? container.decode(String.self, forKey: .text)
+            data = try? container.decode([String: AnyHashable].self, forKey: .data)
+            playServiceId = try? container.decode(String.self, forKey: .playServiceId)
+            token = try container.decode(String.self, forKey: .token)
+            postDelayInMilliseconds = try? container.decode(Int.self, forKey: .postDelayInMilliseconds)
+            muteDelayInMilliseconds = try? container.decode(Int.self, forKey: .muteDelayInMilliseconds)
+            actionTimeoutInMilliseconds = try? container.decode(Int.self, forKey: .actionTimeoutInMilliseconds)
         }
     }
     
@@ -95,32 +119,5 @@ extension RoutineItem.Payload.Action {
         guard let muteDelayInMilliseconds = muteDelayInMilliseconds else { return nil }
         
         return NuguTimeInterval(milliseconds: muteDelayInMilliseconds)
-    }
-}
-
-// MARK: - RoutineItem.Payload.Action: Decodable
-extension RoutineItem.Payload.Action: Decodable {
-    enum CodingKeys: String, CodingKey {
-        case type
-        case text
-        case data
-        case playServiceId
-        case token
-        case postDelayInMilliseconds
-        case muteDelayInMilliseconds
-        case actionTimeoutInMilliseconds
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-
-        type = try container.decode(ActionType.self, forKey: .type)
-        text = try? container.decode(String.self, forKey: .text)
-        data = try? container.decode([String: AnyHashable].self, forKey: .data)
-        playServiceId = try? container.decode(String.self, forKey: .playServiceId)
-        token = try container.decode(String.self, forKey: .token)
-        postDelayInMilliseconds = try? container.decode(Int.self, forKey: .postDelayInMilliseconds)
-        muteDelayInMilliseconds = try? container.decode(Int.self, forKey: .muteDelayInMilliseconds)
-        actionTimeoutInMilliseconds = try? container.decode(Int.self, forKey: .actionTimeoutInMilliseconds)
     }
 }
