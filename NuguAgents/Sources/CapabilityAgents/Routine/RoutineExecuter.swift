@@ -25,6 +25,8 @@ import NuguUtils
 
 protocol RoutineExecuterDelegate: AnyObject {
     func routineExecuterDidChange(state: RoutineState)
+    func routineExecuterShouldSendActionTriggerTimout(token: String)
+    func routineExecuterWillProcessAction(_ action: RoutineItem.Payload.Action)
 
     func routineExecuterShouldRequestAction(
         action: RoutineItem.Payload.Action,
@@ -168,16 +170,16 @@ class RoutineExecuter {
         }
     }
     
-    func move(position: Int, completion: @escaping (Bool) -> Void) {
+    func move(to index: Int, completion: @escaping (Bool) -> Void) {
         routineDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             guard self.state == .playing,
-                  let routine = self.routine, (0..<routine.payload.actions.count).contains(position) else {
+                  let routine = self.routine, (0..<routine.payload.actions.count).contains(index) else {
                 completion(false)
                 return
             }
             
-            self.currentActionIndex = position
+            self.currentActionIndex = index
             self.doAction()
             completion(true)
         }
@@ -270,11 +272,19 @@ private extension RoutineExecuter {
 private extension RoutineExecuter {
     func doAction() {
         guard state == .playing, let routine = routine, let action = currentAction else { return }
+        delegate?.routineExecuterWillProcessAction(action)
         
         let completion: ((StreamDataState) -> Void) = { [weak self] result in
             log.debug(result)
             if case .error = result {
                 self?.doNextAction()
+            }
+        }
+        
+        if let actionTimeout = action.actionTimeoutInMilliseconds,
+           .zero < actionTimeout {
+            DispatchQueue.global().asyncAfter(deadline: .now() + NuguTimeInterval(milliseconds: actionTimeout).seconds) { [weak self] in
+                self?.delegate?.routineExecuterShouldSendActionTriggerTimout(token: action.token)
             }
         }
         

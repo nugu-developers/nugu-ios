@@ -28,7 +28,7 @@ import RxSwift
 public final class RoutineAgent: RoutineAgentProtocol {
     // CapabilityAgentable
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .routine, version: "1.3")
-
+    
     // RoutineAgentProtocol
     public weak var delegate: RoutineAgentDelegate?
     
@@ -40,7 +40,7 @@ public final class RoutineAgent: RoutineAgentProtocol {
     private let contextManager: ContextManageable
     private let upstreamDataSender: UpstreamDataSendable
     private let routineExecuter: RoutineExecuter
-
+    
     // Handleable Directive
     private lazy var handleableDirectiveInfos = [
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Start", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleStart),
@@ -48,9 +48,9 @@ public final class RoutineAgent: RoutineAgentProtocol {
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Continue", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: false), directiveHandler: handleContinue),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Move", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: false), directiveHandler: handleMove)
     ]
-
+    
     private var disposeBag = DisposeBag()
-
+    
     public init(
         upstreamDataSender: UpstreamDataSendable,
         contextManager: ContextManageable,
@@ -73,19 +73,19 @@ public final class RoutineAgent: RoutineAgentProtocol {
         directiveSequencer.add(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
         routineExecuter.delegate = self
     }
-
+    
     deinit {
         contextManager.removeProvider(contextInfoProvider)
         directiveSequencer.remove(directiveHandleInfos: handleableDirectiveInfos.asDictionary)
     }
-
+    
     public lazy var contextInfoProvider: ContextInfoProviderType = { [weak self] completion in
         guard let self = self else { return }
-
+        
         let routine = self.routineExecuter.routine
         let actions = routine?.payload.actions.map { action -> [String: AnyHashable?] in
             [
-                "type": action.type,
+                "type": action.type.rawValue,
                 "text": action.text,
                 "data": action.data,
                 "playServiceId": action.playServiceId,
@@ -99,16 +99,31 @@ public final class RoutineAgent: RoutineAgentProtocol {
             "token": routine?.payload.token,
             "name": routine?.payload.name,
             "routineId": routine?.payload.routineId,
-            "routineType": routine?.payload.routineType,
-            "routineListType": routine?.payload.routineListType,
+            "routineType": routine?.payload.routineType?.rawValue,
+            "routineListType": routine?.payload.routineListType?.rawValue,
             "routineActivity": self.routineExecuter.state.routineActivity,
             "currentAction": self.routineExecuter.routineActionIndex?.advanced(by: 1),
             "actions": actions
         ]
-
+        
         completion(
             ContextInfo(contextType: .capability, name: self.capabilityAgentProperty.name, payload: payload.compactMapValues { $0 })
         )
+    }
+    
+    public func move(to index: Int, completion: @escaping (Bool) -> Void) {
+        routineExecuter.move(to: index, completion: completion)
+    }
+    
+    public func stop() {
+        routineExecuter.stop()
+        
+        guard let routine = routineExecuter.routine else { return }
+        sendCompactContextEvent(Event(
+            typeInfo: .stopped,
+            playServiceId: routine.payload.playServiceId,
+            referrerDialogRequestId: routine.dialogRequestId
+        ).rx)
     }
 }
 
@@ -147,7 +162,20 @@ extension RoutineAgent: RoutineExecuterDelegate {
         
         delegate?.routineAgentDidChange(state: state, item: routine)
     }
-
+    
+    func routineExecuterShouldSendActionTriggerTimout(token: String) {
+        guard let routine = routineExecuter.routine else { return }
+        sendCompactContextEvent(Event(
+            typeInfo: .actionTimeoutTriggered(token: token),
+            playServiceId: routine.payload.playServiceId,
+            referrerDialogRequestId: routine.dialogRequestId
+        ).rx)
+    }
+    
+    func routineExecuterWillProcessAction(_ action: RoutineItem.Payload.Action) {
+        delegate?.routineAgentWillProcessAction(action)
+    }
+    
     func routineExecuterShouldRequestAction(
         action: RoutineItem.Payload.Action,
         referrerDialogRequestId: String,
@@ -172,44 +200,44 @@ private extension RoutineAgent {
                 return
             }
             defer { completion(.finished) }
-
+            
             let routine = RoutineItem(
                 dialogRequestId: directive.header.dialogRequestId,
                 messageId: directive.header.messageId,
                 payload: payload
             )
-
+            
             self?.routineExecuter.start(routine)
         }
     }
-
+    
     func handleStop() -> HandleDirective {
         return { [weak self] directive, completion in
             log.debug("")
             guard let payloadDictionary = directive.payloadDictionary,
-                let token = payloadDictionary["token"] as? String else {
-                    completion(.failed("Invalid payload"))
-                    return
+                  let token = payloadDictionary["token"] as? String else {
+                completion(.failed("Invalid payload"))
+                return
             }
             defer { completion(.finished) }
-
+            
             if self?.routineExecuter.routine?.payload.token == token {
                 self?.routineExecuter.stop()
             }
         }
     }
-
+    
     func handleContinue() -> HandleDirective {
         return { [weak self] directive, completion in
             log.debug("")
             guard let payloadDictionary = directive.payloadDictionary,
-                let token = payloadDictionary["token"] as? String,
-                let playServiceId = payloadDictionary["playServiceId"] as? String else {
-                    completion(.failed("Invalid payload"))
-                    return
+                  let token = payloadDictionary["token"] as? String,
+                  let playServiceId = payloadDictionary["playServiceId"] as? String else {
+                completion(.failed("Invalid payload"))
+                return
             }
             defer { completion(.finished) }
-
+            
             guard self?.routineExecuter.routine?.payload.token == token else {
                 self?.sendCompactContextEvent(Event(
                     typeInfo: .failed(errorCode: "Invalid request"),
@@ -218,7 +246,7 @@ private extension RoutineAgent {
                 ).rx)
                 return
             }
-
+            
             self?.routineExecuter.resume()
         }
     }
@@ -244,7 +272,7 @@ private extension RoutineAgent {
                 return
             }
             
-            self?.routineExecuter.move(position: position) { [weak self] isSuccess in
+            self?.routineExecuter.move(to: position - 1) { [weak self] isSuccess in
                 // TODO: - add error code
                 let typeInfo: Event.TypeInfo = isSuccess ? .moveSucceeded : .moveFailed(errorCode: "")
                 

@@ -36,7 +36,7 @@ extension RoutineAgent {
             case moveSucceeded
             case moveFailed(errorCode: String)
             case moveControl
-            case actionTimeoutTriggered
+            case actionTimeoutTriggered(token: String)
         }
     }
 }

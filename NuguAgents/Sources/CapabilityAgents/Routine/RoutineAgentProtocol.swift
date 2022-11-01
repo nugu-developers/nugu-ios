@@ -24,5 +24,17 @@ public protocol RoutineAgentProtocol: CapabilityAgentable {
     var state: RoutineState { get }
     var routineItem: RoutineItem? { get }
     
+    /**
+     Move to index of Action
+     
+     - parameter to: Action index
+     */
+    func move(to index: Int, completion: @escaping (Bool) -> Void)
+        
+    /**
+     Stop routine
+     */
+    func stop()
+    
     var delegate: RoutineAgentDelegate? { get set }
 }
