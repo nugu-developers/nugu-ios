@@ -205,14 +205,9 @@ private extension AlertsAgent {
                 return
             }
             
-            let isSuccess = delegate.alertsAgentDidReceiveSkipNextAlert(item: setSkipNextAlertItem, header: directive.header)
-            let event = Event(
-                typeInfo: isSuccess ? .setSnoozeSucceeded(token: setSkipNextAlertItem.token) : .setSnoozeFailed(token: setSkipNextAlertItem.token),
-                playServiceId: setSkipNextAlertItem.playServiceId,
-                referrerDialogRequestId: directive.header.dialogRequestId
-            )
-            
-            self.sendCompactContextEvent(event.rx)
+            if delegate.alertsAgentDidReceiveSkipNextAlert(item: setSkipNextAlertItem, header: directive.header) {
+                // Nothing to do
+            }
         }
     }
 }
