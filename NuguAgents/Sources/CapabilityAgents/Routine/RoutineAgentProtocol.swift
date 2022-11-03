@@ -25,6 +25,15 @@ public protocol RoutineAgentProtocol: CapabilityAgentable {
     var routineItem: RoutineItem? { get }
     
     /**
+     Move to previous action
+     */
+    func previous(completion: @escaping (Bool) -> Void)
+    
+    /**
+     Move to next action
+     */
+    func next(completion: @escaping (Bool) -> Void)
+    /**
      Move to index of Action
      
      - parameter to: Action index

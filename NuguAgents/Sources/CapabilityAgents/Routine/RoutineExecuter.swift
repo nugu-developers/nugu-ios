@@ -109,6 +109,8 @@ class RoutineExecuter {
     private var currentActionIndex = -1
     private var ignoreAfterAction = false
     
+    private var ignoreStopEvent = false
+    
     init(
         directiveSequencer: DirectiveSequenceable,
         streamDataRouter: StreamDataRoutable,
@@ -178,8 +180,12 @@ class RoutineExecuter {
                 completion(false)
                 return
             }
+            if let dialogRequestId = self.handlingEvent {
+                self.directiveSequencer.cancelDirective(dialogRequestId: dialogRequestId)
+            }
             
             self.currentActionIndex = index
+            self.ignoreStopEvent = true
             self.doAction()
             completion(true)
         }
@@ -199,6 +205,11 @@ private extension RoutineExecuter {
             case .canceled:
                 self.doStop()
             case .stopped(let policy):
+                // Ignore stop event after action move event
+                guard self.ignoreStopEvent == false else {
+                    self.ignoreStopEvent = false
+                    return
+                }
                 if policy.cancelAll {
                     self.doStop()
                 } else {
