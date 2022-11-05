@@ -206,7 +206,13 @@ private extension AlertsAgent {
             }
             
             if delegate.alertsAgentDidReceiveSkipNextAlert(item: setSkipNextAlertItem, header: directive.header) {
-                // Nothing to do
+                let event = Event(
+                    typeInfo: .alertSkipped(token: setSkipNextAlertItem.token),
+                    playServiceId: setSkipNextAlertItem.playServiceId,
+                    referrerDialogRequestId: directive.header.dialogRequestId
+                )
+                
+                self.sendCompactContextEvent(event.rx)
             }
         }
     }
