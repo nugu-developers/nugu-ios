@@ -135,6 +135,10 @@ private extension NuguServiceWebViewController {
 }
 
 extension NuguServiceWebViewController: RoutineAgentDelegate {
+    func routineAgentWillProcessAction(_ action: NuguAgents.RoutineItem.Payload.Action) {
+        log.debug("routineAgentWillProcessAction, action: \(action)")
+    }
+    
     func routineAgentDidChange(state: RoutineState, item: RoutineItem?) {
         guard let token = item?.payload.token else { return }
         

@@ -27,7 +27,7 @@ protocol RoutineExecuterDelegate: AnyObject {
     func routineExecuterDidChange(state: RoutineState)
     func routineExecuterShouldSendActionTriggerTimout(token: String)
     func routineExecuterWillProcessAction(_ action: RoutineItem.Payload.Action)
-
+    
     func routineExecuterShouldRequestAction(
         action: RoutineItem.Payload.Action,
         referrerDialogRequestId: String,
@@ -88,18 +88,18 @@ class RoutineExecuter {
             delegate?.routineExecuterDidChange(state: state)
         }
     }
-
+    
     private let directiveSequencer: DirectiveSequenceable
     private let textAgent: TextAgentProtocol
-
+    
     private let stopTargets = ["AudioPlayer.Play", "ASR.ExpectSpeech"]
     private let interruptTargets = ["Text.TextInput", "ASR.Recognize"]
-
+    
     private let routineDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.routine_executer")
-
+    
     // Notification
     private var notificationTokens = [Any]()
-
+    
     private var handlingDirectives = Set<String>()
     private var handlingEvent: String?
     private var interruptEvent: String?
@@ -117,23 +117,23 @@ class RoutineExecuter {
     ) {
         self.directiveSequencer = directiveSequencer
         self.textAgent = textAgent
-
+        
         addStreamDataObserver(streamDataRouter)
         addAsrAgentObserver(asrAgent)
         addDirectiveSequencerObserver(directiveSequencer)
     }
-
+    
     deinit {
         notificationTokens.forEach(NotificationCenter.default.removeObserver)
         notificationTokens.removeAll()
     }
-
+    
     func start(_ routine: RoutineItem) {
         routineDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             
             log.debug(routine.payload.actions)
-
+            
             self.handlingDirectives.removeAll()
             self.handlingEvent = nil
             self.interruptEvent = nil
@@ -144,11 +144,11 @@ class RoutineExecuter {
             
             self.routine = routine
             self.state = .playing
-
+            
             self.doAction()
         }
     }
-
+    
     func stop() {
         routineDispatchQueue.async { [weak self] in
             guard let self = self else { return }
@@ -157,7 +157,7 @@ class RoutineExecuter {
             self.doStop()
         }
     }
-
+    
     func resume() {
         routineDispatchQueue.async { [weak self] in
             guard let self = self else { return }
@@ -213,7 +213,7 @@ private extension RoutineExecuter {
         }
         notificationTokens.append(token)
     }
-
+    
     func addAsrAgentObserver(_ asrAgent: ASRAgentProtocol) {
         let token = asrAgent.observe(NuguAgentNotification.ASR.StartRecognition.self, queue: routineDispatchQueue) { [weak self] (notification) in
             guard let self = self, self.state == .playing else { return }
@@ -226,7 +226,7 @@ private extension RoutineExecuter {
         }
         notificationTokens.append(token)
     }
-
+    
     func addStreamDataObserver(_ streamDataRouter: StreamDataRoutable) {
         let directivesToken = streamDataRouter.observe(NuguCoreNotification.StreamDataRoute.ReceivedDirectives.self, queue: routineDispatchQueue) { [weak self] (notification) in
             guard let self = self, self.state == .playing else { return }
@@ -238,9 +238,9 @@ private extension RoutineExecuter {
             }
             // Interrupt 상태에서 Routine 이 아닌 directive 가 전달될 경우 Routine 종료
             else if self.interruptEvent == notification.directives.first?.header.dialogRequestId,
-                      notification.directives.contains(where: { (directive) -> Bool in
+                    notification.directives.contains(where: { (directive) -> Bool in
                         directive.header.namespace != CapabilityAgentCategory.routine.name
-                      }) {
+                    }) {
                 log.debug("")
                 self.doStop()
             }
@@ -251,7 +251,7 @@ private extension RoutineExecuter {
             }
         }
         notificationTokens.append(directivesToken)
-
+        
         let eventTokens = streamDataRouter.observe(NuguCoreNotification.StreamDataRoute.ToBeSentEvent.self, queue: routineDispatchQueue) { [weak self] (notification) in
             guard let self = self, self.state == .playing else { return }
             
@@ -298,7 +298,7 @@ private extension RoutineExecuter {
             }
             if let playServiceId = action.playServiceId {
                 handlingEvent = textAgent.requestTextInput(text: text, token: action.token, requestType: .specific(playServiceId: playServiceId), completion: completion)
-
+                
             } else {
                 handlingEvent = textAgent.requestTextInput(text: text, token: action.token, requestType: .normal, completion: completion)
             }
@@ -310,7 +310,7 @@ private extension RoutineExecuter {
             doBreak()
         }
     }
-
+    
     func doNextAction() {
         actionWorkItem?.cancel()
         
@@ -322,7 +322,7 @@ private extension RoutineExecuter {
                     self.doFinish()
                     return
                 }
-
+                
                 self.currentActionIndex += 1
                 self.doAction()
             }
@@ -340,14 +340,14 @@ private extension RoutineExecuter {
             doAction()
         }
     }
-
+    
     @discardableResult
     func doInterrupt() -> Bool {
         guard [.playing, .suspended].contains(state) else { return false }
         
         log.debug("")
         state = .interrupted
-
+        
         return true
     }
     
@@ -357,7 +357,7 @@ private extension RoutineExecuter {
         log.debug("")
         state = .stopped
     }
-
+    
     func doFinish() {
         guard [.playing, .suspended].contains(state) else { return }
         
@@ -407,7 +407,7 @@ private extension RoutineExecuter {
 private extension RoutineExecuter {
     var currentAction: RoutineItem.Payload.Action? {
         guard let routine = routine, currentActionIndex < routine.payload.actions.count else { return nil }
-
+        
         return routine.payload.actions[currentActionIndex]
     }
     

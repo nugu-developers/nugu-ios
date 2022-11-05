@@ -24,7 +24,7 @@ import NuguCore
 import RxSwift
 
 public class AlertsAgent: AlertsAgentProtocol {
-    public var capabilityAgentProperty: CapabilityAgentProperty = .init(category: .alerts, version: "1.1")
+    public var capabilityAgentProperty: CapabilityAgentProperty = .init(category: .alerts, version: "1.4")
     
     // AlertsAgentProtocol
     public weak var delegate: AlertsAgentDelegate?
@@ -41,7 +41,8 @@ public class AlertsAgent: AlertsAgentProtocol {
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "SetAlert", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleSetAlert),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "DeleteAlerts", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleDeleteAlerts),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "DeliveryAlertAsset", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleDeliveryAlertAsset),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "SetSnooze", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleSetSnooze)
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "SetSnooze", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleSetSnooze),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "SkipNextAlert", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleSkipNextAlert)
     ]
     
     public init(
@@ -189,6 +190,30 @@ private extension AlertsAgent {
             )
             
             self.sendCompactContextEvent(event.rx)
+        }
+    }
+    
+    func handleSkipNextAlert() -> HandleDirective {
+        return { [weak self] directive, completion in
+            guard let self = self, let delegate = self.delegate else {
+                completion(.canceled)
+                return
+            }
+            
+            guard let setSkipNextAlertItem = try? JSONDecoder().decode(AlertsAgentDirectivePayload.SkipNextAlert.self, from: directive.payload) else {
+                completion(.failed("Invalid deliveryAssetItem in payload"))
+                return
+            }
+            
+            if delegate.alertsAgentDidReceiveSkipNextAlert(item: setSkipNextAlertItem, header: directive.header) {
+                let event = Event(
+                    typeInfo: .alertSkipped(token: setSkipNextAlertItem.token),
+                    playServiceId: setSkipNextAlertItem.playServiceId,
+                    referrerDialogRequestId: directive.header.dialogRequestId
+                )
+                
+                self.sendCompactContextEvent(event.rx)
+            }
         }
     }
 }

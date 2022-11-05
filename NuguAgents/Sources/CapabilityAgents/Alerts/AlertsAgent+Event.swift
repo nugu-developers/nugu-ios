@@ -39,6 +39,8 @@ extension AlertsAgent {
             // case alertEnteredForeground // Cannot use
             // case alertEnteredBackground // Cannot use
             case alertAssetRequired(token: String) // 필요할지 검토 필요해보임
+            case alertConfirmRequired(token: String) // 필요할지 검토 필요
+            case alertSkipped(token: String) // 필요할지 검토 필요
         }
     }
 }
@@ -66,6 +68,15 @@ extension AlertsAgent.Event: Eventable {
             payload["token"] = token
         case .alertAssetRequired(let token):
             payload["token"] = token
+        case .alertConfirmRequired(let token):
+            payload["token"] = token
+        case .alertSkipped(token: let token):
+            payload["token"] = token
+            
+            let formatter = ISO8601DateFormatter()
+            formatter.timeZone = .current
+            let skippedDateTime = formatter.string(from: Date())
+            payload["skippedDateTime"] = skippedDateTime
         }
         
         return payload
@@ -87,6 +98,10 @@ extension AlertsAgent.Event: Eventable {
             return "SetSnoozeFailed"
         case .alertAssetRequired:
             return "AlertAssetRequired"
+        case .alertConfirmRequired:
+            return "AlertConfirmRequired"
+        case .alertSkipped:
+            return "AlertSkipped"
         }
     }
 }

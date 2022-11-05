@@ -29,28 +29,9 @@ public protocol AlertsAgentDelegate: AnyObject {
     /// - Returns: The context for `AlertsAgent`
     func alertsAgentRequestContext() -> AlertsAgentContext
     
-    /// <#Description#>
-    /// - Parameters:
-    ///   - item: <#payload description#>
-    ///   - header: <#header description#>
     func alertsAgentDidReceiveSetAlert(item: AlertsAgentDirectivePayload.SetAlert, header: Downstream.Header) -> Bool
-    
-    /// <#Description#>
-    /// - Parameters:
-    ///   - item: <#item description#>
-    ///   - header: <#header description#>
     func alertsAgentDidReceiveDeleteAlerts(item: AlertsAgentDirectivePayload.DeleteAlerts, header: Downstream.Header) -> Bool
-    
-    /// <#Description#>
-    /// - Parameters:
-    ///   - item: <#item description#>
-    ///   - header: <#header description#>
-    /// - Returns:If `false`, NUGU SDK handle it.
     func alertsAgentDidReceiveDeliveryAlertAsset(item: AlertsAgentDirectivePayload.DeliveryAlertAsset, header: Downstream.Header) -> Bool
-    
-    /// <#Description#>
-    /// - Parameters:
-    ///   - item: <#item description#>
-    ///   - header: <#header description#>
     func alertsAgentDidReceiveSetSnooze(item: AlertsAgentDirectivePayload.SetSnooze, header: Downstream.Header) -> Bool
+    func alertsAgentDidReceiveSkipNextAlert(item: AlertsAgentDirectivePayload.SkipNextAlert, header: Downstream.Header) -> Bool
 }

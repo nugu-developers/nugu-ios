@@ -21,47 +21,22 @@ import Foundation
 
 import NuguCore
 
-/// <#Description#>
 public enum AlertsAgentDirectivePayload {
-    
-    /// <#Description#>
     public struct SetAlert: Codable {
-        /// <#Description#>
         public let playServiceId: String
-        /// <#Description#>
         public let token: String
-        /// <#Description#>
         public let alertType: String
-        /// <#Description#>
         public let scheduledTime: String
-        /// <#Description#>
         public let activation: Bool
-        /// <#Description#>
         public let minDurationInSec: Int?
-        /// <#Description#>
         public let `repeat`: AlertsRepeat?
-        /// <#Description#>
         public let alarmResourceType: String?
-        /// <#Description#>
         public let assetRequiredInMilliseconds: Int?
-        /// <#Description#>
+        public let creationTime: Int?
+        public let alertConfirmedInMilliseconds: Int?
+        public let modificationTime: Int?
         public let name: String?
-        /// <#Description#>
         public let assets: [AlertsAsset]
-        
-        /// <#Description#>
-        /// - Parameters:
-        ///   - playServiceId: <#playServiceId description#>
-        ///   - token: <#token description#>
-        ///   - alertType: <#alertType description#>
-        ///   - scheduledTime: <#scheduledTime description#>
-        ///   - activation: <#activation description#>
-        ///   - minDurationInSec: <#minDurationInSec description#>
-        ///   - repeat: <#repeat description#>
-        ///   - alarmResourceType: <#alarmResourceType description#>
-        ///   - assetRequiredInMilliseconds: <#assetRequiredInMilliseconds description#>
-        ///   - name: <#name description#>
-        ///   - assets: <#assets description#>
         public init(
             playServiceId: String,
             token: String,
@@ -72,6 +47,9 @@ public enum AlertsAgentDirectivePayload {
             repeat: AlertsRepeat?,
             alarmResourceType: String?,
             assetRequiredInMilliseconds: Int?,
+            alertConfirmedInMilliseconds: Int?,
+            creationTime: Int?,
+            modificationTime: Int?,
             name: String?,
             assets: [AlertsAsset]
         ) {
@@ -84,22 +62,18 @@ public enum AlertsAgentDirectivePayload {
             self.repeat = `repeat`
             self.alarmResourceType = alarmResourceType
             self.assetRequiredInMilliseconds = assetRequiredInMilliseconds
+            self.alertConfirmedInMilliseconds = alertConfirmedInMilliseconds
+            self.creationTime = creationTime
+            self.modificationTime = modificationTime
             self.name = name
             self.assets = assets
         }
     }
     
-    /// <#Description#>
     public struct DeleteAlerts: Codable {
-        /// <#Description#>
         public let playServiceId: String
-        /// <#Description#>
         public let tokens: [String]
         
-        /// <#Description#>
-        /// - Parameters:
-        ///   - playServiceId: <#playServiceId description#>
-        ///   - tokens: <#tokens description#>
         public init(
             playServiceId: String,
             tokens: [String]
@@ -109,15 +83,10 @@ public enum AlertsAgentDirectivePayload {
         }
     }
     
-    /// <#Description#>
     public struct DeliveryAlertAsset: Codable {
-        /// <#Description#>
         public let playServiceId: String
-        /// <#Description#>
         public let token: String
-        /// <#Description#>
         private let assetDetails: [[String: AnyHashable]]?
-        /// <#Description#>
         public let directives: [Downstream.Directive]?
         
         enum CodingKeys: String, CodingKey {
@@ -155,13 +124,15 @@ public enum AlertsAgentDirectivePayload {
         }
     }
     
-    /// <#Description#>
     public struct SetSnooze: Codable {
-        /// <#Description#>
         public let playServiceId: String
-        /// <#Description#>
         public let token: String
-        /// <#Description#>
         public let durationInSec: Int
+    }
+    
+    public struct SkipNextAlert: Codable {
+        public let playServiceId: String
+        public let token: String
+        public let type: String
     }
 }

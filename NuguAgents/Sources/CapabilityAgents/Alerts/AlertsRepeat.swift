@@ -19,22 +19,24 @@
 
 import Foundation
 
-/// <#Description#>
 public struct AlertsRepeat: Codable {
-    /// <#Description#>
     public let type: String
-    /// <#Description#>
     public let daysOfWeek: [String]?
+    public let skippable: Skippable?
     
-    /// <#Description#>
-    /// - Parameters:
-    ///   - type: <#type description#>
-    ///   - daysOfWeek: <#daysOfWeek description#>
     public init(
         type: String,
-        daysOfWeek: [String]?
+        daysOfWeek: [String]?,
+        skippable: Skippable?
     ) {
         self.type = type
         self.daysOfWeek = daysOfWeek
+        self.skippable = skippable
+    }
+}
+
+public extension AlertsRepeat {
+    struct Skippable: Codable {
+        public let skipHolidays: Bool
     }
 }
