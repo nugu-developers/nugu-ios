@@ -213,6 +213,8 @@ private extension RoutineExecuter {
                     self.ignoreStopEvent = false
                 case false where self.ignoreStopEvent == false:
                     self.doInterrupt()
+                default:
+                    break
                 }
             case .failed, .finished:
                 // 마지막 directive 가 실행완료 되면 다음 Action 실행
