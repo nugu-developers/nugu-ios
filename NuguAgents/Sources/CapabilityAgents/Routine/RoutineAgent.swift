@@ -111,8 +111,32 @@ public final class RoutineAgent: RoutineAgentProtocol {
         )
     }
     
-    public func move(to index: Int, completion: @escaping (Bool) -> Void) {
-        routineExecuter.move(to: index, completion: completion)
+    public func previous(completion: @escaping (Bool) -> Void) {
+        guard let routine = routineExecuter.routine else {
+            log.debug("routine is not exist")
+            completion(false)
+            return
+        }
+        sendCompactContextEvent(Event(
+            typeInfo: .moveControl(offset: -1),
+            playServiceId: routine.payload.playServiceId,
+            referrerDialogRequestId: routine.dialogRequestId
+        ).rx)
+        completion(true)
+    }
+    
+    public func next(completion: @escaping (Bool) -> Void) {
+        guard let routine = routineExecuter.routine else {
+            log.debug("routine is not exist")
+            completion(false)
+            return
+        }
+        sendCompactContextEvent(Event(
+            typeInfo: .moveControl(offset: 1),
+            playServiceId: routine.payload.playServiceId,
+            referrerDialogRequestId: routine.dialogRequestId
+        ).rx)
+        completion(true)
     }
     
     public func stop() {
@@ -273,6 +297,7 @@ private extension RoutineAgent {
             }
             
             self?.routineExecuter.move(to: position - 1) { [weak self] isSuccess in
+                log.debug("move to action \(position), result: \(isSuccess)")
                 // TODO: - add error code
                 let typeInfo: Event.TypeInfo = isSuccess ? .moveSucceeded : .moveFailed(errorCode: "")
                 

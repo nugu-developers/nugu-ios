@@ -35,7 +35,7 @@ extension RoutineAgent {
             case actionTriggered(data: [String: AnyHashable]?)
             case moveSucceeded
             case moveFailed(errorCode: String)
-            case moveControl
+            case moveControl(offset: Int)
             case actionTimeoutTriggered(token: String)
         }
     }
@@ -54,6 +54,8 @@ extension RoutineAgent.Event: Eventable {
             payload["data"] = data
         case .moveFailed(let errorCode):
             payload["errorCode"] = errorCode
+        case let .moveControl(offset):
+            payload["offset"] = offset
         default:
             break
         }
