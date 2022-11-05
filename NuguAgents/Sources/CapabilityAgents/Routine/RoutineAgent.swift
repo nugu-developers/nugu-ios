@@ -139,20 +139,6 @@ public final class RoutineAgent: RoutineAgentProtocol {
         completion(true)
     }
     
-    public func move(to index: Int, completion: @escaping (Bool) -> Void) {
-        guard let routine = routineExecuter.routine,
-              index != 0 else {
-            completion(false)
-            return
-        }
-        sendCompactContextEvent(Event(
-            typeInfo: .moveControl(offset: index),
-            playServiceId: routine.payload.playServiceId,
-            referrerDialogRequestId: routine.dialogRequestId
-        ).rx)
-        completion(true)
-    }
-    
     public func stop() {
         routineExecuter.stop()
         

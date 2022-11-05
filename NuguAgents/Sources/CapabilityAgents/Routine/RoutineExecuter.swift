@@ -205,14 +205,13 @@ private extension RoutineExecuter {
             case .canceled:
                 self.doStop()
             case .stopped(let policy):
-                // Ignore stop event after action move event
-                guard self.ignoreStopEvent == false else {
-                    self.ignoreStopEvent = false
-                    return
-                }
-                if policy.cancelAll {
+                switch policy.cancelAll {
+                case true:
                     self.doStop()
-                } else {
+                // Ignore stop event after action move event
+                case false where self.ignoreStopEvent == true:
+                    self.ignoreStopEvent = false
+                case false where self.ignoreStopEvent == false:
                     self.doInterrupt()
                 }
             case .failed, .finished:

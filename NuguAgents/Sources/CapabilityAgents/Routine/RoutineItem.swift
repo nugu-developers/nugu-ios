@@ -51,6 +51,7 @@ public struct RoutineItem {
 
 public extension RoutineItem.Payload {
     struct Action: Decodable {
+        public let id = UUID()
         public let type: ActionType
         public let text: String?
         public let data: [String: AnyHashable]?

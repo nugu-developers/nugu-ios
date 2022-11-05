@@ -33,12 +33,6 @@ public protocol RoutineAgentProtocol: CapabilityAgentable {
      Move to next action
      */
     func next(completion: @escaping (Bool) -> Void)
-    /**
-     Move to index of Action
-     
-     - parameter to: Action index
-     */
-    func move(to index: Int, completion: @escaping (Bool) -> Void)
         
     /**
      Stop routine
