@@ -184,7 +184,13 @@ class RoutineExecuter {
                 self.directiveSequencer.cancelDirective(dialogRequestId: dialogRequestId)
             }
             
-            self.currentActionIndex = index
+            guard let countableActionIndex = self.findCountableActionIndex(index: index) else {
+                log.debug("cannot find countable action index.")
+                completion(false)
+                return
+            }
+            log.debug("moved to index: \(countableActionIndex)")
+            self.currentActionIndex = countableActionIndex
             self.ignoreStopEvent = true
             self.doAction()
             completion(true)
@@ -411,6 +417,16 @@ private extension RoutineExecuter {
             doAction()
         }
         
+    }
+    
+    func findCountableActionIndex(index: Int) -> Int? {
+        guard let countableActions = routine?.payload.actions.filter({ $0.type != .break }),
+              (0..<countableActions.count).contains(index) else {
+            return nil
+        }
+        let action = countableActions[index]
+        
+        return routine?.payload.actions.firstIndex { $0.id == action.id }
     }
 }
 
