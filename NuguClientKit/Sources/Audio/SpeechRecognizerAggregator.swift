@@ -175,10 +175,6 @@ public extension SpeechRecognizerAggregator {
     func startMicInputProvider(requestingFocus: Bool, completion: @escaping (Bool) -> Void) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            guard UIApplication.shared.applicationState == .active else {
-                completion(false)
-                return
-            }
             
             AVAudioSession.sharedInstance().requestRecordPermission { [weak self] isGranted in
                 guard let self = self else { return }
