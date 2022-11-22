@@ -35,7 +35,7 @@ public class PlaySyncManager: PlaySyncManageable {
     
     private var playStack = PlayStack() {
         didSet {
-            let properties = playStack.filter { $0.property.contextType == .display || playContextTimers[$0.property] == nil }
+            let properties = playStack.filter { playContextTimers[$0.property] == nil }
             post(NuguCoreNotification.PlaySync.SynchronizedProperties(properties: properties))
         }
     }
@@ -76,7 +76,7 @@ public class PlaySyncManager: PlaySyncManageable {
 public extension PlaySyncManager {
     func startPlay(property: PlaySyncProperty, info: PlaySyncInfo) {
         playSyncDispatchQueue.async { [weak self] in
-            log.debug("\(property) \(info)")
+            log.debug("startPlay property: \(property) playSyncInfo: \(info)")
             guard let self = self else { return }
 
             // Push to play stack
@@ -100,7 +100,7 @@ public extension PlaySyncManager {
     
     func endPlay(property: PlaySyncProperty) {
         playSyncDispatchQueue.async { [weak self] in
-            log.debug("\(property)")
+            log.debug("endPlay property: \(property)")
             guard let self = self else { return }
             guard let play = self.playStack[property] else { return }
             
@@ -149,7 +149,7 @@ public extension PlaySyncManager {
     
     func resetTimer(property: PlaySyncProperty) {
         playSyncDispatchQueue.async { [weak self] in
-            log.debug(property)
+            log.debug("resetTimer property: \(property)")
             guard let self = self else { return }
             guard self.playContextTimers[property] != nil else { return }
             guard let play = self.playStack[property] else { return }
@@ -244,23 +244,31 @@ private extension PlaySyncManager {
     }
     
     func addTimer(property: PlaySyncProperty, duration: TimeIntervallic) {
+        log.debug("addTimer property: \(property), duration: \(duration)")
         timerDuration[property] = duration
         removeTimer(property: property)
         
         guard duration.dispatchTimeInterval != .never else { return }
         guard timerPaused == false else {
+            log.debug("pused timer: \(timerPaused)")
             pausedTimers.insert(property)
             return
         }
         
+        log.debug("Timer will be fired")
         playContextTimers[property] = Single<Int>.timer(duration.dispatchTimeInterval, scheduler: playSyncScheduler)
             .subscribe(onSuccess: { [weak self] _ in
                 log.debug("Timer fired. \(property) duration \(duration)")
                 self?.popFromPlayStack(property: property)
             })
+        
+        // Post adjusted PlayStacks
+        let properties = playStack.filter { self.playContextTimers[$0.property] == nil }
+        self.post(NuguCoreNotification.PlaySync.SynchronizedProperties(properties: properties))
     }
     
     func removeTimer(property: PlaySyncProperty) {
+        log.debug("removeTimer property: \(property)")
         guard playContextTimers[property] != nil || pausedTimers.contains(property) else { return }
         
         playContextTimers[property]?.dispose()
