@@ -36,6 +36,12 @@ protocol RoutineExecuterDelegate: AnyObject {
 }
 
 class RoutineExecuter {
+    typealias ReceivedDirectives = NuguCoreNotification.StreamDataRoute.ReceivedDirectives
+    
+    private enum Const {
+        static let reactiveTarget = "Apollo.Reactive"
+    }
+    
     weak var delegate: RoutineExecuterDelegate?
     
     private(set) var routine: RoutineItem?
@@ -94,6 +100,7 @@ class RoutineExecuter {
     
     private let stopTargets = ["AudioPlayer.Play", "ASR.ExpectSpeech"]
     private let interruptTargets = ["Text.TextInput", "ASR.Recognize"]
+    private let delayTargets = ["TTS.Speak"]
     
     private let routineDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.routine_executer")
     
@@ -110,6 +117,7 @@ class RoutineExecuter {
     private var ignoreAfterAction = false
     
     private var ignoreStopEvent = false
+    private var shouldDelayAction = false
     
     init(
         directiveSequencer: DirectiveSequenceable,
@@ -240,8 +248,11 @@ private extension RoutineExecuter {
     }
     
     func addStreamDataObserver(_ streamDataRouter: StreamDataRoutable) {
-        let directivesToken = streamDataRouter.observe(NuguCoreNotification.StreamDataRoute.ReceivedDirectives.self, queue: routineDispatchQueue) { [weak self] (notification) in
+        let directivesToken = streamDataRouter.observe(ReceivedDirectives.self, queue: routineDispatchQueue) { [weak self] (notification) in
             guard let self = self, self.state == .playing else { return }
+            
+            // Set mute delay after actions If Directives contains `Apollo.Reactive` and not `TTS.Speak`
+            self.shouldDelayAction = self.applyMuteDelayIfNeeded(notification: notification)
             
             // Directive 에 Routine 중단 대상이 포함되어 있으며, 다음 Action 은 실행되지 않음
             if (notification.directives.contains { self.stopTargets.contains($0.header.type) }), self.hasNextAction {
@@ -325,21 +336,12 @@ private extension RoutineExecuter {
     
     func doNextAction() {
         actionWorkItem?.cancel()
-        
-        if let delay = currentAction?.postDelay {
-            log.debug(delay)
-            let workItem = DispatchWorkItem { [weak self] in
-                guard let self = self else { return }
-                guard self.state == .playing, self.hasNextAction else {
-                    self.doFinish()
-                    return
-                }
-                
-                self.currentActionIndex += 1
-                self.doAction()
-            }
-            actionWorkItem = workItem
-            routineDispatchQueue.asyncAfter(deadline: .now() + delay.dispatchTimeInterval, execute: workItem)
+        if shouldDelayAction, let delay = currentAction?.muteDelay {
+            log.debug("Delaying action using mute delay, delay: \(delay.dispatchTimeInterval)")
+            doActionAfter(delay: delay)
+        } else if let delay = currentAction?.postDelay {
+            log.debug("Delaying action using posy delay, delay: \(delay.dispatchTimeInterval)")
+            doActionAfter(delay: delay)
         } else {
             guard state == .playing, hasNextAction else {
                 doFinish()
@@ -411,6 +413,38 @@ private extension RoutineExecuter {
             doAction()
         }
         
+    }
+    
+    func findCountableActionIndex(index: Int) -> Int? {
+        guard let countableActions = routine?.payload.actions.filter({ $0.type != .break }),
+              (0..<countableActions.count).contains(index) else {
+            return nil
+        }
+        let action = countableActions[index]
+        
+        return routine?.payload.actions.firstIndex { $0.id == action.id }
+    }
+    
+    func applyMuteDelayIfNeeded(notification: ReceivedDirectives) -> Bool {
+        guard (notification.directives.contains { Const.reactiveTarget == $0.header.type }) else {
+            return false
+        }
+        return notification.directives.contains { delayTargets.contains($0.header.type) } == false
+    }
+    
+    func doActionAfter(delay: TimeIntervallic) {
+        let workItem = DispatchWorkItem { [weak self] in
+            guard let self = self else { return }
+            guard self.state == .playing, self.hasNextAction else {
+                self.doFinish()
+                return
+            }
+            
+            self.currentActionIndex += 1
+            self.doAction()
+        }
+        actionWorkItem = workItem
+        routineDispatchQueue.asyncAfter(deadline: .now() + delay.dispatchTimeInterval, execute: workItem)
     }
 }
 
