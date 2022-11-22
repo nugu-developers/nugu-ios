@@ -192,7 +192,13 @@ class RoutineExecuter {
                 self.directiveSequencer.cancelDirective(dialogRequestId: dialogRequestId)
             }
             
-            self.currentActionIndex = index
+            guard let countableActionIndex = self.findCountableActionIndex(index: index) else {
+                log.debug("cannot find countable action index.")
+                completion(false)
+                return
+            }
+            log.debug("moved to index: \(countableActionIndex)")
+            self.currentActionIndex = countableActionIndex
             self.ignoreStopEvent = true
             self.doAction()
             completion(true)
