@@ -263,7 +263,7 @@ private extension PlaySyncManager {
             })
         
         // Post adjusted PlayStacks
-        let properties = self.playStack.filter { self.playContextTimers[$0.property] == nil }
+        let properties = playStack.filter { self.playContextTimers[$0.property] == nil }
         self.post(NuguCoreNotification.PlaySync.SynchronizedProperties(properties: properties))
     }
     

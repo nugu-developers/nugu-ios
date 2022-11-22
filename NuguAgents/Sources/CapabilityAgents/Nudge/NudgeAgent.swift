@@ -41,7 +41,7 @@ public class NudgeAgent: NudgeAgentProtocol {
         if let nudgeInfo = self.nudgeInfo,
            let currentPlayStacks = self.currentPlayStacks,
            (currentPlayStacks.contains { $0.info.dialogRequestId == self.dialogRequestId }) {
-            payload["nudgeInfo"] = self.nudgeInfo
+            payload["nudgeInfo"] = nudgeInfo
         }
         
         completion(ContextInfo(contextType: .capability, name: self.capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
