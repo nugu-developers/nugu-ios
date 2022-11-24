@@ -52,12 +52,11 @@ class RoutineExecuter {
     }
     private(set) var state: RoutineState = .idle {
         didSet {
-            log.debug(state)
-            
             guard oldValue != state else {
                 log.debug("state has not changed. \(oldValue) -> \(state)")
                 return
             }
+            log.debug("routine state: \(state)")
             
             interruptTimer?.cancel()
             switch state {
@@ -117,6 +116,7 @@ class RoutineExecuter {
     private var ignoreAfterAction = false
     
     private var ignoreStopEvent = false
+    private var ignoreInterruptEvents = Set<String>()
     private var shouldDelayAction = false
     
     init(
@@ -149,6 +149,7 @@ class RoutineExecuter {
             self.interruptEvent = nil
             self.currentActionIndex = 0
             self.ignoreAfterAction = false
+            self.ignoreInterruptEvents.removeAll()
             
             self.doFinish()
             
@@ -189,6 +190,7 @@ class RoutineExecuter {
                 return
             }
             if let dialogRequestId = self.handlingEvent {
+                self.ignoreInterruptEvents.insert(dialogRequestId)
                 self.directiveSequencer.cancelDirective(dialogRequestId: dialogRequestId)
             }
             
@@ -284,8 +286,10 @@ private extension RoutineExecuter {
         let eventTokens = streamDataRouter.observe(NuguCoreNotification.StreamDataRoute.ToBeSentEvent.self, queue: routineDispatchQueue) { [weak self] (notification) in
             guard let self = self, self.state == .playing else { return }
             
-            // Event 가 Routine interrupt 대상에 포함되어 있으며, Action 에 의한 event 가 아닌 경우 interrupt 처리.
-            if self.interruptTargets.contains(notification.event.header.type), self.handlingEvent != notification.event.header.dialogRequestId {
+            // Event 가 Routine interrupt 대상에 포함되어 있으며, Move, Action 에 의한 event 가 아닌 경우 interrupt 처리.
+            if self.interruptTargets.contains(notification.event.header.type),
+               self.handlingEvent != notification.event.header.dialogRequestId,
+               self.shouldInterruptEvent(dialogRequestId: notification.event.header.dialogRequestId) {
                 if self.doInterrupt() == true {
                     log.debug("")
                     self.interruptEvent = notification.event.header.dialogRequestId
@@ -451,6 +455,14 @@ private extension RoutineExecuter {
         }
         actionWorkItem = workItem
         routineDispatchQueue.asyncAfter(deadline: .now() + delay.dispatchTimeInterval, execute: workItem)
+    }
+    
+    func shouldInterruptEvent(dialogRequestId: String) -> Bool {
+        guard ignoreInterruptEvents.contains(dialogRequestId) else {
+            return true
+        }
+        ignoreInterruptEvents.remove(dialogRequestId)
+        return false
     }
 }
 
