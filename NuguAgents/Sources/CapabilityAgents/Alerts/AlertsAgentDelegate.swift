@@ -34,4 +34,6 @@ public protocol AlertsAgentDelegate: AnyObject {
     func alertsAgentDidReceiveDeliveryAlertAsset(item: AlertsAgentDirectivePayload.DeliveryAlertAsset, header: Downstream.Header) -> Bool
     func alertsAgentDidReceiveSetSnooze(item: AlertsAgentDirectivePayload.SetSnooze, header: Downstream.Header) -> Bool
     func alertsAgentDidReceiveSkipNextAlert(item: AlertsAgentDirectivePayload.SkipNextAlert, header: Downstream.Header) -> Bool
+    func alertsAgentDidReceiveSetHookEvents(item: AlertsAgentDirectivePayload.SetHookEvents, header: Downstream.Header) -> Bool
+    func alertsAgentDidReceiveDeleteHookEvents(item: AlertsAgentDirectivePayload.DeleteHookEvents, header: Downstream.Header) -> Bool
 }

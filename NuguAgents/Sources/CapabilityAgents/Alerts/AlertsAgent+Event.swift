@@ -41,6 +41,11 @@ extension AlertsAgent {
             case alertAssetRequired(token: String) // 필요할지 검토 필요해보임
             case alertConfirmRequired(token: String) // 필요할지 검토 필요
             case alertSkipped(token: String) // 필요할지 검토 필요
+            case setHookEventsSucceeded(token: String)  // 필요할지 검토 필요
+            case setHookEventsFailed(token: String) // 필요할지 검토 필요
+            case deleteHookEventsSucceeded(token: String) // 필요할지 검토 필요
+            case deleteHookEventsFailed(token: String) // 필요할지 검토 필요
+            // case hookAlertRingingFlowFinished(token: String) // Cannot use
         }
     }
 }
@@ -54,29 +59,37 @@ extension AlertsAgent.Event: Eventable {
         ]
         
         switch typeInfo {
-        case .setAlertSucceeded(let token):
+        case let .setAlertSucceeded(token):
             payload["token"] = token
-        case .setAlertFailed(let token):
+        case let .setAlertFailed(token):
             payload["token"] = token
-        case .deleteAlertsSucceeded(let tokens):
+        case let .deleteAlertsSucceeded(tokens):
             payload["tokens"] = tokens
-        case .deleteAlertsFailed(let tokens):
+        case let .deleteAlertsFailed(tokens):
             payload["tokens"] = tokens
-        case .setSnoozeSucceeded(let token):
+        case let .setSnoozeSucceeded(token):
             payload["token"] = token
-        case .setSnoozeFailed(let token):
+        case let .setSnoozeFailed(token):
             payload["token"] = token
-        case .alertAssetRequired(let token):
+        case let .alertAssetRequired(token):
             payload["token"] = token
-        case .alertConfirmRequired(let token):
+        case let .alertConfirmRequired(token):
             payload["token"] = token
-        case .alertSkipped(token: let token):
+        case let .alertSkipped(token):
             payload["token"] = token
             
             let formatter = ISO8601DateFormatter()
             formatter.timeZone = .current
             let skippedDateTime = formatter.string(from: Date())
             payload["skippedDateTime"] = skippedDateTime
+        case let .setHookEventsSucceeded(token):
+            payload["token"] = token
+        case let .setHookEventsFailed(token):
+            payload["token"] = token
+        case let .deleteHookEventsSucceeded(token):
+            payload["token"] = token
+        case let .deleteHookEventsFailed(token):
+            payload["token"] = token
         }
         
         return payload
@@ -102,6 +115,14 @@ extension AlertsAgent.Event: Eventable {
             return "AlertConfirmRequired"
         case .alertSkipped:
             return "AlertSkipped"
+        case .setHookEventsSucceeded:
+            return "SetHookEventsSucceeded"
+        case .setHookEventsFailed:
+            return "SetHookEventsFailed"
+        case .deleteHookEventsSucceeded:
+            return "DeleteHookEventsSucceeded"
+        case .deleteHookEventsFailed:
+            return "DeleteHookEventsFailed"
         }
     }
 }

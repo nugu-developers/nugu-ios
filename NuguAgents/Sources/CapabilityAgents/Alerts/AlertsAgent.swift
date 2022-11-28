@@ -42,7 +42,9 @@ public class AlertsAgent: AlertsAgentProtocol {
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "DeleteAlerts", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleDeleteAlerts),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "DeliveryAlertAsset", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleDeliveryAlertAsset),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "SetSnooze", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleSetSnooze),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "SkipNextAlert", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleSkipNextAlert)
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "SkipNextAlert", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleSkipNextAlert),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "SetHookEvents", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleSetHookEvents),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "DeleteHookEvents", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleDeleteHookEvents)
     ]
     
     public init(
@@ -214,6 +216,52 @@ private extension AlertsAgent {
                 
                 self.sendCompactContextEvent(event.rx)
             }
+        }
+    }
+    
+    func handleSetHookEvents() -> HandleDirective {
+        return { [weak self] directive, completion in
+            guard let self = self, let delegate = self.delegate else {
+                completion(.canceled)
+                return
+            }
+            
+            guard let setHookEventsItem = try? JSONDecoder().decode(AlertsAgentDirectivePayload.SetHookEvents.self, from: directive.payload) else {
+                completion(.failed("Invalid deliveryAssetItem in payload"))
+                return
+            }
+            
+            let isSuccess = delegate.alertsAgentDidReceiveSetHookEvents(item: setHookEventsItem, header: directive.header)
+            let event = Event(
+                typeInfo: isSuccess ? .setHookEventsSucceeded(token: setHookEventsItem.token) : .setHookEventsFailed(token: setHookEventsItem.token),
+                playServiceId: setHookEventsItem.playServiceId,
+                referrerDialogRequestId: directive.header.dialogRequestId
+            )
+            
+            self.sendCompactContextEvent(event.rx)
+        }
+    }
+    
+    func handleDeleteHookEvents() -> HandleDirective {
+        return { [weak self] directive, completion in
+            guard let self = self, let delegate = self.delegate else {
+                completion(.canceled)
+                return
+            }
+            
+            guard let deleteHookEventsItem = try? JSONDecoder().decode(AlertsAgentDirectivePayload.DeleteHookEvents.self, from: directive.payload) else {
+                completion(.failed("Invalid deliveryAssetItem in payload"))
+                return
+            }
+            
+            let isSuccess = delegate.alertsAgentDidReceiveDeleteHookEvents(item: deleteHookEventsItem, header: directive.header)
+            let event = Event(
+                typeInfo: isSuccess ? .deleteHookEventsSucceeded(token: deleteHookEventsItem.token) : .deleteHookEventsFailed(token: deleteHookEventsItem.token),
+                playServiceId: deleteHookEventsItem.playServiceId,
+                referrerDialogRequestId: directive.header.dialogRequestId
+            )
+            
+            self.sendCompactContextEvent(event.rx)
         }
     }
 }

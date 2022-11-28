@@ -135,4 +135,30 @@ public enum AlertsAgentDirectivePayload {
         public let token: String
         public let type: String
     }
+    
+    public struct SetHookEvents: Codable {
+        public let playServiceId: String
+        public let token: String
+        public let hookEvents: [HookEvent]
+        
+        public struct HookEvent: Codable {
+            public let id: String
+            public let hook: Hook
+            
+            public struct Hook: Codable {
+                public let type: String
+                public let playServiceId: String
+            }
+        }
+    }
+    
+    public struct DeleteHookEvents: Codable {
+        public let playServiceId: String
+        public let token: String
+        public let hookEvents: [HookEvent]
+        
+        public struct HookEvent: Codable {
+            public let id: String
+        }
+    }
 }
