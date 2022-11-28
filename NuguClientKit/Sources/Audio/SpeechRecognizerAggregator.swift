@@ -116,19 +116,31 @@ public extension SpeechRecognizerAggregator {
         }
         
         let dialogRequestId = asrAgent.startRecognition(initiator: initiator) { [weak self] state in
-            if case .prepared = state {
-                self?.startMicInputProvider(requestingFocus: true) { [weak self] success in
-                    if success == false {
-                        log.error("Start MicInputProvider failed")
-                        self?.asrAgent.stopRecognition()
-                        self?.state = .error(SpeechRecognizerAggregatorError.cannotOpenMicInputForRecognition)
-                        completion?(.error(SpeechRecognizerAggregatorError.cannotOpenMicInputForRecognition))
-                        return
-                    }
-                }
+            guard case .prepared = state else {
+                completion?(state)
+                return
             }
             
-            completion?(state)
+            self?.startMicInputProvider(requestingFocus: true) { [weak self] endedUp in
+                if case let .failure(error) = endedUp {
+                    log.error("Start MicInputProvider failed: \(error)")
+                    self?.asrAgent.stopRecognition()
+                    
+                    var recognizerError: Error {
+                        guard error is MicInputError else {
+                            return error
+                        }
+                        
+                        return SpeechRecognizerAggregatorError.cannotOpenMicInputForRecognition
+                    }
+                    self?.state = .error(recognizerError)
+                    completion?(.error(recognizerError))
+                    
+                    return
+                }
+                
+                completion?(.prepared)
+            }
         }
         
         return dialogRequestId
@@ -140,12 +152,21 @@ public extension SpeechRecognizerAggregator {
             $0?.cancel()
             $0 = DispatchWorkItem(block: { [weak self] in
                 log.debug("startMicWorkItem start")
-                self?.startMicInputProvider(requestingFocus: false) { (success) in
-                    guard success else {
-                        log.debug("startMicWorkItem failed!")
-                        self?.state = .error(SpeechRecognizerAggregatorError.cannotOpenMicInputForWakeup)
-                        completion?(.failure(SpeechRecognizerAggregatorError.cannotOpenMicInputForWakeup))
+                self?.startMicInputProvider(requestingFocus: false) { (endedUp) in
+                    if case let .failure(error) = endedUp {
+                        log.debug("startMicWorkItem failed: \(error)")
+                        var recognizerError: Error {
+                            guard error is MicInputError else {
+                                return error
+                            }
+                            
+                            return SpeechRecognizerAggregatorError.cannotOpenMicInputForWakeup
+                        }
+                        self?.state = .error(recognizerError)
+                        completion?(.failure(recognizerError))
+                        
                         return
+
                     }
                     
                     self?.keywordDetector.start()
@@ -172,7 +193,7 @@ public extension SpeechRecognizerAggregator {
         asrAgent.stopRecognition()
     }
     
-    func startMicInputProvider(requestingFocus: Bool, completion: @escaping (Bool) -> Void) {
+    func startMicInputProvider(requestingFocus: Bool, completion: @escaping (EndedUp<Error>) -> Void) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             
@@ -180,22 +201,23 @@ public extension SpeechRecognizerAggregator {
                 guard let self = self else { return }
                 guard isGranted else {
                     log.error("Record permission denied")
-                    completion(false)
+                    completion(.failure(SpeechRecognizerAggregatorError.micPermissionNotGranted))
                     return
                 }
+                
                 self.micQueue.async { [weak self] in
                     guard let self = self else { return }
                     guard self.micInputProvider.isRunning == false else {
-                        completion(true)
+                        completion(.success)
                         return
                     }
                     
                     do {
                         try self.micInputProvider.start()
-                        completion(true)
+                        completion(.success)
                     } catch {
                         log.error(error)
-                        completion(false)
+                        completion(.failure(error))
                     }
                 }
             }
@@ -283,9 +305,9 @@ extension SpeechRecognizerAggregator {
                     self.keywordDetector.stop()
                 }
             case .expectingSpeech:
-                self.startMicInputProvider(requestingFocus: true) { [weak self] (success) in
-                    if success == false {
-                        log.debug("startMicInputProvider failed!")
+                self.startMicInputProvider(requestingFocus: true) { [weak self] (endedUp) in
+                    if case let .failure(error) = endedUp {
+                        log.debug("startMicInputProvider failed: \(error)")
                         self?.asrAgent.stopRecognition()
                     }
                 }
