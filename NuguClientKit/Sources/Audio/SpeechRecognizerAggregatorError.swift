@@ -23,4 +23,5 @@ import Foundation
 public enum SpeechRecognizerAggregatorError: Error {
     case cannotOpenMicInputForRecognition
     case cannotOpenMicInputForWakeup
+    case micPermissionNotGranted
 }
