@@ -24,7 +24,7 @@ import NuguCore
 import RxSwift
 
 public class AlertsAgent: AlertsAgentProtocol {
-    public var capabilityAgentProperty: CapabilityAgentProperty = .init(category: .alerts, version: "1.4")
+    public var capabilityAgentProperty: CapabilityAgentProperty = .init(category: .alerts, version: "1.5")
     
     // AlertsAgentProtocol
     public weak var delegate: AlertsAgentDelegate?
