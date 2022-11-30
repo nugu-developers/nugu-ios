@@ -130,7 +130,13 @@ public extension PlaySyncManager {
             // Pop from play stack
             self.playStack
                 .filter { $0.info.dialogRequestId == dialogRequestId }
-                .filter { $0.property == property ?? $0.property }
+                .filter {
+                    guard let property = property else {
+                        return $0.property.layerType != .overlay
+                    }
+                    
+                    return $0.property == property
+                }
                 .map { $0.property }
                 .forEach(self.popFromPlayStack)
         }
