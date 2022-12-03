@@ -184,15 +184,17 @@ class RoutineExecuter {
     func move(to index: Int, completion: @escaping (Bool) -> Void) {
         routineDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard self.state == .playing,
+            guard [RoutineState.playing, RoutineState.interrupted].contains(self.state),
                   let routine = self.routine, (0..<routine.payload.actions.count).contains(index) else {
                 completion(false)
                 return
             }
-            if let dialogRequestId = self.handlingEvent {
-                self.ignoreInterruptEvents.insert(dialogRequestId)
-                self.directiveSequencer.cancelDirective(dialogRequestId: dialogRequestId)
+            
+            if self.state == .interrupted {
+                self.state = .playing
             }
+            
+            self.cancelCurrentAction()
             
             guard let countableActionIndex = self.findCountableActionIndex(index: index) else {
                 log.debug("cannot find countable action index.")
@@ -463,6 +465,14 @@ private extension RoutineExecuter {
         }
         ignoreInterruptEvents.remove(dialogRequestId)
         return false
+    }
+    
+    func cancelCurrentAction() {
+        if let dialogRequestId = handlingEvent {
+            ignoreInterruptEvents.insert(dialogRequestId)
+            directiveSequencer.cancelDirective(dialogRequestId: dialogRequestId)
+        }
+        handlingDirectives.removeAll()
     }
 }
 
