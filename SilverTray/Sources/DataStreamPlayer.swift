@@ -277,12 +277,6 @@ public class DataStreamPlayer {
     }
     
     private func internalPlay() {
-        do {
-            try Self.audioEngineManager.startAudioEngine()
-        } catch {
-             os_log("[%@] audioEngine start failed", log: .audioEngine, type: .debug, "\(id)")
-        }
-        
         if let error = (UnifiedErrorCatcher.try {
             player.play()
             os_log("[%@] player started", log: .player, type: .debug, "\(id)")
@@ -353,8 +347,10 @@ public class DataStreamPlayer {
         tempAudioArray.removeAll()
         audioBuffers.removeAll()
         
-        if Self.audioEngineManager.removeObserver(self) == nil {
-            os_log("[%@] removing observer failed", log: .player, type: .default, "\(id)")
+        Self.audioEngineManager.removeObserver(self) { [weak self] removedObserver in
+            guard removedObserver == nil else { return }
+            guard let self = self else { return }
+            os_log("[%@] removing observer failed", log: .player, type: .default, "\(self.id)")
         }
         
         #if DEBUG

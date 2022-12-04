@@ -11,7 +11,7 @@ import NuguObjcUtils
 class AudioEngineManager<Observer: AudioEngineObservable> {
     @Atomic private var audioEngine = AVAudioEngine()
     private let audioEngineQueue = DispatchQueue(label: "com.sktelecom.romain.silver_tray.audio_engine_notification")
-    @Atomic private var audioEngineObservers = Set<Observer>()
+    private var audioEngineObservers = Set<Observer>()
     
     private let notificationCenter = NotificationCenter.default
     private var audioEngineConfigurationObserver: Any?
@@ -32,7 +32,7 @@ class AudioEngineManager<Observer: AudioEngineObservable> {
         audioEngine.isRunning
     }
     
-    func startAudioEngine() throws {
+    private func startAudioEngine() throws {
         var engineError: Error?
         _audioEngine.mutate { engine in
             guard engine.isRunning == false else { return }
@@ -64,9 +64,7 @@ class AudioEngineManager<Observer: AudioEngineObservable> {
         }
         
         audioEngineConfigurationObserver = notificationCenter.addObserver(forName: .AVAudioEngineConfigurationChange, object: audioEngine, queue: nil) { [weak self] (notification) in
-            self?.audioEngineQueue.async { [weak self] in
-                self?.engineConfigurationChange(notification: notification)
-            }
+            self?.engineConfigurationChange(notification: notification)
         }
     }
     
@@ -111,26 +109,26 @@ extension AudioEngineManager {
 // MARK: - Observer
 
 extension AudioEngineManager {
-    @discardableResult func registerObserver(_ observer: Observer) -> Bool {
-        var isInserted = false
-        _audioEngineObservers.mutate {
-            isInserted = $0.insert(observer).inserted
+    func registerObserver(_ observer: Observer, completion: ((Bool) -> Void)? = nil) {
+        audioEngineQueue.async { [weak self] in
+            guard let self = self else { return }
+            let isInserted = self.audioEngineObservers.insert(observer).inserted
+            try? self.startAudioEngine()
+            
+            completion?(isInserted)
         }
-        try? startAudioEngine()
-        
-        return isInserted
     }
     
-    @discardableResult func removeObserver(_ observer: Observer) -> Observer? {
-        var removedObserver: Observer? = nil
-        _audioEngineObservers.mutate {
-            removedObserver = $0.remove(observer)
-            if $0.count == 0 {
-                try? stopAudioEngine()
+    func removeObserver(_ observer: Observer, completion: ((Observer?) -> Void)? = nil) {
+        audioEngineQueue.async { [weak self] in
+            guard let self = self else { return }
+            let removedObserver = self.audioEngineObservers.remove(observer)
+            if self.audioEngineObservers.isEmpty {
+                try? self.stopAudioEngine()
             }
+            
+            completion?(removedObserver)
         }
-        
-        return removedObserver
     }
 }
 
@@ -138,8 +136,17 @@ private extension AudioEngineManager {
     func engineConfigurationChange(notification: Notification) {
         os_log("engineConfigurationChange: %{public}@", log: .audioEngine, type: .debug, "\(notification)")
         
-        audioEngineObservers.forEach { (observer) in
-            observer.engineConfigurationChange(notification: notification)
+        audioEngineQueue.async { [weak self] in
+            do {
+                try self?.startAudioEngine()
+            } catch {
+                os_log("audioEngine start failed: %{public}@", log: .audioEngine, type: .error, "\(error)")
+                return
+            }
+            
+            self?.audioEngineObservers.forEach { (observer) in
+                observer.engineConfigurationChange(notification: notification)
+            }
         }
     }
 }
