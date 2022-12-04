@@ -33,7 +33,7 @@ class AudioEngineManager<Observer: AudioEngineObservable> {
     }
     
     func startAudioEngine() throws {
-        var engineError: Error!
+        var engineError: Error?
         _audioEngine.mutate { engine in
             guard engine.isRunning == false else { return }
             
@@ -136,13 +136,7 @@ extension AudioEngineManager {
 
 private extension AudioEngineManager {
     func engineConfigurationChange(notification: Notification) {
-        os_log("engineConfigurationChange: %{private}@", log: .audioEngine, type: .debug, "\(notification)")
-        
-        do {
-            try startAudioEngine()
-        } catch {
-            os_log("audioEngine start failed", log: .audioEngine, type: .debug)
-        }
+        os_log("engineConfigurationChange: %{public}@", log: .audioEngine, type: .debug, "\(notification)")
         
         audioEngineObservers.forEach { (observer) in
             observer.engineConfigurationChange(notification: notification)
