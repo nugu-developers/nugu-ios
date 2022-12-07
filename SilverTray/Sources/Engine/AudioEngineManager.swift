@@ -90,19 +90,75 @@ class AudioEngineManager<Observer: AudioEngineObservable> {
 
 extension AudioEngineManager {
     func attach(_ node: AVAudioNode) {
-        _audioEngine.mutate { $0.attach(node) }
+        _audioEngine.mutate { engine in
+            if let error = (UnifiedErrorCatcher.try { () -> Error? in
+                if #available(iOS 13, *) {
+                    if engine.attachedNodes.contains(node) == false {
+                        engine.attach(node)
+                    }
+                } else {
+                    engine.attach(node)
+                }
+                
+                return nil
+            }) {
+                os_log("attach failed: %@", log: .audioEngine, type: .error, error.localizedDescription)
+            }
+        }
     }
     
     func detach(_ node: AVAudioNode) {
-        _audioEngine.mutate { $0.detach(node) }
+        _audioEngine.mutate { engine in
+            if let error = (UnifiedErrorCatcher.try { () -> Error? in
+                if #available(iOS 13, *) {
+                    if engine.attachedNodes.contains(node) {
+                        engine.detach(node)
+                    }
+                } else {
+                    engine.detach(node)
+                }
+                
+                return nil
+            }) {
+                os_log("detach failed: %@", log: .audioEngine, type: .error, error.localizedDescription)
+            }
+        }
     }
     
-    func connect(_ node1: AVAudioNode, to: AVAudioNode, format: AVAudioFormat?) {
-        _audioEngine.mutate { $0.connect(node1, to: to, format: format) }
+    func connect(_ node1: AVAudioNode, to node2: AVAudioNode, format: AVAudioFormat?) {
+        _audioEngine.mutate { engine in
+            if let error = (UnifiedErrorCatcher.try { () -> Error? in
+                if #available(iOS 13, *) {
+                    if engine.attachedNodes.contains(node1), engine.attachedNodes.contains(node2) {
+                        engine.connect(node1, to: node2, format: format)
+                    }
+                } else {
+                    engine.connect(node1, to: node2, format: format)
+                }
+                
+                return nil
+            }) {
+                os_log("connect failed: %@", log: .audioEngine, type: .error, error.localizedDescription)
+            }
+        }
     }
     
     func disconnectNodeOutput(_ node: AVAudioNode) {
-        _audioEngine.mutate { $0.disconnectNodeOutput(node) }
+        _audioEngine.mutate { engine in
+            if let error = (UnifiedErrorCatcher.try { () -> Error? in
+                if #available(iOS 13, *) {
+                    if engine.attachedNodes.contains(node) {
+                        engine.disconnectNodeOutput(node)
+                    }
+                } else {
+                    engine.disconnectNodeOutput(node)
+                }
+                
+                return nil
+            }) {
+                os_log("disconnect failed: %@", log: .audioEngine, type: .error, error.localizedDescription)
+            }
+        }
     }
 }
 

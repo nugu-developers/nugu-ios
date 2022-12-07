@@ -205,21 +205,31 @@ public class DataStreamPlayer {
     }
     
     private func attachAudioNodes() {
-        #if !os(watchOS)
-        Self.audioEngineManager.attach(speedController)
-        Self.audioEngineManager.attach(pitchController)
-        #endif
-        
-        Self.audioEngineManager.attach(player)
+        if let error = UnifiedErrorCatcher.try({ () -> Error? in
+            #if !os(watchOS)
+            Self.audioEngineManager.attach(speedController)
+            Self.audioEngineManager.attach(pitchController)
+            #endif
+            
+            Self.audioEngineManager.attach(player)
+            return nil
+        }) {
+            os_log("[%@] attachAudioNodes failed: %@", log: .player, type: .error, "\(id)", "\(error)")
+        }
     }
     
     private func detachAudioNodes() {
-        #if !os(watchOS)
-        Self.audioEngineManager.detach(speedController)
-        Self.audioEngineManager.detach(pitchController)
-        #endif
-        
-        Self.audioEngineManager.detach(player)
+        if let error = UnifiedErrorCatcher.try({ () -> Error? in
+            #if !os(watchOS)
+            Self.audioEngineManager.detach(speedController)
+            Self.audioEngineManager.detach(pitchController)
+            #endif
+            
+            Self.audioEngineManager.detach(player)
+            return nil
+        }) {
+            os_log("[%@] detachAudioNodes failed: %@", log: .player, type: .error, "\(id)", "\(error)")
+        }
     }
 
     
