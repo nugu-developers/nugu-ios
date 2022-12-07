@@ -90,19 +90,52 @@ class AudioEngineManager<Observer: AudioEngineObservable> {
 
 extension AudioEngineManager {
     func attach(_ node: AVAudioNode) {
-        _audioEngine.mutate { $0.attach(node) }
+        _audioEngine.mutate {
+            if #available(iOS 13, *) {
+                if $0.attachedNodes.contains(node) == false {
+                    $0.attach(node)
+                }
+            } else {
+                $0.attach(node)
+            }
+        }
     }
     
     func detach(_ node: AVAudioNode) {
-        _audioEngine.mutate { $0.detach(node) }
+        _audioEngine.mutate {
+            if #available(iOS 13, *) {
+                if $0.attachedNodes.contains(node) {
+                    $0.detach(node)
+                }
+            } else {
+                $0.detach(node)
+            }
+        }
     }
     
-    func connect(_ node1: AVAudioNode, to: AVAudioNode, format: AVAudioFormat?) {
-        _audioEngine.mutate { $0.connect(node1, to: to, format: format) }
+    func connect(_ node1: AVAudioNode, to node2: AVAudioNode, format: AVAudioFormat?) {
+        _audioEngine.mutate {
+            if #available(iOS 13, *) {
+                if $0.attachedNodes.contains(node1), $0.attachedNodes.contains(node2) {
+                    $0.connect(node1, to: node2, format: format)
+                }
+            } else {
+                $0.connect(node1, to: node2, format: format)
+            }
+        }
     }
     
     func disconnectNodeOutput(_ node: AVAudioNode) {
-        _audioEngine.mutate { $0.disconnectNodeOutput(node) }
+        _audioEngine.mutate {
+            if #available(iOS 13, *) {
+                if $0.attachedNodes.contains(node) {
+                    $0.disconnectNodeOutput(node)
+                }
+            } else {
+                $0.disconnectNodeOutput(node)
+            }
+
+        }
     }
 }
 
