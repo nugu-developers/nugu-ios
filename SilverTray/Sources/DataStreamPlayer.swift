@@ -40,6 +40,7 @@ public class DataStreamPlayer {
     private let pitchController = AVAudioUnitTimePitch()
     #endif
     
+    private let audioEnginePrepareTimeout: DispatchTimeInterval = .seconds(2)
     private let audioFormat: AVAudioFormat
     private let jitterBufferSize = 2 // Use 2 chunks as a jitter buffer
     private let bufferTimeout: DispatchTimeInterval = .seconds(30) // Wait for next buffer until this time.
@@ -184,8 +185,17 @@ public class DataStreamPlayer {
             throw error
         }
         
-        // Hold this instance because properties of this should not be released outside.
-        Self.audioEngineManager.registerObserver(self)
+        audioQueue.async { [weak self] in
+            guard let self = self else { return }
+            
+            // AVAudioEngine이 준비될 때까지 player의 동작을 늦춘다.
+            let semaphore = DispatchSemaphore(value: .zero)
+            // Hold this instance because properties of this should not be released outside.
+            Self.audioEngineManager.registerObserver(self) { _ in
+                semaphore.signal()
+            }
+            _ = semaphore.wait(timeout: .now() + self.audioEnginePrepareTimeout.seconds)
+        }
     }
     
     /**
