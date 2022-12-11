@@ -97,7 +97,7 @@ class RoutineExecuter {
     private let directiveSequencer: DirectiveSequenceable
     private let textAgent: TextAgentProtocol
     
-    private let stopTargets = ["AudioPlayer.Play", "ASR.ExpectSpeech"]
+    private let stopTargets = ["ASR.ExpectSpeech"]
     private let interruptTargets = ["Text.TextInput", "ASR.Recognize"]
     private let delayTargets = ["TTS.Speak"]
     
@@ -218,14 +218,15 @@ private extension RoutineExecuter {
             guard let self = self, self.state == .playing,
                   self.handlingDirectives.remove(notification.directive.header.messageId) != nil else { return }
             
-            log.debug(notification.result)
+            log.debug("completed directive: \(notification)")
             switch notification.result {
             case .canceled:
                 self.doStop()
             case .stopped(let policy):
                 switch policy.cancelAll {
                 case true:
-                    self.doStop()
+                    self.handlingDirectives.removeAll()
+                    self.doNextAction()
                 // Ignore stop event after action move event
                 case false where self.ignoreStopEvent == true:
                     self.ignoreStopEvent = false
@@ -324,9 +325,9 @@ private extension RoutineExecuter {
         }
         
         log.debug(action.type)
-        // Actin 규격에 문제가 있는 경우 다음 Action 으로 넘어감
         switch action.type {
         case .text:
+            // Action 규격에 문제가 있는 경우 다음 Action 으로 넘어감
             guard let text = action.text else {
                 doNextAction()
                 return
