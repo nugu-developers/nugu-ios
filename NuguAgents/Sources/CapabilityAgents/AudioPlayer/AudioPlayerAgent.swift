@@ -70,6 +70,7 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     private let directiveSequencer: DirectiveSequenceable
     private let upstreamDataSender: UpstreamDataSendable
     private let audioPlayerPauseTimeout: DispatchTimeInterval
+    private let audioPlayerResultSubject = PublishSubject<(dialogRequestId: String, result: AudioPlayerResult)>()
     private lazy var audioPlayerDisplayManager: AudioPlayerDisplayManager = AudioPlayerDisplayManager(
         audioPlayerPauseTimeout: audioPlayerPauseTimeout,
         audioPlayerAgent: self,
@@ -358,6 +359,7 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
             log.info("media player state: \(state), messageId: \(player.header.messageId)")
             guard let self = self else { return }
             
+            var audioPlayerResult: (dialogRequestId: String, result: AudioPlayerResult)?
             var audioPlayerState: AudioPlayerState?
             var eventTypeInfo: PlayEvent.TypeInfo?
             
@@ -371,6 +373,7 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
                     player.sendingResumeEventAsPlaybackStarted == true ? (eventTypeInfo = .playbackStarted) : (eventTypeInfo = .playbackResumed)
                 }                
             case .finish:
+                audioPlayerResult = (dialogRequestId: player.header.dialogRequestId, result: .finished)
                 audioPlayerState = .finished
                 eventTypeInfo = .playbackFinished
             case .pause:
@@ -383,9 +386,11 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
                     eventTypeInfo = .playbackPaused
                 }
             case .stop:
+                audioPlayerResult = (dialogRequestId: player.header.dialogRequestId, result: .stopped)
                 audioPlayerState = .stopped
                 eventTypeInfo = .playbackStopped(reason: player.stopReason.rawValue)
             case .error(let error):
+                audioPlayerResult = (dialogRequestId: player.header.dialogRequestId, result: .error(error))
                 audioPlayerState = .stopped
                 eventTypeInfo = .playbackFailed(error: error)
             case .bufferEmpty, .likelyToKeepUp:
@@ -400,8 +405,13 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
                     self.releaseFocusIfNeeded()
                 }
             }
+            
             if let eventTypeInfo = eventTypeInfo {
                 self.sendCompactContextEvent(self.playEvent(typeInfo: eventTypeInfo, player: player))
+            }
+            
+            if let audioPlayerResult = audioPlayerResult {
+                self.audioPlayerResultSubject.onNext(audioPlayerResult)
             }
         }
     }
@@ -469,17 +479,21 @@ private extension AudioPlayerAgent {
     
    func handlePlay() -> HandleDirective {
         return { [weak self] directive, completion in
-            defer { completion(.finished) }
-            guard let self = self else { return }
+            guard let self = self else {
+                completion(.canceled)
+                return
+            }
             
             self.audioPlayerDispatchQueue.sync { [weak self] in
                 guard let self = self else { return }
                 guard let player = self.prefetchPlayer, player.header.messageId == directive.header.messageId else {
                     log.info("Message id does not match")
+                    completion(.canceled)
                     return
                 }
                 guard player.internalPlayer != nil else {
                     log.info("Internal player is nil")
+                    completion(.canceled)
                     return
                 }
                 
@@ -492,6 +506,19 @@ private extension AudioPlayerAgent {
                 }
                 self.currentPlayer = player
                 self.focusManager.requestFocus(channelDelegate: self)
+                
+                self.audioPlayerResultSubject
+                    .filter { $0.dialogRequestId == player.header.dialogRequestId }
+                    .take(1)
+                    .subscribe(onNext: { (_, result) in
+                        if case let .error(error) = result {
+                            completion(.failed("\(error)"))
+                            return
+                        }
+                        
+                        completion(.finished)
+                    })
+                    .disposed(by: self.disposeBag)
             }
         }
     }
