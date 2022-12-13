@@ -42,7 +42,7 @@ public class DataStreamPlayer {
     
     private let audioEnginePrepareTimeout: DispatchTimeInterval = .seconds(2)
     private let audioFormat: AVAudioFormat
-    private let jitterBufferSize = 2 // Use 2 chunks as a jitter buffer
+    private let jitterBufferSize = 5 // Use 5 chunks as a jitter buffer
     private let bufferTimeout: DispatchTimeInterval = .seconds(30) // Wait for next buffer until this time.
     private lazy var chunkSize = Int(audioFormat.sampleRate / 10) // 100ms
     
@@ -67,7 +67,7 @@ public class DataStreamPlayer {
         }
     }
     
-    private let audioQueue = DispatchQueue(label: "com.sktelecom.romain.silver_tray.player_queue")
+    private let audioQueue = DispatchQueue(label: "com.sktelecom.romain.silver_tray.player_queue", qos: .userInitiated)
     private let notificationCenter = NotificationCenter.default
     private var audioBufferObserver: Any?
     private var audioBufferCancelItem: DispatchWorkItem?
