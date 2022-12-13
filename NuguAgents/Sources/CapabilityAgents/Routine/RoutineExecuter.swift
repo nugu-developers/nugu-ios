@@ -225,8 +225,13 @@ private extension RoutineExecuter {
             case .stopped(let policy):
                 switch policy.cancelAll {
                 case true:
+                    if self.handlingDirectives.contains(notification.directive.header.messageId) {
+                        self.doNextAction()
+                    } else {
+                        self.doStop()
+                    }
+                    
                     self.handlingDirectives.removeAll()
-                    self.doNextAction()
                 // Ignore stop event after action move event
                 case false where self.ignoreStopEvent == true:
                     self.ignoreStopEvent = false
