@@ -120,7 +120,7 @@ public class MicInputProvider {
             return nil
         }) {
             log.error("create AVAudioInputNode error: \(error.localizedDescription)")
-            throw error
+            throw MicInputError.foundationError(error)
         }
         
         guard 0 < inputFormat.channelCount, 0 < inputFormat.sampleRate else {
@@ -178,7 +178,7 @@ public class MicInputProvider {
                 "\t\t\(AVAudioSession.sharedInstance().categoryOptions)\n" +
                 "\t\taudio session sampleRate: \(AVAudioSession.sharedInstance().sampleRate)")
             
-            throw error
+            throw MicInputError.foundationError(error)
         }
         
         // installTap() must be called before prepare() or start() on iOS 11.
@@ -188,7 +188,7 @@ public class MicInputProvider {
             addAudioEngineConfigurationObserver()
         } catch {
             log.error(error.localizedDescription)
-            throw error
+            throw MicInputError.foundationError(error)
         }
     }
 }

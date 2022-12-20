@@ -26,6 +26,7 @@ public enum MicInputError: Error {
     case audioFormatError
     case audioHardwareError
     case resamplerError(source: AVAudioFormat, dest: AVAudioFormat)
+    case foundationError(_ error: Error)
 }
 
 // MARK: - LocalizedError
@@ -39,6 +40,8 @@ extension MicInputError: LocalizedError {
             return "audio hardware is not available"
         case .resamplerError(let source, let dest):
             return "cannot resample. source(\(source)) or destnation (\(dest)) sample may be wrong"
+        case .foundationError(let error):
+            return "foundation error: \(error)"
         }
     }
 }

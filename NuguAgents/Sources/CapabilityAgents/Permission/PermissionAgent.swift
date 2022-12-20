@@ -24,7 +24,7 @@ import NuguCore
 
 public class PermissionAgent: PermissionAgentProtocol {
     // CapabilityAgentable
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .permission, version: "1.0")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .permission, version: "1.2")
     
     // PermissionAgentProtocol
     public weak var delegate: PermissionAgentDelegate?
@@ -35,7 +35,7 @@ public class PermissionAgent: PermissionAgentProtocol {
     
     // Handleable Directive
     private lazy var handleableDirectiveInfos = [
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "RequestPermission", blockingPolicy: BlockingPolicy(medium: .audio, isBlocking: false), directiveHandler: handleRequestPermission)
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "RequestPermission", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleRequestPermission)
     ]
     
     public init(

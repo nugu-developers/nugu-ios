@@ -22,4 +22,5 @@ import Foundation
 
 public protocol RoutineAgentDelegate: AnyObject {
     func routineAgentDidChange(state: RoutineState, item: RoutineItem?)
+    func routineAgentWillProcessAction(_ action: RoutineItem.Payload.Action)
 }

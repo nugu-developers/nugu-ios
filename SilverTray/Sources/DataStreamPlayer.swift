@@ -40,8 +40,9 @@ public class DataStreamPlayer {
     private let pitchController = AVAudioUnitTimePitch()
     #endif
     
+    private let audioEnginePrepareTimeout: DispatchTimeInterval = .seconds(2)
     private let audioFormat: AVAudioFormat
-    private let jitterBufferSize = 2 // Use 2 chunks as a jitter buffer
+    private let jitterBufferSize = 5 // Use 5 chunks as a jitter buffer
     private let bufferTimeout: DispatchTimeInterval = .seconds(30) // Wait for next buffer until this time.
     private lazy var chunkSize = Int(audioFormat.sampleRate / 10) // 100ms
     
@@ -66,10 +67,9 @@ public class DataStreamPlayer {
         }
     }
     
-    private let audioQueue = DispatchQueue(label: "com.sktelecom.romain.silver_tray.player_queue")
+    private let audioQueue = DispatchQueue(label: "com.sktelecom.romain.silver_tray.player_queue", qos: .userInitiated)
     private let notificationCenter = NotificationCenter.default
     private var audioBufferObserver: Any?
-    private let audioBufferObserverQueue = OperationQueue()
     private var audioBufferCancelItem: DispatchWorkItem?
     
     #if DEBUG
@@ -185,8 +185,17 @@ public class DataStreamPlayer {
             throw error
         }
         
-        // Hold this instance because properties of this should not be released outside.
-        Self.audioEngineManager.registerObserver(self)
+        audioQueue.async { [weak self] in
+            guard let self = self else { return }
+            
+            // AVAudioEngine이 준비될 때까지 player의 동작을 늦춘다.
+            let semaphore = DispatchSemaphore(value: .zero)
+            // Hold this instance because properties of this should not be released outside.
+            Self.audioEngineManager.registerObserver(self) { _ in
+                semaphore.signal()
+            }
+            _ = semaphore.wait(timeout: .now() + self.audioEnginePrepareTimeout.seconds)
+        }
     }
     
     /**
@@ -206,21 +215,31 @@ public class DataStreamPlayer {
     }
     
     private func attachAudioNodes() {
-        #if !os(watchOS)
-        Self.audioEngineManager.attach(speedController)
-        Self.audioEngineManager.attach(pitchController)
-        #endif
-        
-        Self.audioEngineManager.attach(player)
+        if let error = UnifiedErrorCatcher.try({ () -> Error? in
+            #if !os(watchOS)
+            Self.audioEngineManager.attach(speedController)
+            Self.audioEngineManager.attach(pitchController)
+            #endif
+            
+            Self.audioEngineManager.attach(player)
+            return nil
+        }) {
+            os_log("[%@] attachAudioNodes failed: %@", log: .player, type: .error, "\(id)", "\(error)")
+        }
     }
     
     private func detachAudioNodes() {
-        #if !os(watchOS)
-        Self.audioEngineManager.detach(speedController)
-        Self.audioEngineManager.detach(pitchController)
-        #endif
-        
-        Self.audioEngineManager.detach(player)
+        if let error = UnifiedErrorCatcher.try({ () -> Error? in
+            #if !os(watchOS)
+            Self.audioEngineManager.detach(speedController)
+            Self.audioEngineManager.detach(pitchController)
+            #endif
+            
+            Self.audioEngineManager.detach(player)
+            return nil
+        }) {
+            os_log("[%@] detachAudioNodes failed: %@", log: .player, type: .error, "\(id)", "\(error)")
+        }
     }
 
     
@@ -278,12 +297,6 @@ public class DataStreamPlayer {
     }
     
     private func internalPlay() {
-        do {
-            try Self.audioEngineManager.startAudioEngine()
-        } catch {
-             os_log("[%@] audioEngine start failed", log: .audioEngine, type: .debug, "\(id)")
-        }
-        
         if let error = (UnifiedErrorCatcher.try {
             player.play()
             os_log("[%@] player started", log: .player, type: .debug, "\(id)")
@@ -354,8 +367,10 @@ public class DataStreamPlayer {
         tempAudioArray.removeAll()
         audioBuffers.removeAll()
         
-        if Self.audioEngineManager.removeObserver(self) == nil {
-            os_log("[%@] removing observer failed", log: .player, type: .default, "\(id)")
+        Self.audioEngineManager.removeObserver(self) { [weak self] removedObserver in
+            guard removedObserver == nil else { return }
+            guard let self = self else { return }
+            os_log("[%@] removing observer failed", log: .player, type: .default, "\(self.id)")
         }
         
         #if DEBUG
@@ -585,19 +600,22 @@ private extension DataStreamPlayer {
                     os_log("[%@] waiting for next audio data.", log: .player, type: .debug, "\(self.id)")
                     self.bufferState = .bufferEmpty
                     
-                    self.audioBufferObserver = self.notificationCenter.addObserver(forName: .audioBufferChange, object: self, queue: self.audioBufferObserverQueue) { [weak self] (notification) in
-                        guard let self = self else { return }
-                        guard self.bufferState == .bufferEmpty else { return }
-                        guard let nextBuffer = self.audioBuffers[safe: self.scheduleBufferIndex] else { return }
-                        
-                        os_log("[%@] Try to restart scheduler.", log: .player, type: .debug, "\(self.id)")
-                        self.bufferState = .likelyToKeepUp
-                        self.scheduleBuffer(audioBuffer: nextBuffer)
-                        
-                        if let audioBufferObserver = self.audioBufferObserver {
-                            self.notificationCenter.removeObserver(audioBufferObserver)
+                    self.audioBufferObserver = self.notificationCenter.addObserver(forName: .audioBufferChange, object: self, queue: nil) { [weak self] (notification) in
+                        self?.audioQueue.async { [weak self] in
+                            guard let self = self else { return }
+                            guard self.bufferState == .bufferEmpty else { return }
+                            guard let nextBuffer = self.audioBuffers[safe: self.scheduleBufferIndex] else { return }
+                            
+                            os_log("[%@] Try to restart scheduler.", log: .player, type: .debug, "\(self.id)")
+                            self.bufferState = .likelyToKeepUp
+                            self.scheduleBuffer(audioBuffer: nextBuffer)
+                            
+                            if let audioBufferObserver = self.audioBufferObserver {
+                                self.notificationCenter.removeObserver(audioBufferObserver)
+                            }
                         }
                     }
+                    
                     return
                 }
                 

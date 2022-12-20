@@ -28,15 +28,21 @@ public class NudgeAgent: NudgeAgentProtocol {
     private let contextManager: ContextManageable
     private var nudgeInfo: [String: AnyHashable]?
     private var dialogRequestId: String?
+    private var currentPlayStacks: [(property: PlaySyncProperty, info: PlaySyncInfo)]?
     
     public let capabilityAgentProperty = CapabilityAgentProperty(category: .nudge, version: "1.0")
     public lazy var contextInfoProvider: ContextInfoProviderType = { [weak self] (completion) in
         guard let self = self else { return }
         
-        let payload: [String: AnyHashable?] = [
+        var payload: [String: AnyHashable?] = [
             "version": self.capabilityAgentProperty.version,
-            "nudgeInfo": self.nudgeInfo
         ]
+        
+        if let nudgeInfo = self.nudgeInfo,
+           let currentPlayStacks = self.currentPlayStacks,
+           (currentPlayStacks.contains { $0.info.dialogRequestId == self.dialogRequestId }) {
+            payload["nudgeInfo"] = nudgeInfo
+        }
         
         completion(ContextInfo(contextType: .capability, name: self.capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
     }
@@ -62,9 +68,7 @@ public class NudgeAgent: NudgeAgentProtocol {
         contextManager.addProvider(contextInfoProvider)
         
         playSyncObserver = playSyncManager.observe(NuguCoreNotification.PlaySync.SynchronizedProperties.self, queue: nil) { [weak self] (notification) in
-            if (notification.properties.contains { $0.info.dialogRequestId == self?.dialogRequestId }) == false {
-                self?.nudgeInfo = nil
-            }
+            self?.currentPlayStacks = notification.properties
         }
     }
     
@@ -86,6 +90,7 @@ extension NudgeAgent {
                 return
             }
             
+            log.debug("prefetchAppend, dialogRequestId: \(directive.header.dialogRequestId), nudgeInfo: \(nudgeInfo)")
             self?.nudgeInfo = nudgeInfo
             self?.dialogRequestId = directive.header.dialogRequestId
         }

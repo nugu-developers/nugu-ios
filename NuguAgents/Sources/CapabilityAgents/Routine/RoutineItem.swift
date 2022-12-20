@@ -30,25 +30,82 @@ public struct RoutineItem {
     public struct Payload: Decodable {
         public let playServiceId: String
         public let token: String
+        /**
+         Name of routine
+         
+         Used to show the name of the current routine on devices with a display
+         */
+        public let name: String?
+        /// Unique routine id
+        public let routineId: String?
+        /// The type related to `trigger`
+        public let routineType: RoutineType?
+        /// Routine service exposure type
+        public let routineListType: RoutineListType?
+        /// Actions that make up the routine
         public let actions: [Action]
+        /// TextInput Source
+        public let source: String?
+    }
+}
 
-        public struct Action {
-            public let type: String
-            public let text: String?
-            public let data: [String: AnyHashable]?
-            public let playServiceId: String?
-            public let token: String?
-            public let postDelayInMilliseconds: Int?
+public extension RoutineItem.Payload {
+    struct Action: Decodable {
+        public let id = UUID()
+        public let type: ActionType
+        public let text: String?
+        public let data: [String: AnyHashable]?
+        public let playServiceId: String?
+        public let token: String
+        public let postDelayInMilliseconds: Int?
+        public let muteDelayInMilliseconds: Int?
+        public let actionTimeoutInMilliseconds: Int?
+        
+        @available(*, deprecated, message: "No longer needed. It will be removed in 1.9.0")
+        public var actionType: ActionType? { type }
 
-            public var actionType: Type? {
-                Type.init(rawValue: type)
-            }
-
-            public enum `Type`: String, Decodable {
-                case text = "TEXT"
-                case data = "DATA"
-            }
+        public enum ActionType: String, Decodable {
+            case text = "TEXT"
+            case data = "DATA"
+            case `break` = "BREAK"
         }
+        
+        enum CodingKeys: String, CodingKey {
+            case type
+            case text
+            case data
+            case playServiceId
+            case token
+            case postDelayInMilliseconds
+            case muteDelayInMilliseconds
+            case actionTimeoutInMilliseconds
+        }
+
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+
+            type = try container.decode(ActionType.self, forKey: .type)
+            text = try? container.decode(String.self, forKey: .text)
+            data = try? container.decode([String: AnyHashable].self, forKey: .data)
+            playServiceId = try? container.decode(String.self, forKey: .playServiceId)
+            token = try container.decode(String.self, forKey: .token)
+            postDelayInMilliseconds = try? container.decode(Int.self, forKey: .postDelayInMilliseconds)
+            muteDelayInMilliseconds = try? container.decode(Int.self, forKey: .muteDelayInMilliseconds)
+            actionTimeoutInMilliseconds = try? container.decode(Int.self, forKey: .actionTimeoutInMilliseconds)
+        }
+    }
+    
+    enum RoutineType: String, Decodable {
+        case voice = "VOICE"
+        case schedule = "SCHEDULE"
+        case alarmOff = "ALARM_OFF"
+        case appStart = "APP_START"
+    }
+    
+    enum RoutineListType: String, Decodable {
+        case user = "USER"
+        case preset = "PRESET"
+        case recommend = "RECOMMEND"
     }
 }
 
@@ -58,27 +115,10 @@ extension RoutineItem.Payload.Action {
 
         return NuguTimeInterval(milliseconds: postDelayInMilliseconds)
     }
-}
-
-// MARK: - RoutineItem.Payload.Action: Decodable
-extension RoutineItem.Payload.Action: Decodable {
-    enum CodingKeys: String, CodingKey {
-        case type
-        case text
-        case data
-        case playServiceId
-        case token
-        case postDelayInMilliseconds
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-
-        type = try container.decode(String.self, forKey: .type)
-        text = try? container.decode(String.self, forKey: .text)
-        data = try? container.decode([String: AnyHashable].self, forKey: .data)
-        playServiceId = try? container.decode(String.self, forKey: .playServiceId)
-        token = try? container.decode(String.self, forKey: .token)
-        postDelayInMilliseconds = try? container.decode(Int.self, forKey: .postDelayInMilliseconds)
+    
+    var muteDelay: TimeIntervallic? {
+        guard let muteDelayInMilliseconds = muteDelayInMilliseconds else { return nil }
+        
+        return NuguTimeInterval(milliseconds: muteDelayInMilliseconds)
     }
 }

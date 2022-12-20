@@ -1,8 +1,8 @@
 //
-//  RoutineAgentProtocol.swift
-//  NuguAgents
+//  AudioPlayerResult.swift
+//  
 //
-//  Created by MinChul Lee on 2020/07/07.
+//  Created by childc on 2022/12/12.
 //  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,24 +20,12 @@
 
 import Foundation
 
-public protocol RoutineAgentProtocol: CapabilityAgentable {
-    var state: RoutineState { get }
-    var routineItem: RoutineItem? { get }
-    
-    /**
-     Move to previous action
-     */
-    func previous(completion: @escaping (Bool) -> Void)
-    
-    /**
-     Move to next action
-     */
-    func next(completion: @escaping (Bool) -> Void)
-        
-    /**
-     Stop routine
-     */
-    func stop()
-    
-    var delegate: RoutineAgentDelegate? { get set }
+/// A result of AudioPlayer request.
+public enum AudioPlayerResult {
+    /// Indicates that playback has finished.
+    case finished
+    /// Indicates that audio playback was stopped due to a user request or a directive which stops or replaces the current stream.
+    case stopped
+    /// Indicates that audio playback was stopped due to an error.
+    case error(_ error: Error)
 }

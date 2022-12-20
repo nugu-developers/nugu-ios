@@ -19,47 +19,23 @@
 
 import Foundation
 
-/// <#Description#>
 public struct AlertsAgentContext: Codable {
-    
-    /// <#Description#>
     public struct Alert: Codable {
-        /// <#Description#>
         public let playServiceId: String
-        /// <#Description#>
         public let token: String
-        /// <#Description#>
         public let alertType: String
-        /// <#Description#>
         public let scheduledTime: String
-        /// <#Description#>
         public let activation: Bool
-        /// <#Description#>
         public let minDurationInSec: Int?
-        /// <#Description#>
         public let `repeat`: AlertsRepeat?
-        /// <#Description#>
         public let alarmResourceType: String?
-        /// <#Description#>
         public let assetRequiredInMilliseconds: Int?
-        /// <#Description#>
+        public let alertConfirmedInMilliseconds: Int?
+        public let creationTime: Int?
+        public let modificationTime: Int?
         public let name: String?
-        /// <#Description#>
         public let assets: [AlertsAsset]
         
-        /// <#Description#>
-        /// - Parameters:
-        ///   - playServiceId: <#playServiceId description#>
-        ///   - token: <#token description#>
-        ///   - alertType: <#alertType description#>
-        ///   - scheduledTime: <#scheduledTime description#>
-        ///   - activation: <#activation description#>
-        ///   - minDurationInSec: <#minDurationInSec description#>
-        ///   - repeat: <#repeat description#>
-        ///   - alarmResourceType: <#alarmResourceType description#>
-        ///   - assetRequiredInMilliseconds: <#assetRequiredInMilliseconds description#>
-        ///   - name: <#name description#>
-        ///   - assets: <#assets description#>
         public init(
             playServiceId: String,
             token: String,
@@ -70,6 +46,9 @@ public struct AlertsAgentContext: Codable {
             `repeat`: AlertsRepeat?,
             alarmResourceType: String?,
             assetRequiredInMilliseconds: Int?,
+            alertConfirmedInMilliseconds: Int?,
+            creationTime: Int?,
+            modificationTime: Int?,
             name: String?,
             assets: [AlertsAsset]
         ) {
@@ -82,35 +61,21 @@ public struct AlertsAgentContext: Codable {
             self.repeat = `repeat`
             self.alarmResourceType = alarmResourceType
             self.assetRequiredInMilliseconds = assetRequiredInMilliseconds
+            self.alertConfirmedInMilliseconds = alertConfirmedInMilliseconds
+            self.creationTime = creationTime
+            self.modificationTime = modificationTime
             self.name = name
             self.assets = assets
         }
     }
     
-    /// <#Description#>
     public let maxAlertCount: Int
-    /// <#Description#>
     public let maxAlarmCount: Int
-    /// <#Description#>
     public let supportedTypes: [String]
-    /// <#Description#>
     public let supportedAlarmResourceTypes: [String]
-    /// <#Description#>
     public let internalAlarms: [[String: String]]
-    /// <#Description#>
     public let allAlerts: [Alert]
-    /// <#Description#>
     public let activeAlarmToken: String?
-    
-    /// <#Description#>
-    /// - Parameters:
-    ///   - maxAlertCount: <#maxAlertCount description#>
-    ///   - maxAlarmCount: <#maxAlarmCount description#>
-    ///   - supportedTypes: <#supportedType description#>
-    ///   - supportedAlarmResourceTypes: <#supportedAlarmResourceTypes description#>
-    ///   - internalAlarms: <#internalAlarms description#>
-    ///   - allAlerts: <#allAlerts description#>
-    ///   - activeAlarmToken: <#activeAlarmToken description#>
     public init(
         maxAlertCount: Int,
         maxAlarmCount: Int,

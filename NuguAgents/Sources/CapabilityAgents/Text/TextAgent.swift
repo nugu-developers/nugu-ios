@@ -64,18 +64,19 @@ public final class TextAgent: TextAgentProtocol {
     private var disposeBag = DisposeBag()
     private var expectTyping: TextAgentExpectTyping? {
         didSet {
-            guard oldValue?.messageId != expectTyping?.messageId else { return }
+            guard oldValue?.dialogRequestId != expectTyping?.dialogRequestId else { return }
             log.debug("expectTyping is changed from:\(oldValue?.dialogRequestId ?? "nil") to:\(expectTyping?.dialogRequestId ?? "nil")")
             
-            if let oldMessageId = oldValue?.messageId {
+            // TextAgent의 ExpectTyping은 함꼐 내려온 template에 종속적으로 동작해야 해서 messasgeId 대신 dialogRequestId를 사용한다.
+            if let oldDialogRequestId = oldValue?.dialogRequestId {
                 // Remove last attributes
-                dialogAttributeStore.removeAttributes(messageId: oldMessageId)
+                dialogAttributeStore.removeAttributes(key: oldDialogRequestId)
             }
             
-            if let messageId = expectTyping?.messageId,
+            if let dialogRequestId = expectTyping?.dialogRequestId,
                let payload = expectTyping?.payload.dictionary {
                 // Store attributes
-                dialogAttributeStore.setAttributes(payload.compactMapValues { $0 }, messageId: messageId)
+                dialogAttributeStore.setAttributes(payload.compactMapValues { $0 }, key: dialogRequestId)
             }
         }
     }
@@ -130,10 +131,6 @@ extension TextAgent {
             completion: completion
         )
         .dialogRequestId
-    }
-    
-    public func clearAttributes() {
-        dialogAttributeStore.removeAllAttributes()
     }
 }
 
@@ -325,8 +322,8 @@ private extension TextAgent {
                     
                     var attributes = [String: AnyHashable]()
                     if case .dialog = requestType,
-                       let expectTypingMessageId = self?.expectTyping?.messageId,
-                       let expectTypingAttribute = self?.dialogAttributeStore.requestAttributes(messageId: expectTypingMessageId) {
+                       let expectTypingDialogRequestId = self?.expectTyping?.dialogRequestId,
+                       let expectTypingAttribute = self?.dialogAttributeStore.requestAttributes(key: expectTypingDialogRequestId) {
                         attributes.merge(expectTypingAttribute)
                     }
                     
@@ -335,8 +332,9 @@ private extension TextAgent {
                     }
                     
                     if let interactionControl = self?.currentInteractionControl,
-                       let interactionControlDic = try? JSONEncoder().encode(interactionControl) {
-                        attributes["interactionControl"] = interactionControlDic
+                       let interactionControlData = try? JSONEncoder().encode(interactionControl),
+                       let interactionControlDictionary = try? JSONSerialization.jsonObject(with: interactionControlData, options: []) as? [String: AnyHashable] {
+                        attributes["interactionControl"] = interactionControlDictionary
                     }
                     
                     return attributes
@@ -353,10 +351,6 @@ private extension TextAgent {
                 referrerDialogRequestId: referrerDialogRequestId
             ).rx
         }
-        .do(onDispose: { [weak self] in
-            self?.expectTyping = nil
-        })
-
     }
 }
 

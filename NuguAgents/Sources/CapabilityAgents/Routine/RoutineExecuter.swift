@@ -25,7 +25,9 @@ import NuguUtils
 
 protocol RoutineExecuterDelegate: AnyObject {
     func routineExecuterDidChange(state: RoutineState)
-
+    func routineExecuterShouldSendActionTriggerTimout(token: String)
+    func routineExecuterWillProcessAction(_ action: RoutineItem.Payload.Action)
+    
     func routineExecuterShouldRequestAction(
         action: RoutineItem.Payload.Action,
         referrerDialogRequestId: String,
@@ -34,6 +36,12 @@ protocol RoutineExecuterDelegate: AnyObject {
 }
 
 class RoutineExecuter {
+    typealias ReceivedDirectives = NuguCoreNotification.StreamDataRoute.ReceivedDirectives
+    
+    private enum Const {
+        static let reactiveTarget = "Apollo.Reactive"
+    }
+    
     weak var delegate: RoutineExecuterDelegate?
     
     private(set) var routine: RoutineItem?
@@ -44,12 +52,11 @@ class RoutineExecuter {
     }
     private(set) var state: RoutineState = .idle {
         didSet {
-            log.debug(state)
-            
             guard oldValue != state else {
                 log.debug("state has not changed. \(oldValue) -> \(state)")
                 return
             }
+            log.debug("routine state: \(state)")
             
             interruptTimer?.cancel()
             switch state {
@@ -79,23 +86,26 @@ class RoutineExecuter {
                     directiveSequencer.cancelDirective(dialogRequestId: dialogRequestId)
                 }
                 actionWorkItem?.cancel()
+            case .suspended:
+                break
             }
             
             delegate?.routineExecuterDidChange(state: state)
         }
     }
-
+    
     private let directiveSequencer: DirectiveSequenceable
     private let textAgent: TextAgentProtocol
-
-    private let stopTargets = ["AudioPlayer.Play", "ASR.ExpectSpeech"]
+    
+    private let stopTargets = ["ASR.ExpectSpeech"]
     private let interruptTargets = ["Text.TextInput", "ASR.Recognize"]
-
+    private let delayTargets = ["TTS.Speak"]
+    
     private let routineDispatchQueue = DispatchQueue(label: "com.sktelecom.romaine.routine_executer")
-
+    
     // Notification
     private var notificationTokens = [Any]()
-
+    
     private var handlingDirectives = Set<String>()
     private var handlingEvent: String?
     private var interruptEvent: String?
@@ -105,6 +115,10 @@ class RoutineExecuter {
     private var currentActionIndex = -1
     private var ignoreAfterAction = false
     
+    private var ignoreStopEvent = false
+    private var ignoreInterruptEvents = Set<String>()
+    private var shouldDelayAction = false
+    
     init(
         directiveSequencer: DirectiveSequenceable,
         streamDataRouter: StreamDataRoutable,
@@ -113,38 +127,39 @@ class RoutineExecuter {
     ) {
         self.directiveSequencer = directiveSequencer
         self.textAgent = textAgent
-
+        
         addStreamDataObserver(streamDataRouter)
         addAsrAgentObserver(asrAgent)
         addDirectiveSequencerObserver(directiveSequencer)
     }
-
+    
     deinit {
         notificationTokens.forEach(NotificationCenter.default.removeObserver)
         notificationTokens.removeAll()
     }
-
+    
     func start(_ routine: RoutineItem) {
         routineDispatchQueue.async { [weak self] in
             guard let self = self else { return }
             
             log.debug(routine.payload.actions)
-
+            
             self.handlingDirectives.removeAll()
             self.handlingEvent = nil
             self.interruptEvent = nil
             self.currentActionIndex = 0
             self.ignoreAfterAction = false
+            self.ignoreInterruptEvents.removeAll()
             
             self.doFinish()
             
             self.routine = routine
             self.state = .playing
-
+            
             self.doAction()
         }
     }
-
+    
     func stop() {
         routineDispatchQueue.async { [weak self] in
             guard let self = self else { return }
@@ -153,7 +168,7 @@ class RoutineExecuter {
             self.doStop()
         }
     }
-
+    
     func resume() {
         routineDispatchQueue.async { [weak self] in
             guard let self = self else { return }
@@ -163,6 +178,34 @@ class RoutineExecuter {
                 self.state = .playing
                 self.doNextAction()
             }
+        }
+    }
+    
+    func move(to index: Int, completion: @escaping (Bool) -> Void) {
+        routineDispatchQueue.async { [weak self] in
+            guard let self = self else { return }
+            guard [RoutineState.playing, RoutineState.interrupted].contains(self.state),
+                  let routine = self.routine, (0..<routine.payload.actions.count).contains(index) else {
+                completion(false)
+                return
+            }
+            
+            if self.state == .interrupted {
+                self.state = .playing
+            }
+            
+            self.cancelCurrentAction()
+            
+            guard let countableActionIndex = self.findCountableActionIndex(index: index) else {
+                log.debug("cannot find countable action index.")
+                completion(false)
+                return
+            }
+            log.debug("moved to index: \(countableActionIndex)")
+            self.currentActionIndex = countableActionIndex
+            self.ignoreStopEvent = true
+            self.doAction()
+            completion(true)
         }
     }
 }
@@ -175,15 +218,27 @@ private extension RoutineExecuter {
             guard let self = self, self.state == .playing,
                   self.handlingDirectives.remove(notification.directive.header.messageId) != nil else { return }
             
-            log.debug(notification.result)
+            log.debug("completed directive: \(notification)")
             switch notification.result {
             case .canceled:
                 self.doStop()
             case .stopped(let policy):
-                if policy.cancelAll {
-                    self.doStop()
-                } else {
+                switch policy.cancelAll {
+                case true:
+                    if self.handlingDirectives.contains(notification.directive.header.messageId) {
+                        self.doNextAction()
+                    } else {
+                        self.doStop()
+                    }
+                    
+                    self.handlingDirectives.removeAll()
+                // Ignore stop event after action move event
+                case false where self.ignoreStopEvent == true:
+                    self.ignoreStopEvent = false
+                case false where self.ignoreStopEvent == false:
                     self.doInterrupt()
+                default:
+                    break
                 }
             case .failed, .finished:
                 // 마지막 directive 가 실행완료 되면 다음 Action 실행
@@ -194,7 +249,7 @@ private extension RoutineExecuter {
         }
         notificationTokens.append(token)
     }
-
+    
     func addAsrAgentObserver(_ asrAgent: ASRAgentProtocol) {
         let token = asrAgent.observe(NuguAgentNotification.ASR.StartRecognition.self, queue: routineDispatchQueue) { [weak self] (notification) in
             guard let self = self, self.state == .playing else { return }
@@ -207,10 +262,13 @@ private extension RoutineExecuter {
         }
         notificationTokens.append(token)
     }
-
+    
     func addStreamDataObserver(_ streamDataRouter: StreamDataRoutable) {
-        let directivesToken = streamDataRouter.observe(NuguCoreNotification.StreamDataRoute.ReceivedDirectives.self, queue: routineDispatchQueue) { [weak self] (notification) in
+        let directivesToken = streamDataRouter.observe(ReceivedDirectives.self, queue: routineDispatchQueue) { [weak self] (notification) in
             guard let self = self, self.state == .playing else { return }
+            
+            // Set mute delay after actions If Directives contains `Apollo.Reactive` and not `TTS.Speak`
+            self.shouldDelayAction = self.applyMuteDelayIfNeeded(notification: notification)
             
             // Directive 에 Routine 중단 대상이 포함되어 있으며, 다음 Action 은 실행되지 않음
             if (notification.directives.contains { self.stopTargets.contains($0.header.type) }), self.hasNextAction {
@@ -219,9 +277,9 @@ private extension RoutineExecuter {
             }
             // Interrupt 상태에서 Routine 이 아닌 directive 가 전달될 경우 Routine 종료
             else if self.interruptEvent == notification.directives.first?.header.dialogRequestId,
-                      notification.directives.contains(where: { (directive) -> Bool in
+                    notification.directives.contains(where: { (directive) -> Bool in
                         directive.header.namespace != CapabilityAgentCategory.routine.name
-                      }) {
+                    }) {
                 log.debug("")
                 self.doStop()
             }
@@ -232,12 +290,14 @@ private extension RoutineExecuter {
             }
         }
         notificationTokens.append(directivesToken)
-
+        
         let eventTokens = streamDataRouter.observe(NuguCoreNotification.StreamDataRoute.ToBeSentEvent.self, queue: routineDispatchQueue) { [weak self] (notification) in
             guard let self = self, self.state == .playing else { return }
             
-            // Event 가 Routine interrupt 대상에 포함되어 있으며, Action 에 의한 event 가 아닌 경우 interrupt 처리.
-            if self.interruptTargets.contains(notification.event.header.type), self.handlingEvent != notification.event.header.dialogRequestId {
+            // Event 가 Routine interrupt 대상에 포함되어 있으며, Move, Action 에 의한 event 가 아닌 경우 interrupt 처리.
+            if self.interruptTargets.contains(notification.event.header.type),
+               self.handlingEvent != notification.event.header.dialogRequestId,
+               self.shouldInterruptEvent(dialogRequestId: notification.event.header.dialogRequestId) {
                 if self.doInterrupt() == true {
                     log.debug("")
                     self.interruptEvent = notification.event.header.dialogRequestId
@@ -253,6 +313,7 @@ private extension RoutineExecuter {
 private extension RoutineExecuter {
     func doAction() {
         guard state == .playing, let routine = routine, let action = currentAction else { return }
+        delegate?.routineExecuterWillProcessAction(action)
         
         let completion: ((StreamDataState) -> Void) = { [weak self] result in
             log.debug(result)
@@ -261,17 +322,24 @@ private extension RoutineExecuter {
             }
         }
         
-        log.debug(action.actionType)
-        // Actin 규격에 문제가 있는 경우 다음 Action 으로 넘어감
-        switch action.actionType {
+        if let actionTimeout = action.actionTimeoutInMilliseconds,
+           .zero < actionTimeout {
+            DispatchQueue.global().asyncAfter(deadline: .now() + NuguTimeInterval(milliseconds: actionTimeout).seconds) { [weak self] in
+                self?.delegate?.routineExecuterShouldSendActionTriggerTimout(token: action.token)
+            }
+        }
+        
+        log.debug(action.type)
+        switch action.type {
         case .text:
+            // Action 규격에 문제가 있는 경우 다음 Action 으로 넘어감
             guard let text = action.text else {
                 doNextAction()
                 return
             }
             if let playServiceId = action.playServiceId {
                 handlingEvent = textAgent.requestTextInput(text: text, token: action.token, requestType: .specific(playServiceId: playServiceId), completion: completion)
-
+                
             } else {
                 handlingEvent = textAgent.requestTextInput(text: text, token: action.token, requestType: .normal, completion: completion)
             }
@@ -279,28 +347,19 @@ private extension RoutineExecuter {
             if let eventIdentifier = delegate?.routineExecuterShouldRequestAction(action: action, referrerDialogRequestId: routine.dialogRequestId, completion: completion) {
                 handlingEvent = eventIdentifier.dialogRequestId
             }
-        case .none:
-            doNextAction()
+        case .break:
+            doBreak()
         }
     }
-
+    
     func doNextAction() {
         actionWorkItem?.cancel()
-        
-        if let delay = currentAction?.postDelay {
-            log.debug(delay)
-            let workItem = DispatchWorkItem { [weak self] in
-                guard let self = self else { return }
-                guard self.state == .playing, self.hasNextAction else {
-                    self.doFinish()
-                    return
-                }
-
-                self.currentActionIndex += 1
-                self.doAction()
-            }
-            actionWorkItem = workItem
-            routineDispatchQueue.asyncAfter(deadline: .now() + delay.dispatchTimeInterval, execute: workItem)
+        if shouldDelayAction, let delay = currentAction?.muteDelay {
+            log.debug("Delaying action using mute delay, delay: \(delay.dispatchTimeInterval)")
+            doActionAfter(delay: delay)
+        } else if let delay = currentAction?.postDelay {
+            log.debug("Delaying action using posy delay, delay: \(delay.dispatchTimeInterval)")
+            doActionAfter(delay: delay)
         } else {
             guard state == .playing, hasNextAction else {
                 doFinish()
@@ -309,33 +368,117 @@ private extension RoutineExecuter {
             
             log.debug("")
             
-            self.currentActionIndex += 1
-            self.doAction()
+            currentActionIndex += 1
+            doAction()
         }
     }
-
+    
     @discardableResult
     func doInterrupt() -> Bool {
-        guard state == .playing else { return false }
+        guard [.playing, .suspended].contains(state) else { return false }
         
         log.debug("")
         state = .interrupted
-
+        
         return true
     }
     
     func doStop() {
-        guard [.playing, .interrupted].contains(state) else { return }
+        guard [.playing, .interrupted, .suspended].contains(state) else { return }
         
         log.debug("")
         state = .stopped
     }
-
+    
     func doFinish() {
-        guard state == .playing else { return }
+        guard [.playing, .suspended].contains(state) else { return }
         
         log.debug("")
         state = .finished
+    }
+    
+    func doBreak() {
+        guard state == .playing else { return }
+        
+        actionWorkItem?.cancel()
+        state = .suspended
+        
+        if let delay = currentAction?.muteDelay {
+            log.debug("currentAction muteDelay: \(delay)")
+            let workItem = DispatchWorkItem { [weak self] in
+                guard let self = self else { return }
+                guard self.state == .suspended, self.hasNextAction else {
+                    self.doFinish()
+                    return
+                }
+                
+                self.currentActionIndex += 1
+                self.state = .playing
+                self.doAction()
+            }
+            actionWorkItem = workItem
+            routineDispatchQueue.asyncAfter(deadline: .now() + delay.dispatchTimeInterval, execute: workItem)
+        } else {
+            guard state == .suspended, hasNextAction else {
+                doFinish()
+                return
+            }
+            
+            log.debug("")
+            
+            currentActionIndex += 1
+            state = .playing
+            doAction()
+        }
+        
+    }
+    
+    func findCountableActionIndex(index: Int) -> Int? {
+        guard let countableActions = routine?.payload.actions.filter({ $0.type != .break }),
+              (0..<countableActions.count).contains(index) else {
+            return nil
+        }
+        let action = countableActions[index]
+        
+        return routine?.payload.actions.firstIndex { $0.id == action.id }
+    }
+    
+    func applyMuteDelayIfNeeded(notification: ReceivedDirectives) -> Bool {
+        guard (notification.directives.contains { Const.reactiveTarget == $0.header.type }) else {
+            return false
+        }
+        return notification.directives.contains { delayTargets.contains($0.header.type) } == false
+    }
+    
+    func doActionAfter(delay: TimeIntervallic) {
+        let workItem = DispatchWorkItem { [weak self] in
+            guard let self = self else { return }
+            guard self.state == .playing, self.hasNextAction else {
+                self.doFinish()
+                return
+            }
+            
+            self.currentActionIndex += 1
+            self.doAction()
+        }
+        actionWorkItem = workItem
+        routineDispatchQueue.asyncAfter(deadline: .now() + delay.dispatchTimeInterval, execute: workItem)
+    }
+    
+    func shouldInterruptEvent(dialogRequestId: String) -> Bool {
+        guard ignoreInterruptEvents.contains(dialogRequestId) else {
+            return true
+        }
+        ignoreInterruptEvents.remove(dialogRequestId)
+        return false
+    }
+    
+    func cancelCurrentAction() {
+        if let dialogRequestId = handlingEvent {
+            ignoreInterruptEvents.insert(dialogRequestId)
+            directiveSequencer.cancelDirective(dialogRequestId: dialogRequestId)
+        }
+        handlingDirectives.removeAll()
     }
 }
 
@@ -344,7 +487,7 @@ private extension RoutineExecuter {
 private extension RoutineExecuter {
     var currentAction: RoutineItem.Payload.Action? {
         guard let routine = routine, currentActionIndex < routine.payload.actions.count else { return nil }
-
+        
         return routine.payload.actions[currentActionIndex]
     }
     

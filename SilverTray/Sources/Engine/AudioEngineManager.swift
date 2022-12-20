@@ -10,8 +10,8 @@ import NuguObjcUtils
 
 class AudioEngineManager<Observer: AudioEngineObservable> {
     @Atomic private var audioEngine = AVAudioEngine()
-    private let audioEngineQueue = OperationQueue()
-    @Atomic private var audioEngineObservers = Set<Observer>()
+    private let audioEngineQueue = DispatchQueue(label: "com.sktelecom.romain.silver_tray.audio_engine_notification")
+    private var audioEngineObservers = Set<Observer>()
     
     private let notificationCenter = NotificationCenter.default
     private var audioEngineConfigurationObserver: Any?
@@ -32,12 +32,8 @@ class AudioEngineManager<Observer: AudioEngineObservable> {
         audioEngine.isRunning
     }
     
-    init() {
-        audioEngineQueue.name = "com.sktelecom.romain.silver_tray.audio_engine_notification"
-    }
-    
-    func startAudioEngine() throws {
-        var engineError: Error!
+    private func startAudioEngine() throws {
+        var engineError: Error?
         _audioEngine.mutate { engine in
             guard engine.isRunning == false else { return }
             
@@ -67,7 +63,7 @@ class AudioEngineManager<Observer: AudioEngineObservable> {
             notificationCenter.removeObserver(audioEngineConfigurationObserver)
         }
         
-        audioEngineConfigurationObserver = notificationCenter.addObserver(forName: .AVAudioEngineConfigurationChange, object: audioEngine, queue: audioEngineQueue) { [weak self] (notification) in
+        audioEngineConfigurationObserver = notificationCenter.addObserver(forName: .AVAudioEngineConfigurationChange, object: audioEngine, queue: nil) { [weak self] (notification) in
             self?.engineConfigurationChange(notification: notification)
         }
     }
@@ -94,60 +90,119 @@ class AudioEngineManager<Observer: AudioEngineObservable> {
 
 extension AudioEngineManager {
     func attach(_ node: AVAudioNode) {
-        _audioEngine.mutate { $0.attach(node) }
+        _audioEngine.mutate { engine in
+            if let error = (UnifiedErrorCatcher.try { () -> Error? in
+                if #available(iOS 13, *) {
+                    if engine.attachedNodes.contains(node) == false {
+                        engine.attach(node)
+                    }
+                } else {
+                    engine.attach(node)
+                }
+                
+                return nil
+            }) {
+                os_log("attach failed: %@", log: .audioEngine, type: .error, error.localizedDescription)
+            }
+        }
     }
     
     func detach(_ node: AVAudioNode) {
-        _audioEngine.mutate { $0.detach(node) }
+        _audioEngine.mutate { engine in
+            if let error = (UnifiedErrorCatcher.try { () -> Error? in
+                if #available(iOS 13, *) {
+                    if engine.attachedNodes.contains(node) {
+                        engine.detach(node)
+                    }
+                } else {
+                    engine.detach(node)
+                }
+                
+                return nil
+            }) {
+                os_log("detach failed: %@", log: .audioEngine, type: .error, error.localizedDescription)
+            }
+        }
     }
     
-    func connect(_ node1: AVAudioNode, to: AVAudioNode, format: AVAudioFormat?) {
-        _audioEngine.mutate { $0.connect(node1, to: to, format: format) }
+    func connect(_ node1: AVAudioNode, to node2: AVAudioNode, format: AVAudioFormat?) {
+        _audioEngine.mutate { engine in
+            if let error = (UnifiedErrorCatcher.try { () -> Error? in
+                if #available(iOS 13, *) {
+                    if engine.attachedNodes.contains(node1), engine.attachedNodes.contains(node2) {
+                        engine.connect(node1, to: node2, format: format)
+                    }
+                } else {
+                    engine.connect(node1, to: node2, format: format)
+                }
+                
+                return nil
+            }) {
+                os_log("connect failed: %@", log: .audioEngine, type: .error, error.localizedDescription)
+            }
+        }
     }
     
     func disconnectNodeOutput(_ node: AVAudioNode) {
-        _audioEngine.mutate { $0.disconnectNodeOutput(node) }
+        _audioEngine.mutate { engine in
+            if let error = (UnifiedErrorCatcher.try { () -> Error? in
+                if #available(iOS 13, *) {
+                    if engine.attachedNodes.contains(node) {
+                        engine.disconnectNodeOutput(node)
+                    }
+                } else {
+                    engine.disconnectNodeOutput(node)
+                }
+                
+                return nil
+            }) {
+                os_log("disconnect failed: %@", log: .audioEngine, type: .error, error.localizedDescription)
+            }
+        }
     }
 }
 
 // MARK: - Observer
 
 extension AudioEngineManager {
-    @discardableResult func registerObserver(_ observer: Observer) -> Bool {
-        var isInserted = false
-        _audioEngineObservers.mutate {
-            isInserted = $0.insert(observer).inserted
+    func registerObserver(_ observer: Observer, completion: ((Bool) -> Void)? = nil) {
+        audioEngineQueue.async { [weak self] in
+            guard let self = self else { return }
+            let isInserted = self.audioEngineObservers.insert(observer).inserted
+            try? self.startAudioEngine()
+            
+            completion?(isInserted)
         }
-        try? startAudioEngine()
-        
-        return isInserted
     }
     
-    @discardableResult func removeObserver(_ observer: Observer) -> Observer? {
-        var removedObserver: Observer? = nil
-        _audioEngineObservers.mutate {
-            removedObserver = $0.remove(observer)
-            if $0.count == 0 {
-                try? stopAudioEngine()
+    func removeObserver(_ observer: Observer, completion: ((Observer?) -> Void)? = nil) {
+        audioEngineQueue.async { [weak self] in
+            guard let self = self else { return }
+            let removedObserver = self.audioEngineObservers.remove(observer)
+            if self.audioEngineObservers.isEmpty {
+                try? self.stopAudioEngine()
             }
+            
+            completion?(removedObserver)
         }
-        
-        return removedObserver
     }
 }
 
 private extension AudioEngineManager {
     func engineConfigurationChange(notification: Notification) {
-        os_log("engineConfigurationChange: %{private}@", log: .audioEngine, type: .debug, "\(notification)")
+        os_log("engineConfigurationChange: %{public}@", log: .audioEngine, type: .debug, "\(notification)")
         
-        do {
-            try startAudioEngine()
-        } catch {
-            os_log("audioEngine start failed", log: .audioEngine, type: .debug)
-        }
-        
-        audioEngineObservers.forEach { (observer) in
-            observer.engineConfigurationChange(notification: notification)
+        audioEngineQueue.async { [weak self] in
+            do {
+                try self?.startAudioEngine()
+            } catch {
+                os_log("audioEngine start failed: %{public}@", log: .audioEngine, type: .error, "\(error)")
+                return
+            }
+            
+            self?.audioEngineObservers.forEach { (observer) in
+                observer.engineConfigurationChange(notification: notification)
+            }
         }
     }
 }
