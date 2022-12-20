@@ -12,15 +12,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Install Cocoapods
-        run: gem install cocoapods
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
-
       - name: Deploy to Cocoapods
         run: |
           set -eo pipefail
