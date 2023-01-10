@@ -75,6 +75,15 @@ public protocol AudioPlayerAgentProtocol: CapabilityAgentable, TypedNotifyable {
     /// Change shuffle status by sending current status as on / off.
     func requestShuffleCommand(current: Bool)
     
+    /// Change current playing item information by sending current token
+    func requestPlaylistItemSelected(with token: String, postback: [String: AnyHashable])
+    
+    /// Change current playing item information by sending current token and current status as on / off.
+    func requestPlaylistItemFavorite(with token: String, postback: [String: AnyHashable])
+    
+    /// Change current playlist information by sending deletedTokens and playlist tokens
+    func requestPlaylistModified(deletedTokens: [String], tokens: [String])
+    
     /// Sets the current playback time to the specified time.
     ///
     /// - Parameter offset: The time(seconds) to which to seek.
