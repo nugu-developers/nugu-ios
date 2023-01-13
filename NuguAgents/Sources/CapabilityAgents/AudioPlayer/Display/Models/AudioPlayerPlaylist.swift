@@ -125,7 +125,7 @@ public struct AudioPlayerPlaylist: Codable {
     public let token: String?
     public let edit: PlaylistTitle?
     public let button: DisplayCommonTemplate.Common.Button?
-    public let currentToken: String?
+    public var currentToken: String?
     public var list: PlaylistItems?
     
     public func encode(to encoder: Encoder) throws {
