@@ -332,12 +332,16 @@ private extension NuguOAuthClient {
         queries.append(URLQueryItem(name: "state", value: state))
         queries.append(URLQueryItem(name: "client_id", value: grant.clientId))
         queries.append(URLQueryItem(name: "redirect_uri", value: grant.redirectUri))
-        queries.append(URLQueryItem(name: "data", value: "{\"deviceSerialNumber\":\"\(deviceUniqueId)\", \"theme\":\"\(theme.rawValue)\"}"))
-        
-        if let additionalQueries = additionalQueries {
-            queries.append(contentsOf: additionalQueries)
+        var data: [String: String] = [:]
+        data["deviceSerialNumber"] = "deviceUniqueId"
+        data["theme"] = theme.rawValue
+        additionalQueries?.forEach { item in
+            data[item.name] = item.value
         }
-        
+        if let dataJson = try? JSONEncoder().encode(data),
+           let dataJsonString = String(data: dataJson, encoding: .utf8)  {
+            queries.append(URLQueryItem(name: "data", value: dataJsonString))
+        }
         urlComponents?.queryItems = queries
         
         guard let url = urlComponents?.url else {
