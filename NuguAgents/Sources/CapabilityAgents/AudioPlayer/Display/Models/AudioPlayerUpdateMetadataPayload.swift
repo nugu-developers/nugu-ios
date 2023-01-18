@@ -27,6 +27,7 @@ public struct AudioPlayerUpdateMetadataPayload: Decodable {
         
         public struct Template: Decodable {
             public let content: Content?
+            public let playlist: AudioPlayerPlaylist?
             
             public struct Content: Decodable {
                 public let settings: AudioPlayerSettingsTemplate?

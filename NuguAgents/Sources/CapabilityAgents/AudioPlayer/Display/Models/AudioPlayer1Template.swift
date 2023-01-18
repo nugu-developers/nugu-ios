@@ -18,6 +18,7 @@
 //  limitations under the License.
 //
 
+import Foundation
 /// <#Description#>
 public struct AudioPlayer1Template: Decodable {
     public let template: Template
@@ -27,6 +28,7 @@ public struct AudioPlayer1Template: Decodable {
         public let title: Title
         public let content: Content
         public let grammarGuide: [String]?
+        public let playlist: AudioPlayerPlaylist?
         
         public struct Title: Decodable {
             public let iconUrl: String?
