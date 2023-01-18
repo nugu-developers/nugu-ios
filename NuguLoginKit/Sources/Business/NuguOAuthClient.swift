@@ -327,17 +327,22 @@ private extension NuguOAuthClient {
         let state = oauthHandler.makeState()
         var urlComponents = URLComponents(string: NuguOAuthServerInfo.serverBaseUrl + "/v1/auth/oauth/authorize")
         
-        var queries = [URLQueryItem]() 
-        queries.append(URLQueryItem(name: "response_type", value: "code"))
-        queries.append(URLQueryItem(name: "state", value: state))
-        queries.append(URLQueryItem(name: "client_id", value: grant.clientId))
-        queries.append(URLQueryItem(name: "redirect_uri", value: grant.redirectUri))
-        var data: [String: String] = [:]
-        data["deviceSerialNumber"] = "deviceUniqueId"
-        data["theme"] = theme.rawValue
-        additionalQueries?.forEach { item in
-            data[item.name] = item.value
+        var queries = [
+            URLQueryItem(name: "response_type", value: "code"),
+            URLQueryItem(name: "state", value: state),
+            URLQueryItem(name: "client_id", value: grant.clientId),
+            URLQueryItem(name: "redirect_uri", value: grant.redirectUri)
+        ]
+        var additionalQueryData: [String: String] {
+            guard let additionalQueries = additionalQueries else { return [:] }
+            return Dictionary(uniqueKeysWithValues: additionalQueries.map { ($0.name, $0.value) }).compactMapValues { $0 }
         }
+        
+        let data: [String: String] = [
+            "deviceSerialNumber": "deviceUniqueId",
+            "theme": theme.rawValue
+        ].merged(with: additionalQueryData)
+        
         if let dataJson = try? JSONEncoder().encode(data),
            let dataJsonString = String(data: dataJson, encoding: .utf8)  {
             queries.append(URLQueryItem(name: "data", value: dataJsonString))
