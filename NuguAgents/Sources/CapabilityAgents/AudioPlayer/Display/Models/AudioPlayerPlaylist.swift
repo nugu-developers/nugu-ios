@@ -34,7 +34,7 @@ public struct AudioPlayerPlaylist: Codable {
     public struct PlaylistItems: Codable {
         public struct Item: Codable {
             public struct Favorite: Codable {
-                enum CodingKeys: CodingKey {
+                private enum CodingKeys: CodingKey {
                     case text
                     case imageUrl
                     case status
@@ -67,7 +67,7 @@ public struct AudioPlayerPlaylist: Codable {
                 }
             }
             
-            enum CodingKeys: String, CodingKey {
+            private enum CodingKeys: String, CodingKey {
                 case text = "text"
                 case subText
                 case imageUrl
@@ -118,17 +118,6 @@ public struct AudioPlayerPlaylist: Codable {
         
         public let replaceType: String?
         public var items: [Item]
-    }
-    
-    enum CodingKeys: CodingKey {
-        case type
-        case title
-        case subTitle
-        case token
-        case edit
-        case button
-        case currentToken
-        case list
     }
     
     public let type: String?
