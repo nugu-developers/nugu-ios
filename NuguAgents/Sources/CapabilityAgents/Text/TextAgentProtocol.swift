@@ -32,11 +32,25 @@ public protocol TextAgentProtocol: CapabilityAgentable {
     ///   - text: The `text` to be recognized
     ///   - completion: The completion handler to call when the request is complete.
     /// - Returns: The dialogRequestId for request.
+    @available(*, deprecated, message: "Use another `requestTextInput` method. It will be removed in 1.9.0")
     @discardableResult func requestTextInput(
         text: String,
         token: String?,
         source: TextInputSource?,
         requestType: TextAgentRequestType,
+        completion: ((StreamDataState) -> Void)?
+    ) -> String
+    
+    /// Send event that needs a text-based recognition
+    /// - Parameters:
+    ///   - text: The `text` to be recognized
+    ///   - completion: The completion handler to call when the request is complete.
+    /// - Returns: The dialogRequestId for request.
+    @discardableResult func requestTextInput(
+        text: String,
+        token: String?,
+        playServiceId: String?,
+        source: TextInputSource?,
         completion: ((StreamDataState) -> Void)?
     ) -> String
 }
@@ -71,6 +85,22 @@ public extension TextAgentProtocol {
             token: token,
             source: source,
             requestType: requestType,
+            completion: completion
+        )
+    }
+    
+    @discardableResult func requestTextInput(
+        text: String,
+        token: String? = nil,
+        playServiceId: String? = nil,
+        source: TextInputSource? = nil,
+        completion: ((StreamDataState) -> Void)? = nil
+    ) -> String {
+        requestTextInput(
+            text: text,
+            token: token,
+            playServiceId: playServiceId,
+            source: source,
             completion: completion
         )
     }

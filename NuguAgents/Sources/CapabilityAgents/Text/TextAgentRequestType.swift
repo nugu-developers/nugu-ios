@@ -20,6 +20,7 @@
 
 import Foundation
 
+@available(*, deprecated, message: "It will be removed in 1.9.0")
 public enum TextAgentRequestType: Equatable {
     /// send text request only with "text" and "token" infos
     case normal
