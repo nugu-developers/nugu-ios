@@ -222,8 +222,8 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
             }
         }
 
-        if let playlist = self.currentPlaylist, let encodedData = try? JSONEncoder().encode(playlist) {
-            payload["playlist"] = try? JSONSerialization.jsonObject(with: encodedData, options: []) as? [String: AnyHashable]
+        if let playlist = self.currentPlaylist {
+            payload["playlist"] = playlist.token
         }
         
         completion(ContextInfo(contextType: .capability, name: self.capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
