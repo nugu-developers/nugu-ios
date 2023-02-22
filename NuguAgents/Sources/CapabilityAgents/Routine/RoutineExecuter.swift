@@ -184,25 +184,20 @@ class RoutineExecuter {
     func move(to index: Int, completion: @escaping (Bool) -> Void) {
         routineDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            guard [RoutineState.playing, RoutineState.interrupted].contains(self.state),
+            guard [.playing, .interrupted, .suspended].contains(self.state),
                   let routine = self.routine, (0..<routine.payload.actions.count).contains(index) else {
                 completion(false)
                 return
             }
             
-            if self.state == .interrupted {
+            if [.interrupted, .suspended].contains(self.state) {
                 self.state = .playing
             }
             
             self.cancelCurrentAction()
             
-            guard let countableActionIndex = self.findCountableActionIndex(index: index) else {
-                log.debug("cannot find countable action index.")
-                completion(false)
-                return
-            }
-            log.debug("moved to index: \(countableActionIndex)")
-            self.currentActionIndex = countableActionIndex
+            log.debug("moved to index: \(index)")
+            self.currentActionIndex = index
             self.ignoreStopEvent = true
             self.doAction()
             completion(true)
@@ -431,16 +426,6 @@ private extension RoutineExecuter {
             doAction()
         }
         
-    }
-    
-    func findCountableActionIndex(index: Int) -> Int? {
-        guard let countableActions = routine?.payload.actions.filter({ $0.type != .break }),
-              (0..<countableActions.count).contains(index) else {
-            return nil
-        }
-        let action = countableActions[index]
-        
-        return routine?.payload.actions.firstIndex { $0.id == action.id }
     }
     
     func applyMuteDelayIfNeeded(notification: ReceivedDirectives) -> Bool {
