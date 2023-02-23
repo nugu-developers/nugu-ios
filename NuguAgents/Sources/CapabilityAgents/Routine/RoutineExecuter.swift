@@ -191,6 +191,7 @@ class RoutineExecuter {
             }
             
             if [.interrupted, .suspended].contains(self.state) {
+                self.actionWorkItem?.cancel()
                 self.state = .playing
             }
             
