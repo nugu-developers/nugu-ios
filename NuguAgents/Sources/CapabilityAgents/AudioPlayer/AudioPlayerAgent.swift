@@ -27,7 +27,7 @@ import RxSwift
 
 public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     // CapabilityAgentable
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .audioPlayer, version: "1.6")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .audioPlayer, version: "1.7")
     private let playSyncProperty = PlaySyncProperty(layerType: .media, contextType: .sound)
     
     // AudioPlayerAgentProtocol
@@ -76,6 +76,7 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
         audioPlayerAgent: self,
         playSyncManager: playSyncManager
     )
+    private var currentPlaylist: AudioPlayerPlaylist?
     
     // Observers
     private let notificationCenter = NotificationCenter.default
@@ -220,6 +221,10 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
                 log.error("`isLyricsVisible` completion block does not called")
             }
         }
+
+        if let playlist = self.currentPlaylist {
+            payload["playlist"] = playlist.token
+        }
         
         completion(ContextInfo(contextType: .capability, name: self.capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
     }
@@ -293,6 +298,18 @@ public extension AudioPlayerAgent {
         audioPlayerDispatchQueue.async { [weak self] in
             self?.latestPlayer?.seek(to: NuguTimeInterval(seconds: offset))
         }
+    }
+    
+    func requestPlaylistItemSelected(with token: String, postback: [String: AnyHashable]) {
+        sendFullContextEvent(playlistEvent(typeInfo: .playlistItemSelected(token: token, postback: postback)))
+    }
+    
+    func requestPlaylistItemFavorite(with token: String, postback: [String: AnyHashable]) {
+        sendFullContextEvent(playlistEvent(typeInfo: .playlistFavoriteSelected(token: token, postback: postback)))
+    }
+    
+    func requestPlaylistModified(deletedTokens: [String], tokens: [String]) {
+        sendFullContextEvent(playlistEvent(typeInfo: .modifyPlaylist(deletedTokens: deletedTokens, tokens: tokens)))
     }
     
     func notifyUserInteraction() {
@@ -620,6 +637,7 @@ private extension AudioPlayerAgent {
                 return
             }
             
+            self?.currentPlaylist = payload.metadata?.template?.playlist
             self?.audioPlayerDisplayManager.updateMetadata(payload: payload, playServiceId: playServiceId, header: directive.header)
         }
     }
@@ -811,6 +829,22 @@ private extension AudioPlayerAgent {
                 referrerDialogRequestId: player.header.dialogRequestId
             )
             observer(.success(settingEvent))
+            return Disposables.create()
+        }.subscribe(on: audioPlayerScheduler)
+    }
+    
+    func playlistEvent(typeInfo: PlaylistEvent.TypeInfo) -> Single<Eventable> {
+        return Single.create { [weak self] (observer) -> Disposable in
+            guard let self = self, let player = self.latestPlayer else {
+                observer(.failure(NuguAgentError.invalidState))
+                return Disposables.create()
+            }
+            
+            let playlistEvent = PlaylistEvent(
+                typeInfo: typeInfo,
+                playServiceId: player.payload.playServiceId
+            )
+            observer(.success(playlistEvent))
             return Disposables.create()
         }.subscribe(on: audioPlayerScheduler)
     }

@@ -189,6 +189,7 @@ private extension ControlCenterManager {
         guard let payloadAsData = try? JSONSerialization.data(withJSONObject: template.payload, options: []) else {
             return nil
         }
+
         switch template.type {
         case "AudioPlayer.Template1":
             guard let payload = try? JSONDecoder().decode(AudioPlayer1Template.self, from: payloadAsData) else {

@@ -565,6 +565,8 @@
 		E66F999128ADC957000B8F76 /* FakeContextManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66F999028ADC957000B8F76 /* FakeContextManager.swift */; };
 		E66F999328ADD49E000B8F76 /* MockTextAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66F999228ADD49E000B8F76 /* MockTextAgent.swift */; };
 		E68D470728B318840042EB20 /* RoutineAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E68D470628B318840042EB20 /* RoutineAgentTests.swift */; };
+		F6D49D0D296BAD3500510498 /* AudioPlayerPlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D49D0C296BAD3500510498 /* AudioPlayerPlaylist.swift */; };
+		F6D49D0F296BAE9600510498 /* AudioPlayerAgent+PlaylistEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D49D0E296BAE9600510498 /* AudioPlayerAgent+PlaylistEvent.swift */; };
 		F778C001261B096A00B69B32 /* EnumTypedNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = F778C000261B096A00B69B32 /* EnumTypedNotification.swift */; };
 		F78CB7CC25FF2EA000DC3103 /* NudgeAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F78CB7CB25FF2EA000DC3103 /* NudgeAgent.swift */; };
 		F78CB7E225FF2EA800DC3103 /* NudgeAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = F78CB7E125FF2EA800DC3103 /* NudgeAgentProtocol.swift */; };
@@ -1433,6 +1435,8 @@
 		E66F999028ADC957000B8F76 /* FakeContextManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeContextManager.swift; sourceTree = "<group>"; };
 		E66F999228ADD49E000B8F76 /* MockTextAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockTextAgent.swift; sourceTree = "<group>"; };
 		E68D470628B318840042EB20 /* RoutineAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineAgentTests.swift; sourceTree = "<group>"; };
+		F6D49D0C296BAD3500510498 /* AudioPlayerPlaylist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerPlaylist.swift; sourceTree = "<group>"; };
+		F6D49D0E296BAE9600510498 /* AudioPlayerAgent+PlaylistEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AudioPlayerAgent+PlaylistEvent.swift"; sourceTree = "<group>"; };
 		F778C000261B096A00B69B32 /* EnumTypedNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnumTypedNotification.swift; sourceTree = "<group>"; };
 		F78CB7CB25FF2EA000DC3103 /* NudgeAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NudgeAgent.swift; sourceTree = "<group>"; };
 		F78CB7E125FF2EA800DC3103 /* NudgeAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NudgeAgentProtocol.swift; sourceTree = "<group>"; };
@@ -1680,6 +1684,7 @@
 				A135E6942428B6C8006F82E5 /* AudioPlayerAgent+RequestPlayEvent.swift */,
 				A135E662241F1925006F82E5 /* AudioPlayerAgent+SettingsEvent.swift */,
 				A135E66A241F39D9006F82E5 /* AudioPlayerAgent+LyricsEvent.swift */,
+				F6D49D0E296BAE9600510498 /* AudioPlayerAgent+PlaylistEvent.swift */,
 			);
 			path = Event;
 			sourceTree = "<group>";
@@ -3292,6 +3297,7 @@
 				E64986792833681A001AD733 /* DisplayCommonTemplate.swift */,
 				E649867A2833681A001AD733 /* AudioPlayerLyricsTemplate.swift */,
 				E649867B2833681A001AD733 /* AudioPlayer1Template.swift */,
+				F6D49D0C296BAD3500510498 /* AudioPlayerPlaylist.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -4648,6 +4654,7 @@
 				7373890024A46C930018DDD2 /* SystemAgentRevokeReason.swift in Sources */,
 				065DF8C825637D58009CF99E /* Attachable.swift in Sources */,
 				E649867C2833681A001AD733 /* AudioPlayerSettingsTemplate.swift in Sources */,
+				F6D49D0F296BAE9600510498 /* AudioPlayerAgent+PlaylistEvent.swift in Sources */,
 				A135E66B241F39D9006F82E5 /* AudioPlayerAgent+LyricsEvent.swift in Sources */,
 				E649867D2833681A001AD733 /* AudioPlayerUpdateMetadataPayload.swift in Sources */,
 				1FBE3BE5283752BB006D158B /* MessengerAgent.swift in Sources */,
@@ -4704,6 +4711,7 @@
 				064FD86B25A2CEB800DE6454 /* UtilityAgentProtocol.swift in Sources */,
 				1F93375D25BEB8CE00CEBF66 /* MessageAgentContext.swift in Sources */,
 				1FBE3BE4283752BB006D158B /* MessengerPostback.swift in Sources */,
+				F6D49D0D296BAD3500510498 /* AudioPlayerPlaylist.swift in Sources */,
 				1FD5D18024A99993007BA384 /* PhoneCallErrorCode.swift in Sources */,
 				73152FC023E0414700F843C3 /* ASRNotifyResult.swift in Sources */,
 				1FFBC8A825EDFB5100DFD0D6 /* AlertsAgent.swift in Sources */,
@@ -5069,7 +5077,7 @@
 					"@loader_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				MARKETING_VERSION = 1.8.0;
+				MARKETING_VERSION = 1.8.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguCore;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -5106,7 +5114,7 @@
 					"@loader_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				MARKETING_VERSION = 1.8.0;
+				MARKETING_VERSION = 1.8.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguCore;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -5139,7 +5147,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8.0;
+				MARKETING_VERSION = 1.8.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguClientKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -5172,7 +5180,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8.0;
+				MARKETING_VERSION = 1.8.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguClientKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -5205,7 +5213,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8.0;
+				MARKETING_VERSION = 1.8.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguLoginKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -5238,7 +5246,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8.0;
+				MARKETING_VERSION = 1.8.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguLoginKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -5271,7 +5279,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8.0;
+				MARKETING_VERSION = 1.8.1;
 				OTHER_SWIFT_FLAGS = "-DDEPLOY_OTHER_PACKAGE_MANAGER";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguUIKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
@@ -5305,7 +5313,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8.0;
+				MARKETING_VERSION = 1.8.1;
 				OTHER_SWIFT_FLAGS = "-DDEPLOY_OTHER_PACKAGE_MANAGER";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguUIKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
@@ -5340,7 +5348,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8.0;
+				MARKETING_VERSION = 1.8.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-l\"c++\"",
@@ -5380,7 +5388,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8.0;
+				MARKETING_VERSION = 1.8.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-l\"c++\"",
@@ -5419,7 +5427,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8.0;
+				MARKETING_VERSION = 1.8.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-l\"c++\"",
@@ -5458,7 +5466,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8.0;
+				MARKETING_VERSION = 1.8.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-l\"c++\"",
@@ -5497,7 +5505,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8.0;
+				MARKETING_VERSION = 1.8.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.SampleApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = NuguSampleAppDev;
@@ -5528,7 +5536,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8.0;
+				MARKETING_VERSION = 1.8.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.SampleApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = NuguSampleAppDev;
@@ -5740,7 +5748,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8.0;
+				MARKETING_VERSION = 1.8.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguUtils;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -5773,7 +5781,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8.0;
+				MARKETING_VERSION = 1.8.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguUtils;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -5806,7 +5814,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8.0;
+				MARKETING_VERSION = 1.8.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguAgents;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -5838,7 +5846,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8.0;
+				MARKETING_VERSION = 1.8.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguAgents;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -5868,7 +5876,7 @@
 					"@loader_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MARKETING_VERSION = 1.8.0;
+				MARKETING_VERSION = 1.8.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.TycheSDK;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -5896,7 +5904,7 @@
 					"@loader_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MARKETING_VERSION = 1.8.0;
+				MARKETING_VERSION = 1.8.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.TycheSDK;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -5922,7 +5930,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8.0;
+				MARKETING_VERSION = 1.8.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.OpusSDK;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -5948,7 +5956,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8.0;
+				MARKETING_VERSION = 1.8.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.OpusSDK;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -5975,7 +5983,7 @@
 					"@loader_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = 1.8.0;
+				MARKETING_VERSION = 1.8.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguObjcUtils;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -6004,7 +6012,7 @@
 					"@loader_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = 1.8.0;
+				MARKETING_VERSION = 1.8.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguObjcUtils;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -6036,7 +6044,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8.0;
+				MARKETING_VERSION = 1.8.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.SilverTray;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -6068,7 +6076,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8.0;
+				MARKETING_VERSION = 1.8.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.SilverTray;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -6101,7 +6109,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8.0;
+				MARKETING_VERSION = 1.8.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguServiceKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -6136,7 +6144,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8.0;
+				MARKETING_VERSION = 1.8.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguServiceKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

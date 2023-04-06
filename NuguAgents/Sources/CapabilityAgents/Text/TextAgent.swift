@@ -132,6 +132,25 @@ extension TextAgent {
         )
         .dialogRequestId
     }
+    
+    @discardableResult public func requestTextInput(
+        text: String,
+        token: String?,
+        playServiceId: String?,
+        source: TextInputSource?,
+        completion: ((StreamDataState) -> Void)?
+    ) -> String {
+        sendFullContextEvent(
+            textInput(
+                text: text,
+                token: token,
+                playServiceId: playServiceId,
+                source: source
+            ),
+            completion: completion
+        )
+        .dialogRequestId
+    }
 }
 
 // MARK: - ContextInfoDelegate
@@ -340,6 +359,51 @@ private extension TextAgent {
                     return attributes
                 }
                 
+                single(.success(attributes))
+            }
+            
+            return disposable
+        }
+        .flatMap { attributes in
+            Event(
+                typeInfo: .textInput(text: text, token: token, attributes: attributes),
+                referrerDialogRequestId: referrerDialogRequestId
+            ).rx
+        }
+    }
+    
+    func textInput(
+        text: String,
+        token: String?,
+        playServiceId: String?,
+        source: TextInputSource? = nil,
+        referrerDialogRequestId: String? = nil
+    ) -> Single<Eventable> {
+        return Single<[String: AnyHashable]>.create { [weak self] single in
+            let disposable = Disposables.create()
+            guard let self = self else { return disposable }
+            
+            self.textDispatchQueue.async { [weak self] in
+                var attributes = [String: AnyHashable]()
+                if let expectTypingDialogRequestId = self?.expectTyping?.dialogRequestId,
+                   let expectTypingAttribute = self?.dialogAttributeStore.requestAttributes(key: expectTypingDialogRequestId) {
+                    attributes.merge(expectTypingAttribute)
+                }
+                
+                if let playServiceId = playServiceId {
+                    attributes["playServiceId"] = playServiceId
+                }
+                
+                if let source = source {
+                    attributes["source"] = source.description
+                }
+                
+                if let interactionControl = self?.currentInteractionControl,
+                   let interactionControlData = try? JSONEncoder().encode(interactionControl),
+                   let interactionControlDictionary = try? JSONSerialization.jsonObject(with: interactionControlData, options: []) as? [String: AnyHashable] {
+                    attributes["interactionControl"] = interactionControlDictionary
+                }
+                    
                 single(.success(attributes))
             }
             
