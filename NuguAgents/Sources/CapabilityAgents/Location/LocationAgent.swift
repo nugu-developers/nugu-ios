@@ -46,12 +46,18 @@ public final class LocationAgent: LocationAgentProtocol {
         var payload: [String: AnyHashable?] = [
             "version": self.capabilityAgentProperty.version
         ]
-        if let locationInfo = self.delegate?.locationAgentRequestLocationInfo() {
-            payload["current"] = [
-                "latitude": locationInfo.latitude,
-                "longitude": locationInfo.longitude
-            ]
+        
+        self.delegate?.locationAgentRequestLocationInfo { [weak self] locationInfo in
+            guard let self = self else { return }
+            
+            if let locationInfo = locationInfo {
+                payload["current"] = [
+                    "latitude": locationInfo.latitude,
+                    "longitude": locationInfo.longitude
+                ]
+            }
+            
+            completion(ContextInfo(contextType: .capability, name: self.capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
         }
-        completion(ContextInfo(contextType: .capability, name: self.capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
     }
 }

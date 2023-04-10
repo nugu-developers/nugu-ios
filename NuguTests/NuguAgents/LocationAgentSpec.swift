@@ -83,7 +83,7 @@ class LocationAgentSpec: QuickSpec {
 // MARK: - MockLocationAgentDelegate
 
 class MockLocationAgentDelegate: LocationAgentDelegate {
-    func locationAgentRequestLocationInfo() -> LocationInfo? {
-        return LocationInfo(latitude: String(10.1), longitude: String(20.9))
+    func locationAgentRequestLocationInfo(_ completion: (LocationInfo?) -> Void) {
+        completion(LocationInfo(latitude: String(10.1), longitude: String(20.9)))
     }
 }
