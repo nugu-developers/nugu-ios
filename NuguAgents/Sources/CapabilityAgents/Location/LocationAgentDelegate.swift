@@ -22,29 +22,10 @@ import Foundation
 
 /// The methods that you use to receive location information from an associated `LocationAgent` object.
 public protocol LocationAgentDelegate: AnyObject {
-    
     /// It called when need location information for using nugu service.
     ///
     /// It is used as `ContextInfo`, thus must be get `LocationInfo` quickly and synchronous.
     /// Mostly used when every a request through `ASRAgent` or `TextAgent`.
     /// Best to use cached value or constant value when possible.
-    @available(*, deprecated, message: "Use another method using closure. It will be removed in 1.9.0")
-    func locationAgentRequestLocationInfo() -> LocationInfo?
-    
-    /// It called when need location information for using nugu service.
-    ///
-    /// It is used as `ContextInfo`, thus must be get `LocationInfo` quickly and synchronous.
-    /// Mostly used when every a request through `ASRAgent` or `TextAgent`.
-    /// Best to use cached value or constant value when possible.
-    func locationAgentRequestLocationInfo(completion: (LocationInfo?) -> Void)
-}
-
-public extension LocationAgentDelegate {
-    func locationAgentRequestLocationInfo() -> LocationInfo? {
-        return nil
-    }
-    
-    func locationAgentRequestLocationInfo(completion: (LocationInfo?) -> Void) {
-        completion(nil)
-    }
+    func locationAgentRequestLocationInfo(_ completion: (LocationInfo?) -> Void)
 }

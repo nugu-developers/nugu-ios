@@ -47,8 +47,9 @@ public final class LocationAgent: LocationAgentProtocol {
             "version": self.capabilityAgentProperty.version
         ]
         
-        let processLocationInfo = { [weak self] (_ locationInfo: LocationInfo?) in
+        self.delegate?.locationAgentRequestLocationInfo { [weak self] locationInfo in
             guard let self = self else { return }
+            
             if let locationInfo = locationInfo {
                 payload["current"] = [
                     "latitude": locationInfo.latitude,
@@ -58,15 +59,5 @@ public final class LocationAgent: LocationAgentProtocol {
             
             completion(ContextInfo(contextType: .capability, name: self.capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
         }
-        
-        let retrieveLocationInfo = { [weak self] (completion: (LocationInfo?) -> Void) in
-            guard let self = self else { return }
-            self.delegate?.locationAgentRequestLocationInfo { locationInfo in
-                // TODO: It must be Removed in 1.9.0
-                completion(locationInfo ?? self.delegate?.locationAgentRequestLocationInfo())
-            }
-        }
-        
-        retrieveLocationInfo(processLocationInfo)
     }
 }
