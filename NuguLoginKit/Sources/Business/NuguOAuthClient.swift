@@ -339,7 +339,7 @@ private extension NuguOAuthClient {
         }
         
         let data: [String: String] = [
-            "deviceSerialNumber": "deviceUniqueId",
+            "deviceSerialNumber": deviceUniqueId,
             "theme": theme.rawValue
         ].merged(with: additionalQueryData)
         
