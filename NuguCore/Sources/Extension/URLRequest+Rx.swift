@@ -29,7 +29,7 @@ extension URLRequest {
             let task = urlSession.dataTask(with: self) { (data, response, error) in
                 guard error == nil else {
                     log.error("response error: \(error!)")
-                    event(.error(error!))
+                    event(.failure(error!))
                     return
                 }
                 
@@ -54,7 +54,7 @@ extension URLRequest {
             let task = urlSession.uploadTask(with: self, from: data) { (data, response, error) in
                 guard error == nil else {
                     log.error("response error: \(error!)")
-                    event(.error(error!))
+                    event(.failure(error!))
                     return
                 }
                 
@@ -75,28 +75,28 @@ private extension URLRequest {
     func urlTaskResponseParser(data: Data?, response: URLResponse?, error: Error?) -> SingleEvent<Data> {
         guard error == nil else {
             log.error(error!)
-            return .error(error!)
+            return .failure(error!)
         }
         
         log.debug("response:\n\(response?.description ?? "")\n")
         guard let response = response as? HTTPURLResponse else {
-            return .error(NetworkError.nilResponse)
+            return .failure(NetworkError.nilResponse)
         }
         
         switch HTTPStatusCode(rawValue: response.statusCode) {
         case .ok:
             guard let data = data else {
-                return .error(NetworkError.invalidMessageReceived)
+                return .failure(NetworkError.invalidMessageReceived)
             }
             
             log.debug("data:\n\(String(data: data, encoding: .utf8) ?? "")\n")
             return .success(data)
         case .serverError:
-            return .error(NetworkError.serverError)
+            return .failure(NetworkError.serverError)
         case .unauthorized:
-            return .error(NetworkError.authError)
+            return .failure(NetworkError.authError)
         default:
-            return .error(NetworkError.invalidMessageReceived)
+            return .failure(NetworkError.invalidMessageReceived)
         }
     }
 }

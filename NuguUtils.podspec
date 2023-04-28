@@ -22,6 +22,6 @@ Framework for login using OAuth 2.0
 
   s.source_files = 'NuguUtils/Sources/**/*'
 
-  s.dependency 'RxSwift', '~> 5'
+  s.dependency 'RxSwift', '~> 6'
 end
 
