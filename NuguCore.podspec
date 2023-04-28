@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'NuguCore'
-  s.version = '1.2.8'
+  s.version = '1.2.9'
   s.license = 'Apache License, Version 2.0'
   s.summary = 'Nugu'
   s.description = <<-DESC
@@ -27,6 +27,6 @@ Nugu framework for AI Service
 
   s.dependency 'NuguUtils', s.version.to_s
   s.dependency 'NattyLog', '~> 1.0'
-  s.dependency 'RxSwift', '~> 5'
+  s.dependency 'RxSwift', '~> 6'
 
 end
