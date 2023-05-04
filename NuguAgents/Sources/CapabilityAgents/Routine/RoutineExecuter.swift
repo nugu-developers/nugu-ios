@@ -224,7 +224,7 @@ private extension RoutineExecuter {
                     if self.handlingDirectives.contains(notification.directive.header.messageId) {
                         self.doNextAction()
                     } else {
-                        self.doStop()
+                        self.doInterrupt()
                     }
                     
                     self.handlingDirectives.removeAll()
