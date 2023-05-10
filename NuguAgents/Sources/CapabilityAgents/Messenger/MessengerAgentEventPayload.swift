@@ -54,24 +54,28 @@ public enum MessengerAgentEventPayload {
     }
     
     public struct Enter {
-        /// <#Description#>
         public enum EnterType: String {
             case manual = "MANUAL"
             case transfer = "TRANSFER"
         }
         
-        /// <#Description#>
-        public let roomId: String
-        /// <#Description#>
-        public let enterType: EnterType
+        public enum OrdinalDailyType: String {
+            case first = "FIRST"
+            case several = "SEVERAL"
+        }
         
-        /// <#Description#>
-        /// - Parameters:
-        ///   - roomId: <#roomId description#>
-        ///   - enterType: <#enterType description#>
-        public init(roomId: String, enterType: EnterType) {
+        public let roomId: String
+        public let enterType: EnterType
+        public let ordinalDaily: OrdinalDailyType?
+        
+        public init(
+            roomId: String,
+            enterType: EnterType,
+            ordinalDaily: OrdinalDailyType?
+        ) {
             self.roomId = roomId
             self.enterType = enterType
+            self.ordinalDaily = ordinalDaily
         }
     }
     

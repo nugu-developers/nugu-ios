@@ -25,7 +25,7 @@ import NuguCore
 import RxSwift
 
 public class MessengerAgent {
-    public var capabilityAgentProperty: CapabilityAgentProperty = .init(category: .plugin(name: "Messenger"), version: "1.0")
+    public var capabilityAgentProperty: CapabilityAgentProperty = .init(category: .plugin(name: "Messenger"), version: "1.1")
     
     // private
     private let directiveSequencer: DirectiveSequenceable
@@ -174,6 +174,18 @@ public extension MessengerAgent {
         return sendCompactContextEvent(
             Event(
                 typeInfo: .reaction(item: item),
+                referrerDialogRequestId: nil
+            ).rx,
+            completion: completion
+        ).dialogRequestId
+    }
+    
+    @discardableResult func requestNotifyWontRead(
+        completion: ((StreamDataState) -> Void)? = nil
+    ) -> String {
+        return sendCompactContextEvent(
+            Event(
+                typeInfo: .notifyWontRead,
                 referrerDialogRequestId: nil
             ).rx,
             completion: completion

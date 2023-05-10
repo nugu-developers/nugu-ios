@@ -89,6 +89,35 @@ public enum MessengerAgentDirectivePayload {
         public let postback: MessengerPostback?
         public let profileKey: String?
         public let disableInputForm: Bool?
+        public let isSystemError: Bool?
+        
+        public init(
+            id: String,
+            roomId: String,
+            sender: String?,
+            playServiceId: String?,
+            timestamp: Int,
+            format: String,
+            text: String?,
+            template: [String: AnyHashable]?,
+            postback: MessengerPostback?,
+            profileKey: String?,
+            disableInputForm: Bool?,
+            isSystemError: Bool?
+        ) {
+            self.id = id
+            self.roomId = roomId
+            self.sender = sender
+            self.playServiceId = playServiceId
+            self.timestamp = timestamp
+            self.format = format
+            self.text = text
+            self.template = template
+            self.postback = postback
+            self.profileKey = profileKey
+            self.disableInputForm = disableInputForm
+            self.isSystemError = isSystemError
+        }
     }
     
     // MARK: NotifyStartDialog
@@ -153,6 +182,7 @@ extension MessengerAgentDirectivePayload.NotifyMessage: Codable {
         case postback
         case profileKey
         case disableInputForm
+        case isSystemError
     }
     
     public func encode(to encoder: Encoder) throws {
@@ -169,6 +199,7 @@ extension MessengerAgentDirectivePayload.NotifyMessage: Codable {
         try container.encodeIfPresent(postback, forKey: .postback)
         try container.encodeIfPresent(profileKey, forKey: .profileKey)
         try container.encodeIfPresent(disableInputForm, forKey: .disableInputForm)
+        try container.encodeIfPresent(isSystemError, forKey: .isSystemError)
     }
     
     public init(from decoder: Decoder) throws {
@@ -185,6 +216,6 @@ extension MessengerAgentDirectivePayload.NotifyMessage: Codable {
         postback = try? container.decodeIfPresent(MessengerPostback.self, forKey: .postback)
         profileKey = try? container.decodeIfPresent(String.self, forKey: .profileKey)
         disableInputForm = try? container.decodeIfPresent(Bool.self, forKey: .disableInputForm)
-        
+        isSystemError = try? container.decodeIfPresent(Bool.self, forKey: .isSystemError)
     }
 }
