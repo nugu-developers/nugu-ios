@@ -54,24 +54,37 @@ public enum MessengerAgentEventPayload {
     }
     
     public struct Enter {
-        /// <#Description#>
+        /// 진입 타입
         public enum EnterType: String {
+            /// 사용자가 직접 대화방을 진입
             case manual = "MANUAL"
+            
+            /// 전환 기능을 통해 대화방을 진입
             case transfer = "TRANSFER"
         }
         
-        /// <#Description#>
+        /// 해당 일(5AM ~ 5AM) 접속 횟수
+        public enum OrdinalDaily: String {
+            /// 최초 접속
+            case first = "FIRST"
+            
+            /// 최초 접속이 아님
+            case several = "SEVERAL"
+        }
+        
+        /// 대화방 아이디
         public let roomId: String
-        /// <#Description#>
+        
+        /// 진입 타입
         public let enterType: EnterType
         
-        /// <#Description#>
-        /// - Parameters:
-        ///   - roomId: <#roomId description#>
-        ///   - enterType: <#enterType description#>
-        public init(roomId: String, enterType: EnterType) {
+        /// 해당 일(5AM ~ 5AM) 최초 접속인지 여부
+        public let ordinalDaily: OrdinalDaily?
+        
+        public init(roomId: String, enterType: EnterType, ordinalDaily: OrdinalDaily? = nil) {
             self.roomId = roomId
             self.enterType = enterType
+            self.ordinalDaily = ordinalDaily
         }
     }
     
@@ -153,20 +166,21 @@ public enum MessengerAgentEventPayload {
     }
 }
 
-// MARK: - MessengerAgentEventPayload.Sync + Codable
+// MARK: - MessengerAgentEventPayload + Codable
 
+// MARK: MessengerAgentEventPayload.Sync + Codable
 extension MessengerAgentEventPayload.Sync: Codable {}
 
-// MARK: - MessengerAgentEventPayload.Enter + Codable
-
+// MARK: MessengerAgentEventPayload.Enter + Codable
 extension MessengerAgentEventPayload.Enter: Codable {}
 
-// MARK: - MessengerAgentEventPayload.Enter.EnterType + Codable
-
+// MARK: MessengerAgentEventPayload.Enter.EnterType + Codable
 extension MessengerAgentEventPayload.Enter.EnterType: Codable {}
 
-// MARK: - MessengerAgentEventPayload.Message + Codable
+// MARK: MessengerAgentEventPayload.Enter.OrdinalDaily + Codable
+extension MessengerAgentEventPayload.Enter.OrdinalDaily: Codable {}
 
+// MARK: MessengerAgentEventPayload.Message + Codable
 extension MessengerAgentEventPayload.Message: Codable {
     enum CodingKeys: String, CodingKey {
         case roomId
@@ -203,6 +217,5 @@ extension MessengerAgentEventPayload.Message: Codable {
     }
 }
 
-// MARK: - MessengerAgentEventPayload.Reaction + Codable
-
+// MARK: MessengerAgentEventPayload.Reaction + Codable
 extension MessengerAgentEventPayload.Reaction: Codable {}
