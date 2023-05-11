@@ -565,6 +565,8 @@
 		E66F999128ADC957000B8F76 /* FakeContextManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66F999028ADC957000B8F76 /* FakeContextManager.swift */; };
 		E66F999328ADD49E000B8F76 /* MockTextAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66F999228ADD49E000B8F76 /* MockTextAgent.swift */; };
 		E68D470728B318840042EB20 /* RoutineAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E68D470628B318840042EB20 /* RoutineAgentTests.swift */; };
+		E6BE047C2A0BA1A400AE29E3 /* Image+Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6BE047B2A0BA1A400AE29E3 /* Image+Event.swift */; };
+		E6BE047E2A0BA1BD00AE29E3 /* ImageAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6BE047D2A0BA1BD00AE29E3 /* ImageAgent.swift */; };
 		F6D49D0D296BAD3500510498 /* AudioPlayerPlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D49D0C296BAD3500510498 /* AudioPlayerPlaylist.swift */; };
 		F6D49D0F296BAE9600510498 /* AudioPlayerAgent+PlaylistEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D49D0E296BAE9600510498 /* AudioPlayerAgent+PlaylistEvent.swift */; };
 		F778C001261B096A00B69B32 /* EnumTypedNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = F778C000261B096A00B69B32 /* EnumTypedNotification.swift */; };
@@ -1435,6 +1437,8 @@
 		E66F999028ADC957000B8F76 /* FakeContextManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeContextManager.swift; sourceTree = "<group>"; };
 		E66F999228ADD49E000B8F76 /* MockTextAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockTextAgent.swift; sourceTree = "<group>"; };
 		E68D470628B318840042EB20 /* RoutineAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineAgentTests.swift; sourceTree = "<group>"; };
+		E6BE047B2A0BA1A400AE29E3 /* Image+Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Image+Event.swift"; sourceTree = "<group>"; };
+		E6BE047D2A0BA1BD00AE29E3 /* ImageAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAgent.swift; sourceTree = "<group>"; };
 		F6D49D0C296BAD3500510498 /* AudioPlayerPlaylist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerPlaylist.swift; sourceTree = "<group>"; };
 		F6D49D0E296BAE9600510498 /* AudioPlayerAgent+PlaylistEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AudioPlayerAgent+PlaylistEvent.swift"; sourceTree = "<group>"; };
 		F778C000261B096A00B69B32 /* EnumTypedNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnumTypedNotification.swift; sourceTree = "<group>"; };
@@ -1846,6 +1850,7 @@
 				7E284D9024DD255C00BF9640 /* Interaction */,
 				7ED37D4726043DF3009A0A24 /* Permission */,
 				7E1DDE0B25F894960038D040 /* Routine */,
+				E6BE047A2A0BA18700AE29E3 /* Image */,
 			);
 			path = CapabilityAgents;
 			sourceTree = "<group>";
@@ -3320,6 +3325,15 @@
 			path = Fake;
 			sourceTree = "<group>";
 		};
+		E6BE047A2A0BA18700AE29E3 /* Image */ = {
+			isa = PBXGroup;
+			children = (
+				E6BE047B2A0BA1A400AE29E3 /* Image+Event.swift */,
+				E6BE047D2A0BA1BD00AE29E3 /* ImageAgent.swift */,
+			);
+			path = Image;
+			sourceTree = "<group>";
+		};
 		F78CB7CA25FF2E9400DC3103 /* Nudge */ = {
 			isa = PBXGroup;
 			children = (
@@ -4707,6 +4721,7 @@
 				7373891524A46CB90018DDD2 /* TextAgentProtocol.swift in Sources */,
 				737388FF24A46C930018DDD2 /* SystemAgentExceptionCode.swift in Sources */,
 				7E0E0B082437077F00198FCB /* EndPointDetectable.swift in Sources */,
+				E6BE047C2A0BA1A400AE29E3 /* Image+Event.swift in Sources */,
 				1F93377325BEB95800CEBF66 /* MessageAgentContact.swift in Sources */,
 				064FD86B25A2CEB800DE6454 /* UtilityAgentProtocol.swift in Sources */,
 				1F93375D25BEB8CE00CEBF66 /* MessageAgentContext.swift in Sources */,
@@ -4733,6 +4748,7 @@
 				737388DD24A46C3C0018DDD2 /* SoundBeepName.swift in Sources */,
 				737388C524A46C110018DDD2 /* CapabilityAgentable.swift in Sources */,
 				737388D324A46C2B0018DDD2 /* Session.swift in Sources */,
+				E6BE047E2A0BA1BD00AE29E3 /* ImageAgent.swift in Sources */,
 				737388E624A46C5D0018DDD2 /* AudioPlayerAgentProtocol.swift in Sources */,
 				1F9336D625B68D4100CEBF66 /* MessageAgent.swift in Sources */,
 				7E6D1181249C6E8100E3580C /* SessionManager.swift in Sources */,
