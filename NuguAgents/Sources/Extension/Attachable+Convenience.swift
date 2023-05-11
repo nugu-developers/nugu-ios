@@ -49,4 +49,30 @@ extension Attachable {
             content: speechData
         )
     }
+    
+    func makeAttachmentImage(
+        property: CapabilityAgentProperty,
+        dialogRequestId: String,
+        referrerDialogRequestId: String?,
+        attachmentSeq: Int32,
+        isEnd: Bool,
+        imageData: Data
+    ) -> Upstream.Attachment {
+        let header = Upstream.Header(
+            namespace: property.name,
+            name: name,
+            version: property.version,
+            dialogRequestId: dialogRequestId,
+            messageId: TimeUUID().hexString,
+            referrerDialogRequestId: referrerDialogRequestId
+        )
+        
+        return Upstream.Attachment(
+            header: header,
+            seq: attachmentSeq,
+            isEnd: isEnd,
+            type: type,
+            content: imageData
+        )
+    }
 }

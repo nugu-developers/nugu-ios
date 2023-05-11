@@ -20,7 +20,7 @@
 		064FD86B25A2CEB800DE6454 /* UtilityAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 064FD86A25A2CEB800DE6454 /* UtilityAgentProtocol.swift */; };
 		064FD88125A2CEE000DE6454 /* UtilityAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 064FD88025A2CEE000DE6454 /* UtilityAgent.swift */; };
 		064FD88D25A2DC8B00DE6454 /* UtilityBlockItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 064FD88C25A2DC8B00DE6454 /* UtilityBlockItem.swift */; };
-		065DF8BD25637D51009CF99E /* Attachable+makeAttachmentMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065DF8BC25637D51009CF99E /* Attachable+makeAttachmentMessage.swift */; };
+		065DF8BD25637D51009CF99E /* Attachable+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065DF8BC25637D51009CF99E /* Attachable+Convenience.swift */; };
 		065DF8C825637D58009CF99E /* Attachable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065DF8C725637D57009CF99E /* Attachable.swift */; };
 		066C9D2E25553EF0000C7800 /* MicInputProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFFF3192375707000C9A177 /* MicInputProvider.swift */; };
 		066C9D2F25553EF0000C7800 /* MicInputError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E35D79924623B53003289A2 /* MicInputError.swift */; };
@@ -897,7 +897,7 @@
 		064FD88025A2CEE000DE6454 /* UtilityAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityAgent.swift; sourceTree = "<group>"; };
 		064FD88C25A2DC8B00DE6454 /* UtilityBlockItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityBlockItem.swift; sourceTree = "<group>"; };
 		06500CCC2578821B0088F776 /* NuguUtils.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = NuguUtils.podspec; sourceTree = "<group>"; };
-		065DF8BC25637D51009CF99E /* Attachable+makeAttachmentMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Attachable+makeAttachmentMessage.swift"; sourceTree = "<group>"; };
+		065DF8BC25637D51009CF99E /* Attachable+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Attachable+Convenience.swift"; sourceTree = "<group>"; };
 		065DF8C725637D57009CF99E /* Attachable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Attachable.swift; sourceTree = "<group>"; };
 		067CB450256E4DAA00D57AF0 /* VoiceChromePresenterDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceChromePresenterDelegate.swift; sourceTree = "<group>"; };
 		067CB472256E582200D57AF0 /* VoiceChromePresenterError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceChromePresenterError.swift; sourceTree = "<group>"; };
@@ -2797,7 +2797,7 @@
 		73152FE123E047F200F843C3 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
-				065DF8BC25637D51009CF99E /* Attachable+makeAttachmentMessage.swift */,
+				065DF8BC25637D51009CF99E /* Attachable+Convenience.swift */,
 				7334F47423FD170200EA5E58 /* Eventable+makeEventMessage.swift */,
 				73152F9323E034C300F843C3 /* DispatchQueue+Precondition.swift */,
 				7E5237F8239649940058F0B9 /* NSObject+Rx.swift */,
@@ -4787,7 +4787,7 @@
 				1FD5D19124C82F3B007BA384 /* MediaPlayerAgent+Event.swift in Sources */,
 				737388C924A46C1D0018DDD2 /* ChipsAgentProtocol.swift in Sources */,
 				1FD5D17E24A99993007BA384 /* PhoneCallType.swift in Sources */,
-				065DF8BD25637D51009CF99E /* Attachable+makeAttachmentMessage.swift in Sources */,
+				065DF8BD25637D51009CF99E /* Attachable+Convenience.swift in Sources */,
 				680EF96524B30DBB003DE266 /* MediaPlayerAgentDelegate.swift in Sources */,
 				1FD5D17B24A99993007BA384 /* PhoneCallAgentProtocol.swift in Sources */,
 			);
