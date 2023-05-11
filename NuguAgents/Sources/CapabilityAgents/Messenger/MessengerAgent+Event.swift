@@ -34,6 +34,7 @@ extension MessengerAgent {
             case message(item: MessengerAgentEventPayload.Message)
             case exit(roomId: String)
             case read(roomId: String, readMessageId: String)
+            case notifyWontRead
             case reaction(item: MessengerAgentEventPayload.Reaction)
             case directiveDelivered(roomId: String)
         }
@@ -86,6 +87,8 @@ extension MessengerAgent.Event: Eventable {
                 "roomId": roomId,
                 "readMessageId": readMessageId
             ]
+        case .notifyWontRead:
+            return [:]
         case .reaction(let item):
             return [
                 "roomId": item.roomId,
@@ -105,6 +108,7 @@ extension MessengerAgent.Event: Eventable {
         case .message: return "Message"
         case .exit: return "Exit"
         case .read: return "Read"
+        case .notifyWontRead: return "NotifyWontRead"
         case .reaction: return "Reaction"
         case .directiveDelivered: return "DirectiveDelivered"
         }
