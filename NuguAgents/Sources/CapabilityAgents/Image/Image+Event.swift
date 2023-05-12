@@ -20,6 +20,7 @@
 import Foundation
 
 // MARK: - CapabilityEventAgentable
+
 extension ImageAgent {
     struct Event {
         let typeInfo: TypeInfo
@@ -29,9 +30,18 @@ extension ImageAgent {
             case sendImage
         }
     }
+    
+    struct Attachment {
+        let typeInfo: TypeInfo
+        
+        enum TypeInfo {
+            case sendImage
+        }
+    }
 }
 
 // MARK: - Eventable
+
 extension ImageAgent.Event: Eventable {
     var payload: [String: AnyHashable] {
         var payload: [String: AnyHashable] = [:]
@@ -45,6 +55,23 @@ extension ImageAgent.Event: Eventable {
     var name: String {
         switch typeInfo {
         case .sendImage: return "SendImage"
+        }
+    }
+}
+
+
+// MARK: - Attachable
+
+extension ImageAgent.Attachment: Attachable {
+    var name: String {
+        switch typeInfo {
+        case .sendImage: return "SendImage"
+        }
+    }
+    
+    var type: String {
+        switch typeInfo {
+        case .sendImage: return "application/octet-stream"
         }
     }
 }

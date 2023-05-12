@@ -66,16 +66,34 @@ public class ImageAgent {
 
 public extension ImageAgent {
     @discardableResult func requestSendImage(
-        playServiceId: String,
+        _ image: Data,
         completion: ((StreamDataState) -> Void)? = nil
     ) -> String {
-        return sendCompactContextEvent(
+        let eventIdentifier = EventIdentifier()
+        upstreamDataSender.sendStream(
             Event(
                 typeInfo: .sendImage,
                 referrerDialogRequestId: nil
-            ).rx,
+            ).makeEventMessage(
+                property: capabilityAgentProperty,
+                eventIdentifier: eventIdentifier,
+                contextPayload: []
+            ),
+            completion: nil
+        )
+        upstreamDataSender.sendStream(
+            Attachment(typeInfo: .sendImage)
+                .makeAttachmentImage(
+                    property: capabilityAgentProperty,
+                    dialogRequestId: eventIdentifier.dialogRequestId,
+                    referrerDialogRequestId: nil,
+                    attachmentSeq: 0,
+                    isEnd: true,
+                    imageData: image
+                ),
             completion: completion
-        ).dialogRequestId
+        )
+        return eventIdentifier.dialogRequestId
     }
 }
 
