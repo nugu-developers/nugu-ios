@@ -21,4 +21,9 @@ import Foundation
 
 import NuguCore
 
-public protocol ImageAgentProtocol: CapabilityAgentable { }
+public protocol ImageAgentProtocol: CapabilityAgentable {
+    @discardableResult func requestSendImage(
+        _ image: Data,
+        completion: ((StreamDataState) -> Void)?
+    ) -> String
+}
