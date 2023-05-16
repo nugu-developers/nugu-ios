@@ -527,6 +527,8 @@
 		E649868A28337649001AD733 /* ControlCenterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E649868928337649001AD733 /* ControlCenterManager.swift */; };
 		E6BE047C2A0BA1A400AE29E3 /* Image+Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6BE047B2A0BA1A400AE29E3 /* Image+Event.swift */; };
 		E6BE047E2A0BA1BD00AE29E3 /* ImageAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6BE047D2A0BA1BD00AE29E3 /* ImageAgent.swift */; };
+		E6FBA02B2A1379C500AF8B05 /* MessengerAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FBA02A2A1379C400AF8B05 /* MessengerAgentProtocol.swift */; };
+		E6FBA02D2A137A9700AF8B05 /* ImageAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FBA02C2A137A9700AF8B05 /* ImageAgentProtocol.swift */; };
 		F6D49D0D296BAD3500510498 /* AudioPlayerPlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D49D0C296BAD3500510498 /* AudioPlayerPlaylist.swift */; };
 		F6D49D0F296BAE9600510498 /* AudioPlayerAgent+PlaylistEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D49D0E296BAE9600510498 /* AudioPlayerAgent+PlaylistEvent.swift */; };
 		F778C001261B096A00B69B32 /* EnumTypedNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = F778C000261B096A00B69B32 /* EnumTypedNotification.swift */; };
@@ -1324,6 +1326,8 @@
 		E649868928337649001AD733 /* ControlCenterManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControlCenterManager.swift; sourceTree = "<group>"; };
 		E6BE047B2A0BA1A400AE29E3 /* Image+Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Image+Event.swift"; sourceTree = "<group>"; };
 		E6BE047D2A0BA1BD00AE29E3 /* ImageAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAgent.swift; sourceTree = "<group>"; };
+		E6FBA02A2A1379C400AF8B05 /* MessengerAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessengerAgentProtocol.swift; sourceTree = "<group>"; };
+		E6FBA02C2A137A9700AF8B05 /* ImageAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAgentProtocol.swift; sourceTree = "<group>"; };
 		F6D49D0C296BAD3500510498 /* AudioPlayerPlaylist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerPlaylist.swift; sourceTree = "<group>"; };
 		F6D49D0E296BAE9600510498 /* AudioPlayerAgent+PlaylistEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AudioPlayerAgent+PlaylistEvent.swift"; sourceTree = "<group>"; };
 		F778C000261B096A00B69B32 /* EnumTypedNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnumTypedNotification.swift; sourceTree = "<group>"; };
@@ -1764,6 +1768,7 @@
 			isa = PBXGroup;
 			children = (
 				1FBE3BDC283752BA006D158B /* MessengerAgent.swift */,
+				E6FBA02A2A1379C400AF8B05 /* MessengerAgentProtocol.swift */,
 				1FBE3BDD283752BA006D158B /* MessengerAgent+Event.swift */,
 				1FBE3BDE283752BA006D158B /* MessengerAgentContext.swift */,
 				1FBE3BD9283752BA006D158B /* MessengerAgentDelegate.swift */,
@@ -3111,6 +3116,7 @@
 			children = (
 				E6BE047B2A0BA1A400AE29E3 /* Image+Event.swift */,
 				E6BE047D2A0BA1BD00AE29E3 /* ImageAgent.swift */,
+				E6FBA02C2A137A9700AF8B05 /* ImageAgentProtocol.swift */,
 			);
 			path = Image;
 			sourceTree = "<group>";
@@ -4306,6 +4312,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				73152FB123E0413F00F843C3 /* AudioPlayerDisplayManager.swift in Sources */,
+				E6FBA02D2A137A9700AF8B05 /* ImageAgentProtocol.swift in Sources */,
 				1FCAE2C026006B1C001C8061 /* PhoneCallAgentDirectivePayload.swift in Sources */,
 				73152FBA23E0414700F843C3 /* ASRAgent.swift in Sources */,
 				7373891D24A46CFA0018DDD2 /* DialogAttributeStoreable.swift in Sources */,
@@ -4380,6 +4387,7 @@
 				A135E66B241F39D9006F82E5 /* AudioPlayerAgent+LyricsEvent.swift in Sources */,
 				E649867D2833681A001AD733 /* AudioPlayerUpdateMetadataPayload.swift in Sources */,
 				1FBE3BE5283752BB006D158B /* MessengerAgent.swift in Sources */,
+				E6FBA02B2A1379C500AF8B05 /* MessengerAgentProtocol.swift in Sources */,
 				7E2DFE9E24B8510900792529 /* PlayStackControl.swift in Sources */,
 				737388DB24A46C3C0018DDD2 /* SoundAgentDataSource.swift in Sources */,
 				7315307023E1248300F843C3 /* ASRExpectSpeech.swift in Sources */,

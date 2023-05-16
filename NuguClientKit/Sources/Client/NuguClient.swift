@@ -232,6 +232,18 @@ public class NuguClient {
         upstreamDataSender: streamDataRouter
     )
     
+    public lazy var messengerAgent: MessengerAgentProtocol = MessengerAgent(
+        directiveSequencer: directiveSequencer,
+        contextManager: contextManager,
+        upstreamDataSender: streamDataRouter
+    )
+    
+    public lazy var imageAgent: ImageAgentProtocol = ImageAgent(
+        directiveSequencer: directiveSequencer,
+        contextManager: contextManager,
+        upstreamDataSender: streamDataRouter
+    )
+    
     // Supports
     /**
      Indicates the dialog state.
