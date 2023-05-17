@@ -148,6 +148,10 @@ public class NuguClient {
      */
     public let nudgeAgent: NudgeAgentProtocol
     
+    public let messengerAgent: MessengerAgentProtocol
+    
+    public let imageAgent: ImageAgentProtocol
+    
     // Additional Agents
     /**
      Play your own audio contents
@@ -305,7 +309,9 @@ public class NuguClient {
         locationAgent: LocationAgentProtocol?,
         permissionAgent: PermissionAgentProtocol?,
         alertsAgent: AlertsAgentProtocol?,
-        nudgeAgent: NudgeAgentProtocol
+        nudgeAgent: NudgeAgentProtocol,
+        messengerAgent: MessengerAgentProtocol,
+        imageAgent: ImageAgentProtocol
     ) {
         // Core
         self.contextManager = contextManager
@@ -344,6 +350,8 @@ public class NuguClient {
         self.utilityAgent = utilityAgent
         self.routineAgent = routineAgent
         self.nudgeAgent = nudgeAgent
+        self.messengerAgent = messengerAgent
+        self.imageAgent = imageAgent
         
         // Supports
         self.audioSessionManager = audioSessionManager

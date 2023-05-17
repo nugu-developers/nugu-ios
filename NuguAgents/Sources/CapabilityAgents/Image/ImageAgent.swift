@@ -23,15 +23,17 @@ import NuguCore
 
 import RxSwift
 
-public class ImageAgent {
+public class ImageAgent: ImageAgentProtocol {
     public var capabilityAgentProperty: CapabilityAgentProperty = .init(category: .plugin(name: "Image"), version: "1.0")
     
     // private
+    
     private let directiveSequencer: DirectiveSequenceable
     private let contextManager: ContextManageable
     private let upstreamDataSender: UpstreamDataSendable
     
     // Handleable Directive
+    
     private lazy var handleableDirectiveInfos: [DirectiveHandleInfo] = [
     ]
     

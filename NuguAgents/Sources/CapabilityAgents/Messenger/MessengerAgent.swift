@@ -24,7 +24,7 @@ import NuguCore
 
 import RxSwift
 
-public class MessengerAgent {
+public class MessengerAgent: MessengerAgentProtocol {
     public var capabilityAgentProperty: CapabilityAgentProperty = .init(category: .plugin(name: "Messenger"), version: "1.1")
     
     // private

@@ -103,6 +103,18 @@ public extension NuguClient {
             playSyncManager: playSyncManager
         )
         
+        public lazy var messengerAgent: MessengerAgentProtocol = MessengerAgent(
+            directiveSequencer: directiveSequencer,
+            contextManager: contextManager,
+            upstreamDataSender: streamDataRouter
+        )
+        
+        public lazy var imageAgent: ImageAgentProtocol = ImageAgent(
+            directiveSequencer: directiveSequencer,
+            contextManager: contextManager,
+            upstreamDataSender: streamDataRouter
+        )
+        
         // Additional Agents
         /**
          Play some special sound on the special occasion
@@ -325,7 +337,9 @@ public extension NuguClient {
                 locationAgent: locationAgent,
                 permissionAgent: permissionAgent,
                 alertsAgent: alertsAgent,
-                nudgeAgent: nudgeAgent
+                nudgeAgent: nudgeAgent,
+                messengerAgent: messengerAgent,
+                imageAgent: imageAgent
             )
         }
     }
