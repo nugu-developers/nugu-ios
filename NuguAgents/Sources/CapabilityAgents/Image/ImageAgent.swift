@@ -24,7 +24,7 @@ import NuguCore
 import RxSwift
 
 public class ImageAgent: ImageAgentProtocol {
-    public var capabilityAgentProperty: CapabilityAgentProperty = .init(category: .plugin(name: "Image"), version: "1.0")
+    public var capabilityAgentProperty: CapabilityAgentProperty = .init(category: .image, version: "1.0")
     
     // private
     
@@ -72,29 +72,33 @@ public extension ImageAgent {
         completion: ((StreamDataState) -> Void)? = nil
     ) -> String {
         let eventIdentifier = EventIdentifier()
-        upstreamDataSender.sendStream(
-            Event(
-                typeInfo: .sendImage,
-                referrerDialogRequestId: nil
-            ).makeEventMessage(
-                property: capabilityAgentProperty,
-                eventIdentifier: eventIdentifier,
-                contextPayload: []
-            ),
-            completion: nil
-        )
-        upstreamDataSender.sendStream(
-            Attachment(typeInfo: .sendImage)
-                .makeAttachmentImage(
-                    property: capabilityAgentProperty,
-                    dialogRequestId: eventIdentifier.dialogRequestId,
-                    referrerDialogRequestId: nil,
-                    attachmentSeq: 0,
-                    isEnd: true,
-                    imageData: image
+        contextManager.getContexts { [weak self] contextPayload in
+            guard let self = self else { return }
+            self.upstreamDataSender.sendStream(
+                Event(
+                    typeInfo: .sendImage,
+                    referrerDialogRequestId: nil
+                ).makeEventMessage(
+                    property: self.capabilityAgentProperty,
+                    eventIdentifier: eventIdentifier,
+                    contextPayload: contextPayload
                 ),
-            completion: completion
-        )
+                completion: nil
+            )
+            
+            self.upstreamDataSender.sendStream(
+                Attachment(typeInfo: .sendImage)
+                    .makeAttachmentImage(
+                        property: self.capabilityAgentProperty,
+                        eventIdentifier: eventIdentifier,
+                        attachmentSeq: 0,
+                        isEnd: true,
+                        imageData: image
+                    ),
+                completion: completion
+            )
+        }
+        
         return eventIdentifier.dialogRequestId
     }
 }
