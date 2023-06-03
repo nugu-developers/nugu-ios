@@ -52,8 +52,7 @@ extension Attachable {
     
     func makeAttachmentImage(
         property: CapabilityAgentProperty,
-        dialogRequestId: String,
-        referrerDialogRequestId: String?,
+        eventIdentifier: EventIdentifier,
         attachmentSeq: Int32,
         isEnd: Bool,
         imageData: Data
@@ -62,9 +61,9 @@ extension Attachable {
             namespace: property.name,
             name: name,
             version: property.version,
-            dialogRequestId: dialogRequestId,
-            messageId: TimeUUID().hexString,
-            referrerDialogRequestId: referrerDialogRequestId
+            dialogRequestId: eventIdentifier.dialogRequestId,
+            messageId: eventIdentifier.messageId,
+            referrerDialogRequestId: eventIdentifier.dialogRequestId
         )
         
         return Upstream.Attachment(
