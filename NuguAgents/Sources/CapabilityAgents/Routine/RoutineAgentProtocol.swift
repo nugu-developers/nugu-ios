@@ -23,6 +23,7 @@ import Foundation
 public protocol RoutineAgentProtocol: CapabilityAgentable {
     var state: RoutineState { get }
     var routineItem: RoutineItem? { get }
+    var interruptTimeoutInSeconds: Int? { get set }
     
     /**
      Move to previous action
@@ -33,6 +34,11 @@ public protocol RoutineAgentProtocol: CapabilityAgentable {
      Move to next action
      */
     func next(completion: @escaping (Bool) -> Void)
+    
+    /**
+     Pause routine. The routine state changes to Interrupt.
+     */
+    func pause()
         
     /**
      Stop routine

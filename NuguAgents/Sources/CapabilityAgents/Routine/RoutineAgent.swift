@@ -35,6 +35,14 @@ public final class RoutineAgent: RoutineAgentProtocol {
     public var state: RoutineState { routineExecuter.state }
     public var routineItem: RoutineItem? { routineExecuter.routine }
     
+    public var interruptTimeoutInSeconds: Int? {
+        get {
+            routineExecuter.interruptTimeoutInSeconds
+        } set {
+            routineExecuter.interruptTimeoutInSeconds = newValue
+        }
+    }
+    
     // private
     private let directiveSequencer: DirectiveSequenceable
     private let contextManager: ContextManageable
@@ -137,6 +145,10 @@ public final class RoutineAgent: RoutineAgentProtocol {
             referrerDialogRequestId: routine.dialogRequestId
         ).rx)
         completion(true)
+    }
+    
+    public func pause() {
+        routineExecuter.pause()
     }
     
     public func stop() {
