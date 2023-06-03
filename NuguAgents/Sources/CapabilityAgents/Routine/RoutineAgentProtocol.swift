@@ -23,6 +23,7 @@ import Foundation
 public protocol RoutineAgentProtocol: CapabilityAgentable {
     var state: RoutineState { get }
     var routineItem: RoutineItem? { get }
+    var interruptTimeoutInSeconds: Int? { get set }
     
     /**
      Move to previous action

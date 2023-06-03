@@ -65,19 +65,21 @@ class RoutineExecuter {
             case .playing:
                 break
             case .interrupted:
-                // Interrupt 이후 60초 이내에 Routine.Continue directive 를 받지 못하면 Routine 종료.
                 if hasNextAction {
                     actionWorkItem?.cancel()
                     if let dialogRequestId = handlingEvent {
                         directiveSequencer.cancelDirective(dialogRequestId: dialogRequestId)
                     }
-                    let item = DispatchWorkItem { [weak self] in
-                        guard let self = self, self.state == .interrupted else { return }
-                        
-                        self.doStop()
+                    // Interrupt 이후 interruptTimeoutInSeconds 이내에 Routine.Continue directive 를 받지 못하면 Routine 종료.
+                    if let interruptTimeoutInSeconds = interruptTimeoutInSeconds {
+                        let item = DispatchWorkItem { [weak self] in
+                            guard let self = self, self.state == .interrupted else { return }
+                            
+                            self.doStop()
+                        }
+                        interruptTimer = item
+                        routineDispatchQueue.asyncAfter(deadline: .now() + .seconds(interruptTimeoutInSeconds), execute: item)
                     }
-                    interruptTimer = item
-                    routineDispatchQueue.asyncAfter(deadline: .now() + 60, execute: item)
                 } else {
                     state = .stopped
                 }
@@ -93,6 +95,8 @@ class RoutineExecuter {
             delegate?.routineExecuterDidChange(state: state)
         }
     }
+    
+    var interruptTimeoutInSeconds: Int? = 60
     
     private let directiveSequencer: DirectiveSequenceable
     private let textAgent: TextAgentProtocol
