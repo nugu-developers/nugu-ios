@@ -147,6 +147,10 @@ public final class RoutineAgent: RoutineAgentProtocol {
         completion(true)
     }
     
+    public func pause() {
+        routineExecuter.pause()
+    }
+    
     public func stop() {
         routineExecuter.stop()
         

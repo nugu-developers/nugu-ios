@@ -34,6 +34,11 @@ public protocol RoutineAgentProtocol: CapabilityAgentable {
      Move to next action
      */
     func next(completion: @escaping (Bool) -> Void)
+    
+    /**
+     Pause routine. The routine state changes to Interrupt.
+     */
+    func pause()
         
     /**
      Stop routine

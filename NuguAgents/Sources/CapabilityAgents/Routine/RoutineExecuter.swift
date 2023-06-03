@@ -164,6 +164,15 @@ class RoutineExecuter {
         }
     }
     
+    func pause() {
+        routineDispatchQueue.async { [weak self] in
+            guard let self = self else { return }
+            
+            log.debug("pause routine")
+            self.doInterrupt()
+        }
+    }
+    
     func stop() {
         routineDispatchQueue.async { [weak self] in
             guard let self = self else { return }
