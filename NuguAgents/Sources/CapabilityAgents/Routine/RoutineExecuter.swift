@@ -27,6 +27,8 @@ protocol RoutineExecuterDelegate: AnyObject {
     func routineExecuterDidChange(state: RoutineState)
     func routineExecuterShouldSendActionTriggerTimout(token: String)
     func routineExecuterWillProcessAction(_ action: RoutineItem.Payload.Action)
+    func routineExecuterDidStopProcessingAction(_ action: RoutineItem.Payload.Action)
+    func routineExecuterDidFinishProcessingAction(_ action: RoutineItem.Payload.Action)
     
     func routineExecuterShouldRequestAction(
         action: RoutineItem.Payload.Action,
@@ -196,7 +198,7 @@ class RoutineExecuter {
     
     func move(to index: Int, completion: @escaping (Bool) -> Void) {
         routineDispatchQueue.async { [weak self] in
-            guard let self = self else { return }
+            guard let self = self, let action = self.currentAction else { return }
             guard [.playing, .interrupted, .suspended].contains(self.state),
                   let routine = self.routine, (0..<routine.payload.actions.count).contains(index) else {
                 completion(false)
@@ -208,6 +210,7 @@ class RoutineExecuter {
                 self.state = .playing
             }
             
+            self.delegate?.routineExecuterDidStopProcessingAction(action)
             self.cancelCurrentAction()
             
             log.debug("moved to index: \(index)")
@@ -362,6 +365,7 @@ private extension RoutineExecuter {
     }
     
     func doNextAction() {
+        guard let action = currentAction else { return }
         actionWorkItem?.cancel()
         if shouldDelayAction, let delay = currentAction?.muteDelay {
             log.debug("Delaying action using mute delay, delay: \(delay.dispatchTimeInterval)")
@@ -370,6 +374,7 @@ private extension RoutineExecuter {
             log.debug("Delaying action using posy delay, delay: \(delay.dispatchTimeInterval)")
             doActionAfter(delay: delay)
         } else {
+            delegate?.routineExecuterDidFinishProcessingAction(action)
             guard state == .playing, hasNextAction else {
                 doFinish()
                 return
@@ -407,7 +412,7 @@ private extension RoutineExecuter {
     }
     
     func doBreak() {
-        guard state == .playing else { return }
+        guard state == .playing, let action = currentAction else { return }
         
         actionWorkItem?.cancel()
         state = .suspended
@@ -416,6 +421,7 @@ private extension RoutineExecuter {
             log.debug("currentAction muteDelay: \(delay)")
             let workItem = DispatchWorkItem { [weak self] in
                 guard let self = self else { return }
+                self.delegate?.routineExecuterDidFinishProcessingAction(action)
                 guard self.state == .suspended, self.hasNextAction else {
                     self.doFinish()
                     return
@@ -428,6 +434,8 @@ private extension RoutineExecuter {
             actionWorkItem = workItem
             routineDispatchQueue.asyncAfter(deadline: .now() + delay.dispatchTimeInterval, execute: workItem)
         } else {
+            delegate?.routineExecuterDidFinishProcessingAction(action)
+            
             guard state == .suspended, hasNextAction else {
                 doFinish()
                 return
@@ -451,7 +459,9 @@ private extension RoutineExecuter {
     
     func doActionAfter(delay: TimeIntervallic) {
         let workItem = DispatchWorkItem { [weak self] in
-            guard let self = self else { return }
+            guard let self = self, let action = self.currentAction else { return }
+            self.delegate?.routineExecuterDidFinishProcessingAction(action)
+            
             guard self.state == .playing, self.hasNextAction else {
                 self.doFinish()
                 return
