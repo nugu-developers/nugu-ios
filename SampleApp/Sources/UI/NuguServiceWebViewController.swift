@@ -144,4 +144,12 @@ extension NuguServiceWebViewController: RoutineAgentDelegate {
         
         nuguServiceWebView.onRoutineStatusChanged(token: token, status: state.routineActivity)
     }
+    
+    func routineAgentDidStopProcessingAction(_ action: NuguAgents.RoutineItem.Payload.Action) {
+        log.debug("routineAgentWillProcessAction, action: \(action)")
+    }
+    
+    func routineAgentDidFinishProcessingAction(_ action: NuguAgents.RoutineItem.Payload.Action) {
+        log.debug("routineAgentWillProcessAction, action: \(action)")
+    }
 }
