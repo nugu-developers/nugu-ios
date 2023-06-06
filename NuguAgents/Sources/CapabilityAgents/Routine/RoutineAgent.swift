@@ -223,6 +223,14 @@ extension RoutineAgent: RoutineExecuterDelegate {
             referrerDialogRequestId: referrerDialogRequestId
         ).rx, completion: completion)
     }
+    
+    func routineExecuterDidStopProcessingAction(_ action: RoutineItem.Payload.Action) {
+        delegate?.routineAgentDidStopProcessingAction(action)
+    }
+    
+    func routineExecuterDidFinishProcessingAction(_ action: RoutineItem.Payload.Action) {
+        delegate?.routineAgentDidFinishProcessingAction(action)
+    }
 }
 
 // MARK: - Private(Directive)
