@@ -18,26 +18,31 @@
 //  limitations under the License.
 
 import Foundation
+import UIKit
 
 import NuguCore
 
 import RxSwift
 
+private enum Const {
+    static let imageSizeThreshHold: CGFloat = 640
+    static let resizedImageQuality: CGFloat = 0.9
+    static let originalImageQuality: CGFloat = 1
+}
+
 public class ImageAgent: ImageAgentProtocol {
     public var capabilityAgentProperty: CapabilityAgentProperty = .init(category: .image, version: "1.0")
     
     // private
-    
     private let directiveSequencer: DirectiveSequenceable
     private let contextManager: ContextManageable
     private let upstreamDataSender: UpstreamDataSendable
     
     // Handleable Directive
+    private var handleableDirectiveInfos: [DirectiveHandleInfo] = []
     
-    private lazy var handleableDirectiveInfos: [DirectiveHandleInfo] = [
-    ]
-    
-    private lazy var disposeBag = DisposeBag()
+    private let imageQueue = DispatchQueue(label: "com.sktelecom.romaine.image_agent")
+    private let disposeBag = DisposeBag()
     
     public init(
         directiveSequencer: DirectiveSequenceable,
@@ -72,40 +77,74 @@ public extension ImageAgent {
         completion: ((StreamDataState) -> Void)? = nil
     ) -> String {
         let eventIdentifier = EventIdentifier()
-        contextManager.getContexts { [weak self] contextPayload in
-            guard let self = self else { return }
-            self.upstreamDataSender.sendStream(
-                Event(
-                    typeInfo: .sendImage,
-                    referrerDialogRequestId: nil
-                ).makeEventMessage(
-                    property: self.capabilityAgentProperty,
-                    eventIdentifier: eventIdentifier,
-                    contextPayload: contextPayload
-                ),
-                completion: nil
-            )
+        
+        imageQueue.async { [weak self] in
+            guard let imageData = self?.resizeToSuitableResolution(imageData: image) else {
+                log.error("Image resize failed")
+                return
+            }
             
-            self.upstreamDataSender.sendStream(
-                Attachment(typeInfo: .sendImage)
-                    .makeAttachmentImage(
+            self?.contextManager.getContexts { [weak self] contextPayload in
+                guard let self = self else { return }
+                self.upstreamDataSender.sendStream(
+                    Event(
+                        typeInfo: .sendImage,
+                        referrerDialogRequestId: nil
+                    ).makeEventMessage(
                         property: self.capabilityAgentProperty,
                         eventIdentifier: eventIdentifier,
-                        attachmentSeq: 0,
-                        isEnd: true,
-                        imageData: image
+                        contextPayload: contextPayload
                     ),
-                completion: completion
-            )
+                    completion: nil
+                )
+                
+                self.upstreamDataSender.sendStream(
+                    Attachment(typeInfo: .sendImage)
+                        .makeAttachmentImage(
+                            property: self.capabilityAgentProperty,
+                            eventIdentifier: eventIdentifier,
+                            attachmentSeq: 0,
+                            isEnd: true,
+                            imageData: imageData
+                        ),
+                    completion: completion
+                )
+            }
         }
         
         return eventIdentifier.dialogRequestId
     }
-}
-
-// MARK: - Private(Directive)
-
-private extension ImageAgent {
+    
+    private func resizeToSuitableResolution(imageData: Data) -> Data? {
+        guard let image = UIImage(data: imageData) else { return nil }
+        
+        // width, height중 640보다 큰 것을 640에 맞춘다
+        var ratio: CGFloat {
+            switch (image.size.width, image.size.height) {
+            case let (width, height) where Const.imageSizeThreshHold < width && Const.imageSizeThreshHold < height:
+                // 둘 다 크다면 그중 작은 것을 640으로 맞춘다
+                let smallerSide = min(width, height)
+                return Const.imageSizeThreshHold / smallerSide
+                
+            case let (width, _) where Const.imageSizeThreshHold < width:
+                return Const.imageSizeThreshHold / width
+                
+            case let (_, height) where Const.imageSizeThreshHold < height:
+                return Const.imageSizeThreshHold / height
+                
+            default:
+                return 1
+            }
+        }
+        
+        if ratio < 1 {
+            let targetSize: CGSize = .init(width: image.size.width * ratio, height: image.size.height * ratio)
+            log.debug("Resize to: \(targetSize), original size: \(image.size)")
+            return image.resize(to: targetSize)?.jpegData(compressionQuality: Const.resizedImageQuality)
+        }
+        
+        return image.jpegData(compressionQuality: Const.originalImageQuality)
+    }
 }
 
 // MARK: - Private(Event)
