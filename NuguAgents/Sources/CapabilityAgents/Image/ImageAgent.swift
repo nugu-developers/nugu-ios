@@ -79,7 +79,11 @@ public extension ImageAgent {
         let eventIdentifier = EventIdentifier()
         
         imageQueue.async { [weak self] in
-            guard let imageData = self?.resizeToSuitableResolution(imageData: image) else { return }
+            guard let imageData = self?.resizeToSuitableResolution(imageData: image) else {
+                log.error("Image resize failed")
+                return
+            }
+            
             self?.contextManager.getContexts { [weak self] contextPayload in
                 guard let self = self else { return }
                 self.upstreamDataSender.sendStream(
@@ -135,7 +139,7 @@ public extension ImageAgent {
         
         if ratio < 1 {
             let targetSize: CGSize = .init(width: image.size.width * ratio, height: image.size.height * ratio)
-            log.debug("resize to: \(targetSize), original size: \(image.size)")
+            log.debug("Resize to: \(targetSize), original size: \(image.size)")
             return image.resize(to: targetSize)?.jpegData(compressionQuality: Const.resizedImageQuality)
         }
         

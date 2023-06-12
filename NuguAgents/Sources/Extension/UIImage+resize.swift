@@ -20,10 +20,10 @@
 
 import UIKit
 
-public extension UIImage {
-    public func resize(to newSize: CGSize, scale: CGFloat = 1.0) -> UIImage? {
+extension UIImage {
+    func resize(to newSize: CGSize, scale: CGFloat = 1.0) -> UIImage? {
         UIGraphicsBeginImageContextWithOptions(newSize, true, scale)
-        self.draw(in: CGRect(origin: .zero, size: newSize))
+        draw(in: CGRect(origin: .zero, size: newSize))
         defer { UIGraphicsEndImageContext() }
         return UIGraphicsGetImageFromCurrentImageContext()
     }
