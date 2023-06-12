@@ -268,6 +268,7 @@
 		73454FC32387BDF00073AF48 /* NuguServerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73454FC22387BDF00073AF48 /* NuguServerInfo.swift */; };
 		73454FC52387BE090073AF48 /* NuguOAuthServerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73454FC42387BE090073AF48 /* NuguOAuthServerInfo.swift */; };
 		7345DFF325C68B3A006DBCC6 /* DataBoundInputStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7345DFF225C68B3A006DBCC6 /* DataBoundInputStream.swift */; };
+		7352F19A2A37225600B0199C /* UIImage+resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7352F1992A37225600B0199C /* UIImage+resize.swift */; };
 		735A4CBE241172F1004E7A41 /* EventResponseProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735A4CBA241172F0004E7A41 /* EventResponseProcessor.swift */; };
 		735A4CBF241172F1004E7A41 /* ServerSideEventProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735A4CBB241172F0004E7A41 /* ServerSideEventProcessor.swift */; };
 		735A4CC0241172F1004E7A41 /* NuguApiProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735A4CBC241172F0004E7A41 /* NuguApiProvider.swift */; };
@@ -1083,6 +1084,7 @@
 		73454FC22387BDF00073AF48 /* NuguServerInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguServerInfo.swift; sourceTree = "<group>"; };
 		73454FC42387BE090073AF48 /* NuguOAuthServerInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguOAuthServerInfo.swift; sourceTree = "<group>"; };
 		7345DFF225C68B3A006DBCC6 /* DataBoundInputStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataBoundInputStream.swift; sourceTree = "<group>"; };
+		7352F1992A37225600B0199C /* UIImage+resize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+resize.swift"; sourceTree = "<group>"; };
 		735A4CBA241172F0004E7A41 /* EventResponseProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventResponseProcessor.swift; sourceTree = "<group>"; };
 		735A4CBB241172F0004E7A41 /* ServerSideEventProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerSideEventProcessor.swift; sourceTree = "<group>"; };
 		735A4CBC241172F0004E7A41 /* NuguApiProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguApiProvider.swift; sourceTree = "<group>"; };
@@ -2609,6 +2611,7 @@
 		73152FE123E047F200F843C3 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
+				7352F1992A37225600B0199C /* UIImage+resize.swift */,
 				065DF8BC25637D51009CF99E /* Attachable+Convenience.swift */,
 				7334F47423FD170200EA5E58 /* Eventable+makeEventMessage.swift */,
 				73152F9323E034C300F843C3 /* DispatchQueue+Precondition.swift */,
@@ -4452,6 +4455,7 @@
 				A135E663241F1925006F82E5 /* AudioPlayerAgent+SettingsEvent.swift in Sources */,
 				737388EE24A46C680018DDD2 /* AudioPlayerDisplayRepeat.swift in Sources */,
 				1FBE3BEA283752BB006D158B /* MessengerProfile.swift in Sources */,
+				7352F19A2A37225600B0199C /* UIImage+resize.swift in Sources */,
 				06CF293C254816C700CEC3EC /* UpstreamEventSendable+Convenience.swift in Sources */,
 				7E38656624AEE97100E78C6E /* DisplayContext.swift in Sources */,
 				7373890E24A46CAE0018DDD2 /* DisplayTemplate.swift in Sources */,
