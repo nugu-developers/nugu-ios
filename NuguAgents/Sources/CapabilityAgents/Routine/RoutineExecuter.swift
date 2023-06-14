@@ -41,7 +41,7 @@ class RoutineExecuter {
     typealias ReceivedDirectives = NuguCoreNotification.StreamDataRoute.ReceivedDirectives
     
     private enum Const {
-        static let reactiveTarget = "Apollo.Reactive"
+        static let reactiveTarget = "Adot.Reactive"
     }
     
     weak var delegate: RoutineExecuterDelegate?
@@ -230,7 +230,7 @@ private extension RoutineExecuter {
             guard let self = self, self.state == .playing,
                   self.handlingDirectives.remove(notification.directive.header.messageId) != nil else { return }
             
-            log.debug("completed directive: \(notification)")
+            log.debug("completed directive: \(notification), handlingDirectives: \(self.handlingDirectives)")
             switch notification.result {
             case .canceled:
                 self.doStop()
@@ -336,6 +336,7 @@ private extension RoutineExecuter {
         
         if let actionTimeout = action.actionTimeoutInMilliseconds,
            .zero < actionTimeout {
+            state = .suspended
             DispatchQueue.global().asyncAfter(deadline: .now() + NuguTimeInterval(milliseconds: actionTimeout).seconds) { [weak self] in
                 self?.delegate?.routineExecuterShouldSendActionTriggerTimout(token: action.token)
             }
@@ -375,7 +376,8 @@ private extension RoutineExecuter {
             doActionAfter(delay: delay)
         } else {
             delegate?.routineExecuterDidFinishProcessingAction(action)
-            guard state == .playing, hasNextAction else {
+            guard state == .playing else { return }
+            guard hasNextAction else {
                 doFinish()
                 return
             }

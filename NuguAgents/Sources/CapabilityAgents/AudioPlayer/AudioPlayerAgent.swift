@@ -524,18 +524,19 @@ private extension AudioPlayerAgent {
                 self.currentPlayer = player
                 self.focusManager.requestFocus(channelDelegate: self)
                 
-                self.audioPlayerResultSubject
-                    .filter { $0.dialogRequestId == player.header.dialogRequestId }
-                    .take(1)
-                    .subscribe(onNext: { (_, result) in
-                        if case let .error(error) = result {
-                            completion(.failed("\(error)"))
-                            return
-                        }
-                        
-                        completion(.finished)
-                    })
-                    .disposed(by: self.disposeBag)
+                completion(.finished) // TODO: DirectiveHandleResult.started 추가
+//                self.audioPlayerResultSubject
+//                    .filter { $0.dialogRequestId == player.header.dialogRequestId }
+//                    .take(1)
+//                    .subscribe(onNext: { (_, result) in
+//                        if case let .error(error) = result {
+//                            completion(.failed("\(error)"))
+//                            return
+//                        }
+//
+//                        completion(.finished)
+//                    })
+//                    .disposed(by: self.disposeBag)
             }
         }
     }
