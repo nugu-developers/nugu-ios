@@ -125,7 +125,7 @@ public final class RoutineAgent: RoutineAgentProtocol {
             completion(false)
             return
         }
-        sendCompactContextEvent(Event(
+        sendFullContextEvent(Event(
             typeInfo: .moveControl(offset: -1),
             playServiceId: routine.payload.playServiceId,
             referrerDialogRequestId: routine.dialogRequestId
@@ -139,7 +139,7 @@ public final class RoutineAgent: RoutineAgentProtocol {
             completion(false)
             return
         }
-        sendCompactContextEvent(Event(
+        sendFullContextEvent(Event(
             typeInfo: .moveControl(offset: 1),
             playServiceId: routine.payload.playServiceId,
             referrerDialogRequestId: routine.dialogRequestId
@@ -155,7 +155,7 @@ public final class RoutineAgent: RoutineAgentProtocol {
         routineExecuter.stop()
         
         guard let routine = routineExecuter.routine else { return }
-        sendCompactContextEvent(Event(
+        sendFullContextEvent(Event(
             typeInfo: .stopped,
             playServiceId: routine.payload.playServiceId,
             referrerDialogRequestId: routine.dialogRequestId
@@ -173,7 +173,7 @@ extension RoutineAgent: RoutineExecuterDelegate {
         case .idle:
             break
         case .playing:
-            sendCompactContextEvent(Event(
+            sendFullContextEvent(Event(
                 typeInfo: .started,
                 playServiceId: routine.payload.playServiceId,
                 referrerDialogRequestId: routine.dialogRequestId
@@ -181,13 +181,13 @@ extension RoutineAgent: RoutineExecuterDelegate {
         case .interrupted:
             break
         case .finished:
-            sendCompactContextEvent(Event(
+            sendFullContextEvent(Event(
                 typeInfo: .finished,
                 playServiceId: routine.payload.playServiceId,
                 referrerDialogRequestId: routine.dialogRequestId
             ).rx)
         case .stopped:
-            sendCompactContextEvent(Event(
+            sendFullContextEvent(Event(
                 typeInfo: .stopped,
                 playServiceId: routine.payload.playServiceId,
                 referrerDialogRequestId: routine.dialogRequestId
@@ -201,7 +201,7 @@ extension RoutineAgent: RoutineExecuterDelegate {
     
     func routineExecuterShouldSendActionTriggerTimout(token: String) {
         guard let routine = routineExecuter.routine else { return }
-        sendCompactContextEvent(Event(
+        sendFullContextEvent(Event(
             typeInfo: .actionTimeoutTriggered(token: token),
             playServiceId: routine.payload.playServiceId,
             referrerDialogRequestId: routine.dialogRequestId
@@ -217,7 +217,7 @@ extension RoutineAgent: RoutineExecuterDelegate {
         referrerDialogRequestId: String,
         completion: @escaping (StreamDataState) -> Void
     ) -> EventIdentifier {
-        return sendCompactContextEvent(Event(
+        return sendFullContextEvent(Event(
             typeInfo: .actionTriggered(data: action.data),
             playServiceId: action.playServiceId,
             referrerDialogRequestId: referrerDialogRequestId
@@ -283,7 +283,7 @@ private extension RoutineAgent {
             defer { completion(.finished) }
             
             guard self?.routineExecuter.routine?.payload.token == token else {
-                self?.sendCompactContextEvent(Event(
+                self?.sendFullContextEvent(Event(
                     typeInfo: .failed(errorCode: "Invalid request"),
                     playServiceId: playServiceId,
                     referrerDialogRequestId: directive.header.dialogRequestId
@@ -307,7 +307,7 @@ private extension RoutineAgent {
             }
             
             guard self?.routineExecuter.routine?.payload.token == token else {
-                self?.sendCompactContextEvent(Event(
+                self?.sendFullContextEvent(Event(
                     typeInfo: .failed(errorCode: "Invalid request"),
                     playServiceId: playServiceId,
                     referrerDialogRequestId: directive.header.dialogRequestId
@@ -321,7 +321,7 @@ private extension RoutineAgent {
                 // TODO: - add error code
                 let typeInfo: Event.TypeInfo = isSuccess ? .moveSucceeded : .moveFailed(errorCode: "")
                 
-                self?.sendCompactContextEvent(Event(
+                self?.sendFullContextEvent(Event(
                     typeInfo: typeInfo,
                     playServiceId: playServiceId,
                     referrerDialogRequestId: directive.header.dialogRequestId
@@ -336,7 +336,7 @@ private extension RoutineAgent {
 // MARK: - Private (Event)
 
 private extension RoutineAgent {
-    @discardableResult func sendCompactContextEvent(
+    @discardableResult func sendFullContextEvent(
         _ event: Single<Eventable>,
         completion: ((StreamDataState) -> Void)? = nil
     ) -> EventIdentifier {
@@ -344,8 +344,8 @@ private extension RoutineAgent {
         upstreamDataSender.sendEvent(
             event,
             eventIdentifier: eventIdentifier,
-            context: self.contextManager.rxContexts(namespace: self.capabilityAgentProperty.name),
-            property: self.capabilityAgentProperty,
+            context: contextManager.rxContexts(),
+            property: capabilityAgentProperty,
             completion: completion
         ).subscribe().disposed(by: disposeBag)
         return eventIdentifier
