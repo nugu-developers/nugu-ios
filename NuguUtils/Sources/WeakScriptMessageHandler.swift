@@ -18,6 +18,7 @@
 //  limitations under the License.
 //
 
+#if !os(watchOS)
 import WebKit
 
 public class WeakScriptMessageHandler: NSObject, WKScriptMessageHandler {
@@ -32,3 +33,4 @@ public class WeakScriptMessageHandler: NSObject, WKScriptMessageHandler {
         self.delegate?.userContentController(userContentController, didReceive: message)
     }
 }
+#endif

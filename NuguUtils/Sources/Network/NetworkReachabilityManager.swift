@@ -18,6 +18,7 @@
 //  limitations under the License.
 //
 
+#if os(iOS)
 import Foundation
 import SystemConfiguration
 
@@ -52,3 +53,4 @@ extension SCNetworkReachabilityFlags {
     var canConnectWithoutUserInteraction: Bool { canConnectAutomatically && !contains(.interventionRequired) }
     var isActuallyReachable: Bool { isReachable && (!isConnectionRequired || canConnectWithoutUserInteraction) }
 }
+#endif
