@@ -25,4 +25,11 @@ public protocol RoutineAgentDelegate: AnyObject {
     func routineAgentWillProcessAction(_ action: RoutineItem.Payload.Action)
     func routineAgentDidStopProcessingAction(_ action: RoutineItem.Payload.Action)
     func routineAgentDidFinishProcessingAction(_ action: RoutineItem.Payload.Action)
+    func routineAgentContinueNextAction(_ action: RoutineItem.Payload.Action) -> Bool
+}
+
+extension RoutineAgentDelegate {
+    public func routineAgentContinueNextAction(_ action: RoutineItem.Payload.Action) -> Bool {
+        true
+    }
 }
