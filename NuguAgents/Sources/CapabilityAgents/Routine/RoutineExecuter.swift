@@ -29,6 +29,7 @@ protocol RoutineExecuterDelegate: AnyObject {
     func routineExecuterWillProcessAction(_ action: RoutineItem.Payload.Action)
     func routineExecuterDidStopProcessingAction(_ action: RoutineItem.Payload.Action)
     func routineExecuterDidFinishProcessingAction(_ action: RoutineItem.Payload.Action)
+    func routineExecuterCanExecuteNextAction(_ action: RoutineItem.Payload.Action) -> Bool
     
     func routineExecuterShouldRequestAction(
         action: RoutineItem.Payload.Action,
@@ -384,8 +385,7 @@ private extension RoutineExecuter {
             
             log.debug("")
             
-            currentActionIndex += 1
-            doAction()
+            doNextActionIfContinueAction()
         }
     }
     
@@ -429,9 +429,8 @@ private extension RoutineExecuter {
                     return
                 }
                 
-                self.currentActionIndex += 1
                 self.state = .playing
-                self.doAction()
+                self.doNextActionIfContinueAction()
             }
             actionWorkItem = workItem
             routineDispatchQueue.asyncAfter(deadline: .now() + delay.dispatchTimeInterval, execute: workItem)
@@ -445,9 +444,8 @@ private extension RoutineExecuter {
             
             log.debug("")
             
-            currentActionIndex += 1
             state = .playing
-            doAction()
+            doNextActionIfContinueAction()
         }
         
     }
@@ -469,8 +467,7 @@ private extension RoutineExecuter {
                 return
             }
             
-            self.currentActionIndex += 1
-            self.doAction()
+            self.doNextActionIfContinueAction()
         }
         actionWorkItem = workItem
         routineDispatchQueue.asyncAfter(deadline: .now() + delay.dispatchTimeInterval, execute: workItem)
@@ -491,6 +488,17 @@ private extension RoutineExecuter {
         }
         handlingDirectives.removeAll()
     }
+    
+    func doNextActionIfContinueAction() {
+        guard let nextAction else { return }
+        
+        if delegate?.routineExecuterCanExecuteNextAction(nextAction) == true {
+            currentActionIndex += 1
+            doAction()
+        } else {
+            doInterrupt()
+        }
+    }
 }
 
 // MARK: - Convienence
@@ -500,6 +508,12 @@ private extension RoutineExecuter {
         guard let routine = routine, currentActionIndex < routine.payload.actions.count else { return nil }
         
         return routine.payload.actions[currentActionIndex]
+    }
+    
+    var nextAction: RoutineItem.Payload.Action? {
+        guard let routine = routine, hasNextAction else { return nil }
+        
+        return routine.payload.actions[currentActionIndex + 1]
     }
     
     var hasNextAction: Bool {
