@@ -295,7 +295,7 @@ extension NuguApiProvider {
                     return Observable.error(error)
                 }
                 
-                guard (error as NSError).code != CFNetworkErrors.cfurlErrorCancelled.rawValue else {
+                guard (error as NSError).code != URLError.cancelled.rawValue else {
                     return Observable.error(error)
                 }
                 
@@ -307,7 +307,7 @@ extension NuguApiProvider {
                     .take(1)
                     .map { _ in
                         log.info("Try to connect next resource server")
-                        guard (error as NSError).code != CFNetworkErrors.cfurlErrorNetworkConnectionLost.rawValue else {
+                        guard (error as NSError).code != URLError.networkConnectionLost.rawValue else {
                             return index
                         }
                         

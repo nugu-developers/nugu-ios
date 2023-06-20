@@ -18,6 +18,7 @@
 //  limitations under the License.
 //
 
+#if os(iOS)
 import UIKit
 
 public enum UserInterfaceUtil {
@@ -26,3 +27,4 @@ public enum UserInterfaceUtil {
         return rootViewController.traitCollection.userInterfaceStyle
     }
 }
+#endif
