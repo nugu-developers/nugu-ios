@@ -29,7 +29,7 @@ protocol RoutineExecuterDelegate: AnyObject {
     func routineExecuterWillProcessAction(_ action: RoutineItem.Payload.Action)
     func routineExecuterDidStopProcessingAction(_ action: RoutineItem.Payload.Action)
     func routineExecuterDidFinishProcessingAction(_ action: RoutineItem.Payload.Action)
-    func routineExecuterContinueNextAction(_ action: RoutineItem.Payload.Action) -> Bool
+    func routineExecuterCanExecuteNextAction(_ action: RoutineItem.Payload.Action) -> Bool
     
     func routineExecuterShouldRequestAction(
         action: RoutineItem.Payload.Action,
@@ -492,7 +492,7 @@ private extension RoutineExecuter {
     func doNextActionIfContinueAction() {
         guard let nextAction else { return }
         
-        if delegate?.routineExecuterContinueNextAction(nextAction) == true {
+        if delegate?.routineExecuterCanExecuteNextAction(nextAction) == true {
             currentActionIndex += 1
             doAction()
         } else {

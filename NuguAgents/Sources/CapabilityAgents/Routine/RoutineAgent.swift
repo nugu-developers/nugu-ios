@@ -232,8 +232,8 @@ extension RoutineAgent: RoutineExecuterDelegate {
         delegate?.routineAgentDidFinishProcessingAction(action)
     }
     
-    func routineExecuterContinueNextAction(_ action: RoutineItem.Payload.Action) -> Bool {
-        delegate?.routineAgentContinueNextAction(action) ?? true
+    func routineAgentCanExecuteNextAction(_ action: RoutineItem.Payload.Action) -> Bool {
+        delegate?.routineAgentCanExecuteNextAction(action) ?? true
     }
 }
 
