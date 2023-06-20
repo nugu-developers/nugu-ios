@@ -232,7 +232,7 @@ extension RoutineAgent: RoutineExecuterDelegate {
         delegate?.routineAgentDidFinishProcessingAction(action)
     }
     
-    func routineAgentCanExecuteNextAction(_ action: RoutineItem.Payload.Action) -> Bool {
+    func routineExecuterCanExecuteNextAction(_ action: RoutineItem.Payload.Action) -> Bool {
         delegate?.routineAgentCanExecuteNextAction(action) ?? true
     }
 }
