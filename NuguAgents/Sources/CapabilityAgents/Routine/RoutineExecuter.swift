@@ -377,7 +377,7 @@ private extension RoutineExecuter {
             doActionAfter(delay: delay)
         } else {
             delegate?.routineExecuterDidFinishProcessingAction(action)
-            guard state == .playing else { return }
+            guard [.playing, .suspended].contains(state) else { return }
             guard hasNextAction else {
                 doFinish()
                 return
@@ -462,7 +462,7 @@ private extension RoutineExecuter {
             guard let self = self, let action = self.currentAction else { return }
             self.delegate?.routineExecuterDidFinishProcessingAction(action)
             
-            guard self.state == .playing, self.hasNextAction else {
+            guard [.playing, .suspended].contains(state), self.hasNextAction else {
                 self.doFinish()
                 return
             }
