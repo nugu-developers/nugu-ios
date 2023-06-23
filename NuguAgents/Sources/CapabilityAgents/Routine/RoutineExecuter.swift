@@ -228,7 +228,7 @@ private extension RoutineExecuter {
     func addDirectiveSequencerObserver(_ directiveSequencer: DirectiveSequenceable) {
         let token = directiveSequencer.observe(NuguCoreNotification.DirectiveSquencer.Complete.self, queue: routineDispatchQueue) { [weak self] (notification) in
             // Routine Action 에 의한 directive 실행 결과에 따른 처리
-            guard let self = self, self.state == .playing,
+            guard let self = self, [.playing, .suspended].contains(self.state),
                   self.handlingDirectives.remove(notification.directive.header.messageId) != nil else { return }
             
             log.debug("completed directive: \(notification), handlingDirectives: \(self.handlingDirectives)")
@@ -265,7 +265,7 @@ private extension RoutineExecuter {
     
     func addAsrAgentObserver(_ asrAgent: ASRAgentProtocol) {
         let token = asrAgent.observe(NuguAgentNotification.ASR.StartRecognition.self, queue: routineDispatchQueue) { [weak self] (notification) in
-            guard let self = self, self.state == .playing else { return }
+            guard let self = self, [.playing, .suspended].contains(self.state) else { return }
             
             // ASR.Recognize event 발생시 interrupt 처리
             if self.doInterrupt() == true {
@@ -278,7 +278,7 @@ private extension RoutineExecuter {
     
     func addStreamDataObserver(_ streamDataRouter: StreamDataRoutable) {
         let directivesToken = streamDataRouter.observe(ReceivedDirectives.self, queue: routineDispatchQueue) { [weak self] (notification) in
-            guard let self = self, self.state == .playing else { return }
+            guard let self = self, [.playing, .suspended].contains(self.state) else { return }
             
             // Set mute delay after actions If Directives contains `Apollo.Reactive` and not `TTS.Speak`
             self.shouldDelayAction = self.applyMuteDelayIfNeeded(notification: notification)
