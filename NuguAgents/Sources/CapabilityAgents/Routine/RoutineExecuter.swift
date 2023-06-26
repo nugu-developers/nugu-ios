@@ -200,8 +200,19 @@ class RoutineExecuter {
     func move(to index: Int, completion: @escaping (Bool) -> Void) {
         routineDispatchQueue.async { [weak self] in
             guard let self = self, let action = self.currentAction else { return }
-            guard [.playing, .interrupted, .suspended].contains(self.state),
-                  let routine = self.routine, (0..<routine.payload.actions.count).contains(index) else {
+            guard [.playing, .interrupted, .suspended].contains(self.state), let routine = self.routine else {
+                doFinish()
+                return
+            }
+            
+            switch index {
+            case (0..<routine.payload.actions.count):
+                break
+            case routine.payload.actions.count:
+                doFinish()
+                completion(true)
+                return
+            default:
                 completion(false)
                 return
             }
@@ -377,7 +388,7 @@ private extension RoutineExecuter {
             doActionAfter(delay: delay)
         } else {
             delegate?.routineExecuterDidFinishProcessingAction(action)
-            guard state.isPlaying else { return }
+            guard state == .playing else { return }
             guard hasNextAction else {
                 doFinish()
                 return
@@ -462,7 +473,8 @@ private extension RoutineExecuter {
             guard let self = self, let action = self.currentAction else { return }
             self.delegate?.routineExecuterDidFinishProcessingAction(action)
             
-            guard self.state.isPlaying, self.hasNextAction else {
+            guard self.state == .playing else { return }
+            guard self.hasNextAction else {
                 self.doFinish()
                 return
             }
