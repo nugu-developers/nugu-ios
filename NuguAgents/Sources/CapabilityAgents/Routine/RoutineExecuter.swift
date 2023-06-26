@@ -201,11 +201,13 @@ class RoutineExecuter {
         routineDispatchQueue.async { [weak self] in
             guard let self = self, let action = self.currentAction else { return }
             guard [.playing, .interrupted, .suspended].contains(self.state), let routine = self.routine else {
-                doFinish()
                 return
             }
             
             switch index {
+            case ..<0:
+                completion(false)
+                break
             case (0..<routine.payload.actions.count):
                 break
             case routine.payload.actions.count:
