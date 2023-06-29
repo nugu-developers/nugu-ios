@@ -6,12 +6,17 @@ import PackageDescription
 let package = Package(
     name: "nugu-ios",
     platforms: [
-        .iOS(.v12)
+        .iOS(.v12),
+        .watchOS(.v7)
     ],
     products: [
         .library(
             name: "nugu-ios",
             targets: ["NuguClientKit", "NuguAgents", "NuguUtils", "NuguServiceKit", "NuguLoginKit", "NuguUIKit", "KeenSense", "NuguCore"]
+        ),
+        .library(
+            name: "nugu-core",
+            targets: ["NuguUtils", "NuguCore", "SilverTray"]
         )
     ],
     dependencies: [

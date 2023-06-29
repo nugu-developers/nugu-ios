@@ -18,6 +18,7 @@
 //  limitations under the License.
 //
 
+#if os(iOS)
 import Foundation
 import AVFoundation
 import MobileCoreServices
@@ -551,3 +552,4 @@ extension AVPlayerItem.Status: CustomStringConvertible {
         }
     }
 }
+#endif

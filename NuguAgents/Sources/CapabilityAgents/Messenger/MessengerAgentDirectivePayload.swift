@@ -89,6 +89,7 @@ public enum MessengerAgentDirectivePayload {
         public let postback: MessengerPostback?
         public let profileKey: String?
         public let disableInputForm: Bool?
+        public let isSystemError: Bool
     }
     
     // MARK: NotifyStartDialog
@@ -153,6 +154,7 @@ extension MessengerAgentDirectivePayload.NotifyMessage: Codable {
         case postback
         case profileKey
         case disableInputForm
+        case isSystemError
     }
     
     public func encode(to encoder: Encoder) throws {
@@ -185,6 +187,6 @@ extension MessengerAgentDirectivePayload.NotifyMessage: Codable {
         postback = try? container.decodeIfPresent(MessengerPostback.self, forKey: .postback)
         profileKey = try? container.decodeIfPresent(String.self, forKey: .profileKey)
         disableInputForm = try? container.decodeIfPresent(Bool.self, forKey: .disableInputForm)
-        
+        isSystemError = try container.decode(Bool.self, forKey: .isSystemError)
     }
 }

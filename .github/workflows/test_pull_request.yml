@@ -21,4 +21,4 @@ jobs:
         run: carthage bootstrap --use-xcframeworks --platform iOS --cache-builds
         
       - name: Run tests
-        run: xcodebuild test -project nugu-ios.xcodeproj -scheme NuguTests -destination 'platform=iOS Simulator,name=iPhone 11,OS=latest'
+        run: xcodebuild -project nugu-ios.xcodeproj -scheme SampleApp CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO

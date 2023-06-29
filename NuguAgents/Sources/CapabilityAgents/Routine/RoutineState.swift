@@ -40,4 +40,8 @@ public extension RoutineState {
         case .suspended: return "SUSPENDED"
         }
     }
+    
+    var isPlaying: Bool {
+        [.playing, .suspended].contains(self)
+    }
 }
