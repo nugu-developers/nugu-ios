@@ -232,6 +232,12 @@ public extension TTSAgent {
             self?.stop(player: player, cancelAssociation: cancelAssociation)
         }
     }
+    
+    func updateLatestPlayerVolume(_ volume: Float) {
+        ttsDispatchQueue.sync {
+            latestPlayer?.volume = volume
+        }
+    }
 }
 
 // MARK: - FocusChannelDelegate

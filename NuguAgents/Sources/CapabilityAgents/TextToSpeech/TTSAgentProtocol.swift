@@ -63,6 +63,13 @@ public protocol TTSAgentProtocol: CapabilityAgentable, TypedNotifyable {
     /// Stops playback
     /// - Parameter cancelAssociation: true: cancel all associated directives, false : only stop tts
     func stopTTS(cancelAssociation: Bool)
+    
+    /**
+     현재 재생 중인 플레이어의 볼륨을 설정한다.
+     
+     - Parameter volume: 플레이어의 볼륨(0.0 ~ 1.0)
+     */
+    func updateLatestPlayerVolume(_ volume: Float)
 }
 
 // MARK: - Default
