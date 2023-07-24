@@ -377,7 +377,7 @@ private extension RoutineExecuter {
                 handlingEvent = textAgent.requestTextInput(
                     text: text,
                     token: action.token,
-                    source: dynamicSource
+                    source: dynamicSource,
                     requestType: .normal,
                     completion: completion
                 )
