@@ -278,6 +278,7 @@ public class NuguClient {
     // Private
     private var pausedByInterruption = false
     private let backgroundFocusHolder: BackgroundFocusHolder
+    private var audioDeactivateWorkItem: DispatchWorkItem?
     
     init(
         contextManager: ContextManageable,
@@ -541,6 +542,10 @@ extension NuguClient: FocusDelegate {
             return delegate?.nuguClientShouldUpdateAudioSessionForFocusAquire() == true
         }
         
+        if let audioDeactivateWorkItem = audioDeactivateWorkItem {
+            audioDeactivateWorkItem.cancel()
+        }
+        
         return audioSessionManager.updateAudioSession(requestingFocus: true) == true
     }
     
@@ -550,8 +555,12 @@ extension NuguClient: FocusDelegate {
             return
         }
         
-        audioSessionManager.notifyAudioSessionDeactivation()
+        let audioDeactivateWorkItem = DispatchWorkItem {
+            audioSessionManager.notifyAudioSessionDeactivation()
+        }
         
+        DispatchQueue.global().asyncAfter(deadline: .now() + NuguClientConst.audioSessionDeactivationDelay, execute: audioDeactivateWorkItem)
+        self.audioDeactivateWorkItem = audioDeactivateWorkItem
     }
 }
 
