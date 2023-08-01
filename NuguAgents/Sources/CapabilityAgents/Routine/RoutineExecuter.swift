@@ -344,7 +344,7 @@ private extension RoutineExecuter {
         let completion: ((StreamDataState) -> Void) = { [weak self] result in
             log.debug(result)
             if case .error = result {
-                self?.doNextAction()
+                self?.pause()
             }
         }
         
