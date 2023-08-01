@@ -365,23 +365,13 @@ private extension RoutineExecuter {
                 return
             }
             let dynamicSource: TextInputSource = .dynamic("DYNAMIC_ROUTINE_ACTION")
-            if let playServiceId = action.playServiceId {
-                handlingEvent = textAgent.requestTextInput(
-                    text: text,
-                    token: action.token,
-                    source: dynamicSource,
-                    requestType: .specific(playServiceId: playServiceId),
-                    completion: completion
-                )
-            } else {
-                handlingEvent = textAgent.requestTextInput(
-                    text: text,
-                    token: action.token,
-                    source: dynamicSource,
-                    requestType: .normal,
-                    completion: completion
-                )
-            }
+            handlingEvent = textAgent.requestTextInput(
+                text: text,
+                token: action.token,
+                playServiceId: action.playServiceId,
+                source: dynamicSource,
+                completion: completion
+            )
         case .data:
             if let eventIdentifier = delegate?.routineExecuterShouldRequestAction(action: action, referrerDialogRequestId: routine.dialogRequestId, completion: completion) {
                 handlingEvent = eventIdentifier.dialogRequestId
