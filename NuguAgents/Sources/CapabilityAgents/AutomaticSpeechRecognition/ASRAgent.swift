@@ -90,7 +90,7 @@ public final class ASRAgent: ASRAgentProtocol {
             guard let asrRequest = asrRequest, let asrResult = asrResult else {
                 asrState = .idle
                 expectSpeech = nil
-                log.error("ASRRequest not exist")
+                log.error("ASR request: \(String(describing: asrRequest)), result: \(String(describing: asrResult))")
                 return
             }
             log.info("\(asrResult)")
