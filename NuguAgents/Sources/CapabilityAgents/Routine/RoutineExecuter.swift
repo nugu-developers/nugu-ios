@@ -351,9 +351,12 @@ private extension RoutineExecuter {
         if let actionTimeout = action.actionTimeoutInMilliseconds,
            .zero < actionTimeout {
             state = .suspended
-            DispatchQueue.global().asyncAfter(deadline: .now() + NuguTimeInterval(milliseconds: actionTimeout).seconds) { [weak self] in
+            
+            let workItem = DispatchWorkItem { [weak self] in
                 self?.delegate?.routineExecuterShouldSendActionTriggerTimout(token: action.token)
             }
+            actionWorkItem = workItem
+            routineDispatchQueue.asyncAfter(deadline: .now() + NuguTimeInterval(milliseconds: actionTimeout).seconds, execute: workItem)
         }
         
         log.debug(action.type)
