@@ -385,7 +385,7 @@ private extension RoutineExecuter {
     }
     
     func doNextAction() {
-        guard let action = currentAction else { return }
+        guard let action = currentAction, state == .playing else { return }
         actionWorkItem?.cancel()
         if shouldDelayAction, let delay = currentAction?.muteDelay {
             log.debug("Delaying action using mute delay, delay: \(delay.dispatchTimeInterval)")
@@ -395,7 +395,6 @@ private extension RoutineExecuter {
             doActionAfter(delay: delay)
         } else {
             delegate?.routineExecuterDidFinishProcessingAction(action)
-            guard state == .playing else { return }
             guard hasNextAction else {
                 doFinish()
                 return
