@@ -522,6 +522,7 @@ private extension AudioPlayerAgent {
                     player.replacePlayer(currentPlayer)
                 }
                 self.currentPlayer = player
+                self.currentPlayer?.play()
                 self.focusManager.requestFocus(channelDelegate: self)
                 
                 completion(.finished) // TODO: DirectiveHandleResult.started 추가
