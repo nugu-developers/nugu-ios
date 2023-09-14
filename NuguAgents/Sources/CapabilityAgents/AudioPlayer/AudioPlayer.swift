@@ -151,6 +151,7 @@ final class AudioPlayer {
     }
 
     func replacePlayer(_ player: AudioPlayer) {
+        guard payload.sourceType != .attachment || player.payload.sourceType != .attachment else { return }
         guard let internalPlayer = player.internalPlayer else { return }
         
         self.internalPlayer = internalPlayer
