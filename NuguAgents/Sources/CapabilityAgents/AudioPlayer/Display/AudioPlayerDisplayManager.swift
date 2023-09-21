@@ -201,6 +201,15 @@ extension AudioPlayerDisplayManager {
         delegate.audioPlayerDisplayShouldControlLyricsPage(direction: payload.direction, completion: completion)
     }
     
+    func showPlaylist(playServiceId: String, completion: @escaping (Bool) -> Void) {
+        guard let delegate = delegate,
+            currentItem?.mediaPayload.playServiceId == payload.playServiceId else {
+                completion(false)
+                return
+        }
+        delegate.audioPlayerDisplayShouldShowPlaylist(completion: completion)
+    }
+    
     func notifyUserInteraction() {
         switch audioPlayerState {
         case .stopped, .finished:

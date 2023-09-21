@@ -162,7 +162,8 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "UpdateMetadata", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleUpdateMetadata),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ShowLyrics", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleShowLyrics),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "HideLyrics", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleHideLyrics),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ControlLyricsPage", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleControlLyricsPage)
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ControlLyricsPage", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleControlLyricsPage),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ShowPlaylist", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler:)
     ]
     
     public init(
@@ -224,6 +225,7 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
 
         if let playlist = self.currentPlaylist {
             payload["playlist"] = playlist.token
+            payload["playlistVisible"] = self.currentPlaylist != nil
         }
         
         completion(ContextInfo(contextType: .capability, name: self.capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
@@ -703,6 +705,21 @@ private extension AudioPlayerAgent {
                     referrerDialogRequestId: directive.header.dialogRequestId
                 ).rx)
             }
+        }
+    }
+    
+    func handleShowPlaylist() -> HandleDirective {
+        return { [weak self] directive, completion in
+            guard let self = self,
+                  let playServiceId = directive.payloadDictionary?["playServiceId"] as? String
+            else {
+                completion(.failed("Invalid payload"))
+                return
+            }
+            
+            defer { completion(.finished) }
+            
+            self.audioPlayerDisplayManager.showPlaylist(playServiceId: playServiceId, completion: completion)
         }
     }
     
