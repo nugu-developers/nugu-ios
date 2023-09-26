@@ -32,6 +32,8 @@ public struct PhoneCallAgentContext {
         /// <#Description#>
         public let recipientIntended: PhoneCallRecipientIntended?
         /// <#Description#>
+        public let name: String?
+        /// <#Description#>
         public let candidates: [PhoneCallPerson]?
         /// <#Description#>
         public let searchScene: String?
@@ -41,18 +43,21 @@ public struct PhoneCallAgentContext {
         ///   - intent: <#intent description#>
         ///   - callType: <#callType description#>
         ///   - recipientIntended: <#recipientIntended description#>
+        ///   - name: <#name description#>
         ///   - candidates: <#candidates description#>
         ///   - searchScene: <#searchScene description#>
         public init(
             intent: PhoneCallIntent?,
             callType: PhoneCallType?,
             recipientIntended: PhoneCallRecipientIntended?,
+            name: String?,
             candidates: [PhoneCallPerson]?,
             searchScene: String?
         ) {
             self.intent = intent
             self.callType = callType
             self.recipientIntended = recipientIntended
+            self.name = name
             self.candidates = candidates
             self.searchScene = searchScene
         }
@@ -96,18 +101,22 @@ public struct PhoneCallAgentContext {
     public let recipient: PhoneCallAgentContext.Recipient?
     /// <#Description#>
     public let numberBlockable: Bool?
+    /// <#Description#>
+    public let aiPhoneUserId: String?
     
     /// The initializer for `PhoneCallAgentContext`.
     public init(
         state: PhoneCallState,
         template: PhoneCallAgentContext.Template?,
         recipient: PhoneCallAgentContext.Recipient?,
-        numberBlockable: Bool?
+        numberBlockable: Bool?,
+        aiPhoneUserId: String?
     ) {
         self.state = state
         self.template = template
         self.recipient = recipient
         self.numberBlockable = numberBlockable
+        self.aiPhoneUserId = aiPhoneUserId
     }
 }
 
@@ -119,6 +128,7 @@ extension PhoneCallAgentContext: Codable {
         case template
         case recipient
         case numberBlockable
+        case aiPhoneUserId
     }
     
     public func encode(to encoder: Encoder) throws {
@@ -131,6 +141,8 @@ extension PhoneCallAgentContext: Codable {
         if let numberBlockableValue = numberBlockable {
             try container.encodeIfPresent(numberBlockableValue ? "TRUE": "FALSE", forKey: .numberBlockable)
         }
+
+        try container.encodeIfPresent(aiPhoneUserId, forKey: .aiPhoneUserId)
     }
 }
 
