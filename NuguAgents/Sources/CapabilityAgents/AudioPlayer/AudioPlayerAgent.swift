@@ -723,9 +723,9 @@ private extension AudioPlayerAgent {
                 guard let self = self else { return }
                 self.sendCompactContextEvent(
                     PlaylistEvent(
-                        typeInfo: isSuccess ? .showPlaylistSucceeded : .showPlaylistFailed(error: ["message": "show Playlist Failed"]) ,
+                        typeInfo: isSuccess ? .showPlaylistSucceeded : .showPlaylistFailed(error: ["message": "show Playlist Failed"]),
                         playServiceId: playServiceId
-                    )
+                    ).rx
                 )
             }
         }

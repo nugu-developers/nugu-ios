@@ -203,7 +203,7 @@ extension AudioPlayerDisplayManager {
     
     func showPlaylist(playServiceId: String, completion: @escaping (Bool) -> Void) {
         guard let delegate = delegate,
-            currentItem?.mediaPayload.playServiceId == payload.playServiceId else {
+            currentItem?.mediaPayload.playServiceId == playServiceId else {
                 completion(false)
                 return
         }
