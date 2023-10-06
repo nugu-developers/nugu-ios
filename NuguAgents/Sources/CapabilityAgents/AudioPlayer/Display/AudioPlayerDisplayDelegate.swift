@@ -62,5 +62,5 @@ public protocol AudioPlayerDisplayDelegate: AnyObject {
     
     /// Tells the delegate that the displayed template should show playlist
     /// - Parameter completion: Whether succeeded or not
-    func audioPlayerDisplayShouldShowPlaylist(completion: @escaping (Bool) -> Boid)
+    func audioPlayerDisplayShouldShowPlaylist(completion: @escaping (Bool) -> Void)
 }
