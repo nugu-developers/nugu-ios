@@ -719,7 +719,15 @@ private extension AudioPlayerAgent {
             
             defer { completion(.finished) }
             
-            self.audioPlayerDisplayManager.showPlaylist(playServiceId: playServiceId, completion: completion)
+            self.audioPlayerDisplayManager.showPlaylist(playServiceId: playServiceId) { [weak self] isSuccess in
+                guard let self = self else { return }
+                self.sendCompactContextEvent(
+                    PlaylistEvent(
+                        typeInfo: isSuccess ? .showPlaylistSucceeded : .showPlaylistFailed(error: ["message": "show Playlist Failed"]) ,
+                        playServiceId: playServiceId
+                    )
+                )
+            }
         }
     }
     
