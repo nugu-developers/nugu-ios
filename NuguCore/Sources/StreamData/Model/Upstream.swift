@@ -20,6 +20,9 @@
 
 import Foundation
 
+import NuguUtils
+import NuguObjcUtils
+
 /// An enum that contains the data structures to be send to the server.
 public enum Upstream {
     /// A structure that contains a event and contexts.
@@ -151,10 +154,16 @@ extension Upstream.Event {
             "client": client
         ]
         
-        guard
-            let data = try? JSONSerialization.data(withJSONObject: contextDict.compactMapValues { $0 }, options: []),
-            let contextString = String(data: data, encoding: .utf8) else {
-                return ""
+        var contextString: String = ""
+        if let error = UnifiedErrorCatcher.try ({
+            if let data = try? JSONSerialization.data(withJSONObject: contextDict.compactMapValues { $0 }, options: []),
+               let serializedContextString = String(data: data, encoding: .utf8) {
+                contextString = serializedContextString
+            }
+            
+            return nil
+        }) {
+            log.error("context dictionary includes unserializable object. error: \(error)")
         }
         
         return contextString
