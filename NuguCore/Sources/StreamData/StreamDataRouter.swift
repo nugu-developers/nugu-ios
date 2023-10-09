@@ -261,6 +261,7 @@ extension StreamDataRouter {
                 
                 directiveSequencer.processDirective(directive)
                 completion?(.received(part: directive))
+                serverInitiatedDirectiveCompletion?(.received(part: directive))
             }
         } else if let attachment = Downstream.Attachment(headerDictionary: part.header, body: part.body) {
             log.debug("Attachment: \(attachment.header.dialogRequestId), \(attachment.header.type)")

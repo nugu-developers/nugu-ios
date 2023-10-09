@@ -432,8 +432,8 @@ public extension NuguClient {
                     completion?(.error(error))
                 case .success(let url):
                     NuguServerInfo.registryServerAddress = url
-                    self?.streamDataRouter.startReceiveServerInitiatedDirective(completion: { state in
-                        sema.signal()
+                    self?.streamDataRouter.startReceiveServerInitiatedDirective(completion: { [weak sema] state in
+                        sema?.signal()
                         completion?(state)
                     })
                 }
