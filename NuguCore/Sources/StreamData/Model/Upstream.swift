@@ -156,9 +156,11 @@ extension Upstream.Event {
         
         var contextString: String = ""
         if let error = UnifiedErrorCatcher.try ({
-            if let data = try? JSONSerialization.data(withJSONObject: contextDict.compactMapValues { $0 }, options: []),
-               let serializedContextString = String(data: data, encoding: .utf8) {
-                contextString = serializedContextString
+            do {
+                let data = try JSONSerialization.data(withJSONObject: contextDict.compactMapValues { $0 }, options: [])
+                contextString = String(data: data, encoding: .utf8) ?? ""
+            } catch {
+                return error
             }
             
             return nil
