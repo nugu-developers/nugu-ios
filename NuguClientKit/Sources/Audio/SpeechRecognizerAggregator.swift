@@ -45,7 +45,7 @@ public class SpeechRecognizerAggregator: SpeechRecognizerAggregatable {
     @Atomic private var startMicWorkItem: DispatchWorkItem?
     
     private var audioSessionInterrupted = false
-    private var recognizeQueue = DispatchQueue(label: "com.sktelecom.romaine.NuguClientKit.recognize")
+    private let recognizeQueue = DispatchQueue(label: "com.sktelecom.romaine.NuguClientKit.recognize")
     
     public var useKeywordDetector = true
     
