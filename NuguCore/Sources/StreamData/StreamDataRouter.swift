@@ -60,6 +60,10 @@ public extension StreamDataRouter {
         serverInitiatedDirectiveStateDisposable = serverInitiatedDirectiveReceiver.stateObserver
             .subscribe(onNext: { [weak self] state in
                 self?.notificationQueue.async { [weak self] in
+                    if state == .connected {
+                        completion?(.prepared)
+                    }
+                    
                     self?.post(state)
                 }
             })
@@ -75,6 +79,7 @@ public extension StreamDataRouter {
                 completion?(.error($0))
             }, onDisposed: {
                 log.debug("server initiated directive is stopeed")
+                completion?(.finished)
             })
         serverInitiatedDirectiveDisposable?.disposed(by: disposeBag)
     }
@@ -256,6 +261,7 @@ extension StreamDataRouter {
                 
                 directiveSequencer.processDirective(directive)
                 completion?(.received(part: directive))
+                serverInitiatedDirectiveCompletion?(.received(part: directive))
             }
         } else if let attachment = Downstream.Attachment(headerDictionary: part.header, body: part.body) {
             log.debug("Attachment: \(attachment.header.dialogRequestId), \(attachment.header.type)")
