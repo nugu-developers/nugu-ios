@@ -40,13 +40,12 @@ public class SpeechRecognizerAggregator: SpeechRecognizerAggregatable {
     private let keywordDetector: KeywordDetector
     
     private let micInputProvider = MicInputProvider()
-    private var audioSessionInterrupted = false
     private var micInputProviderDelay: DispatchTime = .now()
-    
+    private let micQueue = DispatchQueue(label: "com.sktelecom.romaine.NuguClientKit.mic")
     @Atomic private var startMicWorkItem: DispatchWorkItem?
-
-    // Audio input source
-    private let micQueue = DispatchQueue(label: "com.sktelecom.romaine.speech_recognizer")
+    
+    private var audioSessionInterrupted = false
+    private let recognizeQueue = DispatchQueue(label: "com.sktelecom.romaine.NuguClientKit.recognize")
     
     public var useKeywordDetector = true
     
@@ -102,57 +101,73 @@ public class SpeechRecognizerAggregator: SpeechRecognizerAggregatable {
 // MARK: - SpeechRecognizerAggregatable
 
 public extension SpeechRecognizerAggregator {
-    @discardableResult
-    func startListening(initiator: ASRInitiator, completion: ((StreamDataState) -> Void)? = nil) -> String {
-        switch state {
-        case .cancelled,
-             .idle,
-             .error:
-            break
-        case .wakeupTriggering:
-            keywordDetector.stop()
-        default:
-            asrAgent.stopRecognition()
-        }
-        
-        let dialogRequestId = asrAgent.startRecognition(initiator: initiator) { [weak self] state in
-            guard case .prepared = state else {
-                completion?(state)
-                return
+    func startListening(initiator: ASRInitiator, completion: ((StreamDataState) -> Void)? = nil) {
+        recognizeQueue.async { [weak self] in
+            guard let self else { return }
+            
+            switch state {
+            case .cancelled,
+                 .idle,
+                 .error:
+                break
+            case .wakeupTriggering:
+                keywordDetector.stop()
+            default:
+                asrAgent.stopRecognition()
             }
             
-            self?.startMicInputProvider(requestingFocus: true) { [weak self] endedUp in
-                if case let .failure(error) = endedUp {
-                    log.error("Start MicInputProvider failed: \(error)")
-                    self?.asrAgent.stopRecognition()
-                    
-                    var recognizerError: Error {
-                        guard error is MicInputError else {
-                            return error
-                        }
-                        
-                        return SpeechRecognizerAggregatorError.cannotOpenMicInputForRecognition
-                    }
-                    self?.state = .error(recognizerError)
-                    completion?(.error(recognizerError))
-                    
+            let sema = DispatchSemaphore(value: .zero)
+            asrAgent.startRecognition(initiator: initiator) { [weak self] state in
+                guard case .prepared = state else {
+                    completion?(state)
+                    sema.signal()
                     return
                 }
                 
-                completion?(.prepared)
+                self?.startMicInputProvider(requestingFocus: true) { [weak self, weak sema] endedUp in
+                    defer {
+                        sema?.signal()
+                    }
+                    
+                    if case let .failure(error) = endedUp {
+                        log.error("Start MicInputProvider failed: \(error)")
+                        self?.asrAgent.stopRecognition()
+                        
+                        var recognizerError: Error {
+                            guard error is MicInputError else {
+                                return error
+                            }
+                            
+                            return SpeechRecognizerAggregatorError.cannotOpenMicInputForRecognition
+                        }
+                        self?.state = .error(recognizerError)
+                        completion?(.error(recognizerError))
+                        
+                        return
+                    }
+                    
+                    completion?(.prepared)
+                }
             }
+            sema.wait()
         }
-        
-        return dialogRequestId
     }
     
     func startListeningWithTrigger(completion: ((Result<Void, Error>) -> Void)?) {
         guard useKeywordDetector else { return }
-        _startMicWorkItem.mutate {
-            $0?.cancel()
-            $0 = DispatchWorkItem(block: { [weak self] in
+        log.debug("startListeningWithTrigger")
+        
+        recognizeQueue.async { [weak self] in
+            guard let self else { return }
+            
+            let sema = DispatchSemaphore(value: .zero)
+            let startMicWorkItem = DispatchWorkItem { [weak self] in
                 log.debug("startMicWorkItem start")
                 self?.startMicInputProvider(requestingFocus: false) { (endedUp) in
+                    defer {
+                        sema.signal()
+                    }
+                    
                     if case let .failure(error) = endedUp {
                         log.debug("startMicWorkItem failed: \(error)")
                         var recognizerError: Error {
@@ -166,31 +181,45 @@ public extension SpeechRecognizerAggregator {
                         completion?(.failure(recognizerError))
                         
                         return
-
                     }
                     
                     self?.keywordDetector.start()
                     completion?(.success(()))
                 }
-            })
-        }
-        guard let startMicWorkItem = self.startMicWorkItem else { return }
-        
-        if self.micInputProviderDelay > DispatchTime.now() {
-            DispatchQueue.global().asyncAfter(deadline: self.micInputProviderDelay, execute: startMicWorkItem)
-        } else {
-            DispatchQueue.global().async(execute: startMicWorkItem)
+            }
+            
+            _startMicWorkItem.mutate {
+                $0?.cancel()
+                $0 = startMicWorkItem
+            }
+            
+            if micInputProviderDelay > DispatchTime.now() {
+                DispatchQueue.global().asyncAfter(deadline: self.micInputProviderDelay, execute: startMicWorkItem)
+            } else {
+                DispatchQueue.global().async(execute: startMicWorkItem)
+            }
+            
+            sema.wait()
         }
     }
     
     func stopListening() {
-        if keywordDetector.state == .active {
-            keywordDetector.stop()
-            state = .cancelled
+        log.debug("stopListening")
+        recognizeQueue.async { [weak self] in
+            guard let self else { return }
+            
+            let sema = DispatchSemaphore(value: .zero)
+            if keywordDetector.state == .active {
+                keywordDetector.stop()
+                state = .cancelled
+            }
+            
+            asrAgent.stopRecognition()
+            stopMicInputProvider {
+                sema.signal()
+            }
+            sema.wait()
         }
-        
-        stopMicInputProvider()
-        asrAgent.stopRecognition()
     }
     
     func startMicInputProvider(requestingFocus: Bool, completion: @escaping (EndedUp<Error>) -> Void) {
@@ -224,10 +253,11 @@ public extension SpeechRecognizerAggregator {
         }
     }
     
-    func stopMicInputProvider() {
+    func stopMicInputProvider(completion: (() -> Void)? = nil) {
         micQueue.async { [weak self] in
             self?.startMicWorkItem?.cancel()
             self?.micInputProvider.stop()
+            completion?()
         }
     }
 }
