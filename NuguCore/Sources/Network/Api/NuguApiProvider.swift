@@ -137,7 +137,7 @@ class NuguApiProvider: NSObject {
                     return
                 }
                 
-                guard let resourceServerUrl = self.resourceServerAddress else {
+                guard let loadBalancedUrl = self.loadBalancedUrl else {
                     single(.failure(NetworkError.noSuitableResourceServer))
                     return
                 }
@@ -146,8 +146,8 @@ class NuguApiProvider: NSObject {
                     self.serverSideEventProcessor = ServerSideEventProcessor()
                     
                     // connect downstream.
-                    guard let downstreamUrl = URL(string: NuguApi.directives.uri(baseUrl: resourceServerUrl)) else {
-                        log.error("invailid url: \(NuguApi.directives.uri(baseUrl: resourceServerUrl))")
+                    guard let downstreamUrl = URL(string: NuguApi.directives.uri(baseUrl: loadBalancedUrl)) else {
+                        log.error("invailid url: \(NuguApi.directives.uri(baseUrl: loadBalancedUrl))")
                         single(.failure(NetworkError.noSuitableResourceServer))
                         return
                     }
@@ -157,7 +157,7 @@ class NuguApiProvider: NSObject {
                     downstreamRequest.allHTTPHeaderFields = header
                     task = self.session.dataTask(with: downstreamRequest)
                     task?.resume()
-                    log.debug("directive request header:\n\(downstreamRequest.allHTTPHeaderFields?.description ?? "")\n")
+                    log.debug("directive request: \(downstreamRequest)\nheader: \(downstreamRequest.allHTTPHeaderFields?.description ?? "")\n")
                 }
                 
                 single(.success(self.serverSideEventProcessor!.subject))
