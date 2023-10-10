@@ -83,7 +83,7 @@ let package = Package(
         ),
         .target(
             name: "NuguCore",
-            dependencies: ["NuguUtils", "NattyLog"],
+            dependencies: ["NuguUtils", "NuguObjcUtils", "NattyLog"],
             path: "NuguCore/",
             exclude: ["Info.plist", "README.md"]
         ),

@@ -35,7 +35,7 @@ public enum PhoneCallAgentDirectivePayload {
         /// The candidate searched for play service.
         ///
         /// If nil, there are no search results.
-        public let candidates: [PhoneCallPerson]?
+        public var candidates: [PhoneCallPerson]?
         /// The scene of search target and display tempate
         public let searchScene: String?
         /// <#Description#>
