@@ -22,6 +22,7 @@ import Foundation
 
 public protocol AudioSessionManageable: AnyObject {
     var delegate: AudioSessionManagerDelegate? { get set }
+    var allowsUpdateAudioSessionActivation: Bool { get set }
     
     func isCarplayConnected() -> Bool
     func requestRecordPermission(_ response: @escaping (Bool) -> Void)
