@@ -275,7 +275,7 @@ private extension AudioSessionManager {
         try AVAudioSession.sharedInstance().setCategory(
             category,
             mode: .default,
-            options: categoryOptions
+            options: options
         )
         
         log.debug("set audio session: \(category), options: \(options)")
