@@ -46,7 +46,7 @@ final public class AudioSessionManager: AudioSessionManageable {
         // When no other audio is playing, audio session can not detect car play connectivity status even if car play has been already connected.
         // To resolve this problem, activating audio session should be done in prior to detecting car play connectivity.
         if AVAudioSession.sharedInstance().isOtherAudioPlaying == false {
-            try? activeAudioSessionIfNeeded()
+            try? activeAudioSessionIfNeeded(categoryOptions: defaultCategoryOptions)
         }
     }
     
