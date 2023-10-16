@@ -267,7 +267,7 @@ private extension AudioSessionManager {
             options: categoryOptions
         )
         
-        log.debug("set audio session: \(AVAudioSession.Category.playAndRecord), options: \(options)")
+        log.debug("set audio session: \(AVAudioSession.Category.playAndRecord), options: \(categoryOptions)")
         
         try AVAudioSession.sharedInstance().setActive(true)
         
