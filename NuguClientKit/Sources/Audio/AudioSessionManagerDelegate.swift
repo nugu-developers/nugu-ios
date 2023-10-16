@@ -27,7 +27,6 @@ public protocol AudioSessionManagerDelegate: AnyObject {
     func audioSessionRouteChanged(reason: AudioSessionManager.AudioSessionRouteChangeReason)
     func audioSessionWillDeactivate()
     func audioSessionDidDeactivate()
-    func audioSessionAllowActive()
 }
 
 public extension AudioSessionManagerDelegate {
