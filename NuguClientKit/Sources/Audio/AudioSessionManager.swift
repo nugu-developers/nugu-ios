@@ -87,13 +87,7 @@ public extension AudioSessionManager {
               AVAudioSession.sharedInstance().category != .playback ||
               AVAudioSession.sharedInstance().categoryOptions != options else { return true }
         do {
-            try AVAudioSession.sharedInstance().setCategory(
-                .playback,
-                mode: .default,
-                options: options
-            )
-            
-            try activeAudioSessionIfNeeded()
+            try activeAudioSessionIfNeeded(categoryOptions: options)
             return true
         } catch {
             log.debug("updateAudioSessionToPlaybackIfNeeded failed: \(error)")
@@ -110,12 +104,7 @@ public extension AudioSessionManager {
                 return true
             }
             do {
-                try AVAudioSession.sharedInstance().setCategory(
-                    .playAndRecord,
-                    mode: .default,
-                    options: []
-                )
-                try activeAudioSessionIfNeeded()
+                try activeAudioSessionIfNeeded(categoryOptions: [])
                 return true
             } catch {
                 log.debug("updateAudioSession when carplay connected has failed: \(error)")
@@ -148,15 +137,7 @@ public extension AudioSessionManager {
         }
         
         do {
-            try AVAudioSession.sharedInstance().setCategory(
-                .playAndRecord,
-                mode: .default,
-                options: options
-            )
-            log.debug("set audio session: \(AVAudioSession.Category.playAndRecord), options: \(options)")
-
-            try activeAudioSessionIfNeeded()
-            log.debug("audio session activated")
+            try activeAudioSessionIfNeeded(categoryOptions: options)
             
             return true
         } catch {
@@ -277,9 +258,20 @@ private extension AudioSessionManager {
 // MARK: - Private (audioSessiontActive)
 
 private extension AudioSessionManager {
-    func activeAudioSessionIfNeeded() throws {
+    func activeAudioSessionIfNeeded(categoryOptions: AVAudioSession.CategoryOptions) throws {
         guard delegate?.allowsUpdateAudioSessionActivation == true else { return }
+        
+        try AVAudioSession.sharedInstance().setCategory(
+            .playback,
+            mode: .default,
+            options: categoryOptions
+        )
+        
+        log.debug("set audio session: \(AVAudioSession.Category.playAndRecord), options: \(options)")
+        
         try AVAudioSession.sharedInstance().setActive(true)
+        
+        log.debug("audio session activated")
     }
 }
 
