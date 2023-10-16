@@ -45,6 +45,9 @@ public protocol NuguClientDelegate: AnyObject {
     /// Notify that nugu client won't play sound anymore.
     func nuguClientDidReleaseAudioSession()
     
+    /// Check Can ActiveAudioSessiong
+    func nuguClientAllowsAcitveAudioSession() -> Bool
+    
     // speech recognizer aggregator state related
     
     /// Notify that  nugu client speech-related state has been changed

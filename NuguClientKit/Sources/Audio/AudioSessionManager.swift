@@ -24,7 +24,6 @@ import NuguAgents
 
 final public class AudioSessionManager: AudioSessionManageable {
     public weak var delegate: AudioSessionManagerDelegate?
-    public var allowsUpdateAudioSessionActivation: Bool = true
     private let audioPlayerAgent: AudioPlayerAgentProtocol
     private let defaultCategoryOptions = AVAudioSession.CategoryOptions(arrayLiteral: [.defaultToSpeaker, .allowBluetoothA2DP])
     
@@ -279,7 +278,7 @@ private extension AudioSessionManager {
 
 private extension AudioSessionManager {
     func activeAudioSessionIfNeeded() throws {
-        guard allowsUpdateAudioSessionActivation else { return }
+        guard delegate?.allowsUpdateAudioSessionActivation == true else { return }
         try AVAudioSession.sharedInstance().setActive(true)
     }
 }
