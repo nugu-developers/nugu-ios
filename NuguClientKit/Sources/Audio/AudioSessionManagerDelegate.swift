@@ -21,8 +21,14 @@
 import Foundation
 
 public protocol AudioSessionManagerDelegate: AnyObject {
+    var allowsUpdateAudioSessionActivation: Bool { get }
+    
     func audioSessionInterrupted(type: AudioSessionManager.AudioSessionInterruptionType)
     func audioSessionRouteChanged(reason: AudioSessionManager.AudioSessionRouteChangeReason)
     func audioSessionWillDeactivate()
     func audioSessionDidDeactivate()
+}
+
+public extension AudioSessionManagerDelegate {
+    var allowsUpdateAudioSessionActivation: Bool { true }
 }
