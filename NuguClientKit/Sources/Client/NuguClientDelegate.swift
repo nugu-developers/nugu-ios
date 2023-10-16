@@ -97,6 +97,7 @@ public extension NuguClientDelegate {
     // even if it is optional delegate method.
     // Do proper stuffs when NUGU SDK has released using audio session.
     func nuguClientDidReleaseAudioSession() {}
+    func nuguClientAllowsAcitveAudioSession() -> Bool { return true }
     
     // speech recognizer aggregator state related
     func nuguClientDidChangeSpeechState(_ state: SpeechRecognizerAggregatorState) {}
