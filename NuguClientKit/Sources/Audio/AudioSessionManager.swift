@@ -46,7 +46,7 @@ final public class AudioSessionManager: AudioSessionManageable {
         // When no other audio is playing, audio session can not detect car play connectivity status even if car play has been already connected.
         // To resolve this problem, activating audio session should be done in prior to detecting car play connectivity.
         if AVAudioSession.sharedInstance().isOtherAudioPlaying == false {
-            try? activeAudioSessionIfNeeded(categoryOptions: defaultCategoryOptions)
+            try activeAudioSessionIfNeeded()
         }
     }
     
@@ -87,7 +87,8 @@ public extension AudioSessionManager {
               AVAudioSession.sharedInstance().category != .playback ||
               AVAudioSession.sharedInstance().categoryOptions != options else { return true }
         do {
-            try activeAudioSessionIfNeeded(categoryOptions: options)
+            try setAudioCategoryIfNeeded(.playback, options: options)
+            try activeAudioSessionIfNeeded()
             return true
         } catch {
             log.debug("updateAudioSessionToPlaybackIfNeeded failed: \(error)")
@@ -104,7 +105,8 @@ public extension AudioSessionManager {
                 return true
             }
             do {
-                try activeAudioSessionIfNeeded(categoryOptions: [])
+                try setAudioCategoryIfNeeded(.playAndRecord, options: [])
+                try activeAudioSessionIfNeeded()
                 return true
             } catch {
                 log.debug("updateAudioSession when carplay connected has failed: \(error)")
@@ -137,7 +139,8 @@ public extension AudioSessionManager {
         }
         
         do {
-            try activeAudioSessionIfNeeded(categoryOptions: options)
+            try setAudioCategoryIfNeeded(.playAndRecord, options: options)
+            try activeAudioSessionIfNeeded()
             
             return true
         } catch {
@@ -258,20 +261,24 @@ private extension AudioSessionManager {
 // MARK: - Private (audioSessiontActive)
 
 private extension AudioSessionManager {
-    func activeAudioSessionIfNeeded(categoryOptions: AVAudioSession.CategoryOptions) throws {
+    func activeAudioSessionIfNeeded() throws {
         guard delegate?.allowsUpdateAudioSessionActivation == true else { return }
-        
-        try AVAudioSession.sharedInstance().setCategory(
-            .playback,
-            mode: .default,
-            options: categoryOptions
-        )
-        
-        log.debug("set audio session: \(AVAudioSession.Category.playAndRecord), options: \(categoryOptions)")
         
         try AVAudioSession.sharedInstance().setActive(true)
         
         log.debug("audio session activated")
+    }
+    
+    func setAudioCategoryIfNeeded(_ category: AVAudioSession.Category, options: AVAudioSession.CategoryOptions) throws {
+        guard delegate?.allowsUpdateAudioSessionActivation == true else { return }
+        
+        try AVAudioSession.sharedInstance().setCategory(
+            category,
+            mode: .default,
+            options: categoryOptions
+        )
+        
+        log.debug("set audio session: \(category), options: \(options)")
     }
 }
 
