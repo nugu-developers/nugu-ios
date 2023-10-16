@@ -161,7 +161,7 @@ public extension AudioSessionManager {
             delegate?.audioSessionWillDeactivate()
             
             // Notify audio session deactivation to 3rd party apps
-            try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+            try deactiveAudioSessionIfNeeded()
         } catch {
             log.debug("notifyOthersOnDeactivation failed: \(error)")
         }
@@ -267,6 +267,14 @@ private extension AudioSessionManager {
         try AVAudioSession.sharedInstance().setActive(true)
         
         log.debug("audio session activated")
+    }
+    
+    func deactiveAudioSessionIfNeeded() throws {
+        guard delegate?.allowsUpdateAudioSessionActivation == true else { return }
+        
+        try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        
+        log.debug("audio session deactivated")
     }
     
     func setAudioCategoryIfNeeded(_ category: AVAudioSession.Category, options: AVAudioSession.CategoryOptions) throws {
