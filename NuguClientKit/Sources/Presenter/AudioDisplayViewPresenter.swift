@@ -152,6 +152,12 @@ extension AudioDisplayViewPresenter: AudioPlayerDisplayDelegate {
             completion(self?.audioDisplayView?.isLyricsVisible ?? false)
         }
     }
+    
+    public func audioPlayerDisplayShouldShowPlaylist(completion: @escaping (Bool) -> Void) {
+        DispatchQueue.main.async { [weak self] in
+            completion(true)
+        }
+    }
 }
 
 // MARK: - Private (AudioDisplayView)

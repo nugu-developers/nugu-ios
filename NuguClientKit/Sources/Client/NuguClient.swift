@@ -670,6 +670,10 @@ extension NuguClient {
 // MARK: - AudioSessionManagerDelegate
 
 extension NuguClient: AudioSessionManagerDelegate {
+    public var allowsUpdateAudioSessionActivation: Bool {
+        delegate?.nuguClientAllowsAcitveAudioSession() ?? true
+    }
+    
     private func setupAudioSessionManager() {
         audioSessionManager?.delegate = self
     }

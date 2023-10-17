@@ -27,7 +27,7 @@ import RxSwift
 
 public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     // CapabilityAgentable
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .audioPlayer, version: "1.7")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .audioPlayer, version: "1.8")
     private let playSyncProperty = PlaySyncProperty(layerType: .media, contextType: .sound)
     
     // AudioPlayerAgentProtocol
@@ -162,7 +162,8 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "UpdateMetadata", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleUpdateMetadata),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ShowLyrics", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleShowLyrics),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "HideLyrics", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleHideLyrics),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ControlLyricsPage", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleControlLyricsPage)
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ControlLyricsPage", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleControlLyricsPage),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ShowPlaylist", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleShowPlaylist)
     ]
     
     public init(
@@ -224,6 +225,7 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
 
         if let playlist = self.currentPlaylist {
             payload["playlist"] = playlist.token
+            payload["playlistVisible"] = self.currentPlaylist != nil
         }
         
         completion(ContextInfo(contextType: .capability, name: self.capabilityAgentProperty.name, payload: payload.compactMapValues { $0 }))
@@ -702,6 +704,29 @@ private extension AudioPlayerAgent {
                     playServiceId: payload.playServiceId,
                     referrerDialogRequestId: directive.header.dialogRequestId
                 ).rx)
+            }
+        }
+    }
+    
+    func handleShowPlaylist() -> HandleDirective {
+        return { [weak self] directive, completion in
+            guard let self = self,
+                  let playServiceId = directive.payloadDictionary?["playServiceId"] as? String
+            else {
+                completion(.failed("Invalid payload"))
+                return
+            }
+            
+            defer { completion(.finished) }
+            
+            self.audioPlayerDisplayManager.showPlaylist(playServiceId: playServiceId) { [weak self] isSuccess in
+                guard let self = self else { return }
+                self.sendCompactContextEvent(
+                    PlaylistEvent(
+                        typeInfo: isSuccess ? .showPlaylistSucceeded : .showPlaylistFailed(error: ["message": "show Playlist Failed"]),
+                        playServiceId: playServiceId
+                    ).rx
+                )
             }
         }
     }

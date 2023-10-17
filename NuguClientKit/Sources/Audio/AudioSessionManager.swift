@@ -46,7 +46,7 @@ final public class AudioSessionManager: AudioSessionManageable {
         // When no other audio is playing, audio session can not detect car play connectivity status even if car play has been already connected.
         // To resolve this problem, activating audio session should be done in prior to detecting car play connectivity.
         if AVAudioSession.sharedInstance().isOtherAudioPlaying == false {
-            try? AVAudioSession.sharedInstance().setActive(true)
+            try? activeAudioSessionIfNeeded()
         }
     }
     
@@ -87,12 +87,8 @@ public extension AudioSessionManager {
               AVAudioSession.sharedInstance().category != .playback ||
               AVAudioSession.sharedInstance().categoryOptions != options else { return true }
         do {
-            try AVAudioSession.sharedInstance().setCategory(
-                .playback,
-                mode: .default,
-                options: options
-            )
-            try AVAudioSession.sharedInstance().setActive(true)
+            try setAudioCategoryIfNeeded(.playback, options: options)
+            try activeAudioSessionIfNeeded()
             return true
         } catch {
             log.debug("updateAudioSessionToPlaybackIfNeeded failed: \(error)")
@@ -109,12 +105,8 @@ public extension AudioSessionManager {
                 return true
             }
             do {
-                try AVAudioSession.sharedInstance().setCategory(
-                    .playAndRecord,
-                    mode: .default,
-                    options: []
-                )
-                try AVAudioSession.sharedInstance().setActive(true)
+                try setAudioCategoryIfNeeded(.playAndRecord, options: [])
+                try activeAudioSessionIfNeeded()
                 return true
             } catch {
                 log.debug("updateAudioSession when carplay connected has failed: \(error)")
@@ -147,15 +139,8 @@ public extension AudioSessionManager {
         }
         
         do {
-            try AVAudioSession.sharedInstance().setCategory(
-                .playAndRecord,
-                mode: .default,
-                options: options
-            )
-            log.debug("set audio session: \(AVAudioSession.Category.playAndRecord), options: \(options)")
-
-            try AVAudioSession.sharedInstance().setActive(true)
-            log.debug("audio session activated")
+            try setAudioCategoryIfNeeded(.playAndRecord, options: options)
+            try activeAudioSessionIfNeeded()
             
             return true
         } catch {
@@ -176,7 +161,7 @@ public extension AudioSessionManager {
             delegate?.audioSessionWillDeactivate()
             
             // Notify audio session deactivation to 3rd party apps
-            try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+            try deactiveAudioSessionIfNeeded()
         } catch {
             log.debug("notifyOthersOnDeactivation failed: \(error)")
         }
@@ -270,6 +255,38 @@ private extension AudioSessionManager {
         }
         
         audioPlayerStateObserver = nil
+    }
+}
+
+// MARK: - Private (audioSessiontActive)
+
+private extension AudioSessionManager {
+    func activeAudioSessionIfNeeded() throws {
+        guard delegate?.allowsUpdateAudioSessionActivation == true else { return }
+        
+        try AVAudioSession.sharedInstance().setActive(true)
+        
+        log.debug("audio session activated")
+    }
+    
+    func deactiveAudioSessionIfNeeded() throws {
+        guard delegate?.allowsUpdateAudioSessionActivation == true else { return }
+        
+        try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        
+        log.debug("audio session deactivated")
+    }
+    
+    func setAudioCategoryIfNeeded(_ category: AVAudioSession.Category, options: AVAudioSession.CategoryOptions) throws {
+        guard delegate?.allowsUpdateAudioSessionActivation == true else { return }
+        
+        try AVAudioSession.sharedInstance().setCategory(
+            category,
+            mode: .default,
+            options: options
+        )
+        
+        log.debug("set audio session: \(category), options: \(options)")
     }
 }
 
