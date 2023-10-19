@@ -116,19 +116,13 @@ public extension SpeechRecognizerAggregator {
                 asrAgent.stopRecognition()
             }
             
-            let sema = DispatchSemaphore(value: .zero)
             asrAgent.startRecognition(initiator: initiator) { [weak self] state in
                 guard case .prepared = state else {
                     completion?(state)
-                    sema.signal()
                     return
                 }
                 
-                self?.startMicInputProvider(requestingFocus: true) { [weak self, weak sema] endedUp in
-                    defer {
-                        sema?.signal()
-                    }
-                    
+                self?.startMicInputProvider(requestingFocus: true) { [weak self] endedUp in
                     if case let .failure(error) = endedUp {
                         log.error("Start MicInputProvider failed: \(error)")
                         self?.asrAgent.stopRecognition()
@@ -149,7 +143,6 @@ public extension SpeechRecognizerAggregator {
                     completion?(.prepared)
                 }
             }
-            sema.wait()
         }
     }
     
@@ -160,14 +153,9 @@ public extension SpeechRecognizerAggregator {
         recognizeQueue.async { [weak self] in
             guard let self else { return }
             
-            let sema = DispatchSemaphore(value: .zero)
             let startMicWorkItem = DispatchWorkItem { [weak self] in
                 log.debug("startMicWorkItem start")
                 self?.startMicInputProvider(requestingFocus: false) { (endedUp) in
-                    defer {
-                        sema.signal()
-                    }
-                    
                     if case let .failure(error) = endedUp {
                         log.debug("startMicWorkItem failed: \(error)")
                         var recognizerError: Error {
@@ -198,8 +186,6 @@ public extension SpeechRecognizerAggregator {
             } else {
                 DispatchQueue.global().async(execute: startMicWorkItem)
             }
-            
-            sema.wait()
         }
     }
     
