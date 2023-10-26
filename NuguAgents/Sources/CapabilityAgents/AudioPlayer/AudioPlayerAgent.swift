@@ -377,8 +377,7 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
         audioPlayerDispatchQueue.async { [weak self] in
             log.info("media player state: \(state), messageId: \(player.header.messageId)")
             guard let self = self else { return }
-            
-            var audioPlayerResult: (dialogRequestId: String, result: AudioPlayerResult)?
+
             var audioPlayerState: AudioPlayerState?
             var eventTypeInfo: PlayEvent.TypeInfo?
             
@@ -390,9 +389,8 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
                 audioPlayerState = .playing
                 if player.pauseReason != .focus {
                     player.sendingResumeEventAsPlaybackStarted == true ? (eventTypeInfo = .playbackStarted) : (eventTypeInfo = .playbackResumed)
-                }                
+                }
             case .finish:
-                audioPlayerResult = (dialogRequestId: player.header.dialogRequestId, result: .finished)
                 audioPlayerState = .finished
                 eventTypeInfo = .playbackFinished
             case .pause:
@@ -405,11 +403,9 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
                     eventTypeInfo = .playbackPaused
                 }
             case .stop:
-                audioPlayerResult = (dialogRequestId: player.header.dialogRequestId, result: .stopped)
                 audioPlayerState = .stopped
                 eventTypeInfo = .playbackStopped(reason: player.stopReason.rawValue)
             case .error(let error):
-                audioPlayerResult = (dialogRequestId: player.header.dialogRequestId, result: .error(error))
                 audioPlayerState = .stopped
                 eventTypeInfo = .playbackFailed(error: error)
             case .bufferEmpty, .likelyToKeepUp:
@@ -427,10 +423,6 @@ extension AudioPlayerAgent: MediaPlayerDelegate {
             
             if let eventTypeInfo = eventTypeInfo {
                 self.sendCompactContextEvent(self.playEvent(typeInfo: eventTypeInfo, player: player))
-            }
-            
-            if let audioPlayerResult = audioPlayerResult {
-                self.audioPlayerResultSubject.onNext(audioPlayerResult)
             }
         }
     }

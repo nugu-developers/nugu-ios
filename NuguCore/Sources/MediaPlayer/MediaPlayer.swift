@@ -55,6 +55,7 @@ public class MediaPlayer: NSObject, MediaPlayable {
     
     deinit {
         removePlayerItemObserver()
+        releaseDataTask()
     }
 }
 
@@ -235,7 +236,6 @@ extension MediaPlayer {
         }
         let urlAsset = AVURLAsset(url: urlModel)
         urlAsset.resourceLoader.setDelegate(self, queue: DispatchQueue.global())
-        
         return MediaAVPlayerItem(asset: urlAsset, cacheKey: cacheKey)
     }
 }
@@ -357,18 +357,18 @@ private extension MediaPlayer {
         return didRespondFully
     }
     
-    private func releaseCacheData() {
+    private func releaseDataTask() {
+        guard pendingRequests.isEmpty == false else { return }
+        
         downloadDataTask?.cancel()
         downloadDataTask = nil
         downloadSession = nil
         downloadAudioData = nil
         downloadResponse = nil
         originalScheme = nil
-
-        if pendingRequests.count > 0 {
-            for request in pendingRequests {
-                request.finishLoading()
-            }
+        
+        for request in pendingRequests {
+            request.finishLoading()
         }
         
         pendingRequestQueue.sync {
@@ -417,7 +417,7 @@ extension MediaPlayer: URLSessionDataDelegate {
     
     public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         defer {
-            releaseCacheData()
+            releaseDataTask()
         }
         
         sessionHasFinishedLoading = true
@@ -430,14 +430,14 @@ extension MediaPlayer: URLSessionDataDelegate {
         processPendingRequests()
         
         guard let audioDataToWrite = downloadAudioData,
-            let itemKeyForCache = playerItem?.cacheKey else {
+              let itemKeyForCache = playerItem?.cacheKey else {
             return
         }
         
         MediaCacheManager.saveMediaData(
             mediaData: audioDataToWrite,
             cacheKey: itemKeyForCache
-            ) ? log.debug("SaveComplete: \(itemKeyForCache)") : log.error("SaveFailed")
+        ) ? log.debug("SaveComplete: \(itemKeyForCache)") : log.error("SaveFailed")
     }
 }
 
@@ -445,7 +445,8 @@ extension MediaPlayer: URLSessionDataDelegate {
 
 private extension MediaPlayer {
     func addPlayerItemObserver(object: MediaAVPlayerItem) {
-        playerStatusObserver = object.observe(NuguCoreNotification.MediaPlayerItem.PlaybackStatus.self, queue: nil) { (notification) in
+        playerStatusObserver = object.observe(NuguCoreNotification.MediaPlayerItem.PlaybackStatus.self, queue: nil) { [weak self] (notification) in
+            guard let self else { return }
             log.debug("playback status changed to: \(notification)")
             
             switch notification {
@@ -453,7 +454,6 @@ private extension MediaPlayer {
                 if let cacheKey = object.cacheKey {
                     MediaCacheManager.setModifiedDateForCacheFile(key: cacheKey)
                 }
-
             case .failed:
                 log.debug("playback failed reason: \(object.error.debugDescription)")
                 self.delegate?.mediaPlayerStateDidChange(.error(error: object.error ?? MediaPlayableError.unknown), mediaPlayer: self)
