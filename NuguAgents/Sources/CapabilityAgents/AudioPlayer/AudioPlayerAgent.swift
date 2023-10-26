@@ -224,7 +224,7 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
         }
 
         if let playlist = self.currentPlaylist {
-            payload["playlist"] = playlist.token
+            payload["playlistToken"] = playlist.token
             payload["playlistVisible"] = self.currentPlaylist != nil
         }
         
