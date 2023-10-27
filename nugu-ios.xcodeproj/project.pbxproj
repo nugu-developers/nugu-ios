@@ -391,6 +391,7 @@
 		73E8F35326C3C31500B99140 /* SpeechRecognizerAggregatorState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73E8F35226C3C31500B99140 /* SpeechRecognizerAggregatorState.swift */; };
 		73F0B71925CABC800025FC6A /* NuguClient+Builder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F0B71825CABC800025FC6A /* NuguClient+Builder.swift */; };
 		73F0B72F25CAC4930025FC6A /* AudioSessionManagerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F0B72E25CAC4930025FC6A /* AudioSessionManagerDelegate.swift */; };
+		73F0DF882A78A13000533B1B /* NuguClientConst.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F0DF872A78A13000533B1B /* NuguClientConst.swift */; };
 		75021E4E259431B50014537C /* DisplayWebViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75021E4D259431B50014537C /* DisplayWebViewPresenter.swift */; };
 		75021E64259436930014537C /* DisplayWebViewPresenterDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75021E63259436930014537C /* DisplayWebViewPresenterDelegate.swift */; };
 		75021EAC25945E670014537C /* AudioDisplayViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75021EAB25945E670014537C /* AudioDisplayViewPresenter.swift */; };
@@ -530,6 +531,7 @@
 		E6BE047E2A0BA1BD00AE29E3 /* ImageAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6BE047D2A0BA1BD00AE29E3 /* ImageAgent.swift */; };
 		E6FBA02B2A1379C500AF8B05 /* MessengerAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FBA02A2A1379C400AF8B05 /* MessengerAgentProtocol.swift */; };
 		E6FBA02D2A137A9700AF8B05 /* ImageAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FBA02C2A137A9700AF8B05 /* ImageAgentProtocol.swift */; };
+		F6A6B0842AAEFDD900D41DEC /* AudioPlayer2Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A6B0832AAEFDD900D41DEC /* AudioPlayer2Template.swift */; };
 		F6D49D0D296BAD3500510498 /* AudioPlayerPlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D49D0C296BAD3500510498 /* AudioPlayerPlaylist.swift */; };
 		F6D49D0F296BAE9600510498 /* AudioPlayerAgent+PlaylistEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D49D0E296BAE9600510498 /* AudioPlayerAgent+PlaylistEvent.swift */; };
 		F778C001261B096A00B69B32 /* EnumTypedNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = F778C000261B096A00B69B32 /* EnumTypedNotification.swift */; };
@@ -1192,6 +1194,7 @@
 		73E8F35226C3C31500B99140 /* SpeechRecognizerAggregatorState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeechRecognizerAggregatorState.swift; sourceTree = "<group>"; };
 		73F0B71825CABC800025FC6A /* NuguClient+Builder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NuguClient+Builder.swift"; sourceTree = "<group>"; };
 		73F0B72E25CAC4930025FC6A /* AudioSessionManagerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSessionManagerDelegate.swift; sourceTree = "<group>"; };
+		73F0DF872A78A13000533B1B /* NuguClientConst.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguClientConst.swift; sourceTree = "<group>"; };
 		7500490F24766B1500B73DD8 /* AudioDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDisplayView.swift; sourceTree = "<group>"; };
 		75021E4D259431B50014537C /* DisplayWebViewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayWebViewPresenter.swift; sourceTree = "<group>"; };
 		75021E63259436930014537C /* DisplayWebViewPresenterDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayWebViewPresenterDelegate.swift; sourceTree = "<group>"; };
@@ -1330,6 +1333,7 @@
 		E6BE047D2A0BA1BD00AE29E3 /* ImageAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAgent.swift; sourceTree = "<group>"; };
 		E6FBA02A2A1379C400AF8B05 /* MessengerAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessengerAgentProtocol.swift; sourceTree = "<group>"; };
 		E6FBA02C2A137A9700AF8B05 /* ImageAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAgentProtocol.swift; sourceTree = "<group>"; };
+		F6A6B0832AAEFDD900D41DEC /* AudioPlayer2Template.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayer2Template.swift; sourceTree = "<group>"; };
 		F6D49D0C296BAD3500510498 /* AudioPlayerPlaylist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerPlaylist.swift; sourceTree = "<group>"; };
 		F6D49D0E296BAE9600510498 /* AudioPlayerAgent+PlaylistEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AudioPlayerAgent+PlaylistEvent.swift"; sourceTree = "<group>"; };
 		F778C000261B096A00B69B32 /* EnumTypedNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnumTypedNotification.swift; sourceTree = "<group>"; };
@@ -1656,6 +1660,7 @@
 		1F2E803523966B1900569C59 /* Client */ = {
 			isa = PBXGroup;
 			children = (
+				73F0DF872A78A13000533B1B /* NuguClientConst.swift */,
 				1FFFF3D92375735E00C9A177 /* NuguClient.swift */,
 				7386DA9823CF279C002BF24C /* NuguClientDelegate.swift */,
 				73752BC625B8AFA6005C27DA /* NuguClientNotification.swift */,
@@ -3110,6 +3115,7 @@
 				E649867A2833681A001AD733 /* AudioPlayerLyricsTemplate.swift */,
 				E649867B2833681A001AD733 /* AudioPlayer1Template.swift */,
 				F6D49D0C296BAD3500510498 /* AudioPlayerPlaylist.swift */,
+				F6A6B0832AAEFDD900D41DEC /* AudioPlayer2Template.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -4186,6 +4192,7 @@
 				7E341F3D25AFEEFD00734A45 /* SpeechRecognizerAggregator.swift in Sources */,
 				0600C3582570E4CF0071AEF3 /* ConfigurationStore.swift in Sources */,
 				066C9D2E25553EF0000C7800 /* MicInputProvider.swift in Sources */,
+				73F0DF882A78A13000533B1B /* NuguClientConst.swift in Sources */,
 				7330CD84237A77D800FCD6E9 /* KeywordDetector.swift in Sources */,
 				75E623D625E89EC800EAAE3C /* ASRBeepPlayerResourcesURL.swift in Sources */,
 			);
@@ -4476,6 +4483,7 @@
 				7E8050AA2518A69300994786 /* ASRInitiator.swift in Sources */,
 				7ED37D7926044103009A0A24 /* PermissionAgentDirectivePayload.swift in Sources */,
 				06CF28EB2547DE5700CEC3EC /* ContextManager+Rx.swift in Sources */,
+				F6A6B0842AAEFDD900D41DEC /* AudioPlayer2Template.swift in Sources */,
 				7E5F4896243C3C8A00118054 /* SoundAgent.swift in Sources */,
 				1FCAE15725FF0C59001C8061 /* AlertsAgentDirectivePayload.swift in Sources */,
 				737388FE24A46C930018DDD2 /* SystemAgentProtocol.swift in Sources */,

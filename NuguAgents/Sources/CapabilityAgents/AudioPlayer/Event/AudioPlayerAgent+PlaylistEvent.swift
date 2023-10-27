@@ -30,6 +30,9 @@ extension AudioPlayerAgent {
             case playlistItemSelected(token: String, postback: [String: AnyHashable])
             case playlistFavoriteSelected(token: String, postback: [String: AnyHashable])
             case modifyPlaylist(deletedTokens: [String], tokens: [String])
+            
+            case showPlaylistSucceeded
+            case showPlaylistFailed(error: [String: String])
         }
     }
 }
@@ -51,7 +54,12 @@ extension AudioPlayerAgent.PlaylistEvent: Eventable {
         case .modifyPlaylist(deletedTokens: let deletedTokens, tokens: let tokens):
             eventPayload["deletedTokens"] = deletedTokens
             eventPayload["tokens"] = tokens
+        case .showPlaylistSucceeded:
+            break
+        case .showPlaylistFailed(error: let error):
+            eventPayload["error"] = error
         }
+        
         return eventPayload
     }
     
@@ -61,6 +69,10 @@ extension AudioPlayerAgent.PlaylistEvent: Eventable {
             return "ElementSelected"
         case .modifyPlaylist:
             return "ModifyPlaylist"
+        case .showPlaylistSucceeded:
+            return "ShowPlaylistSucceeded"
+        case .showPlaylistFailed:
+            return "ShowPlaylistFailed"
         }
     }
 }

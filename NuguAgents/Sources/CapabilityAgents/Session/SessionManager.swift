@@ -60,11 +60,17 @@ final public class SessionManager: SessionManageable {
     public func set(session: Session) {
         sessionDispatchQueue.async { [weak self] in
             guard let self = self else { return }
-            log.debug(session.dialogRequestId)
-            self.sessions[session.dialogRequestId] = session
-            self.addTimer(session: session)
+            let dialogRequestId = session.dialogRequestId
+            log.debug("Set session, session: \(session)")
+            self.sessions[dialogRequestId] = session
             
-            self.addActiveSession(dialogRequestId: session.dialogRequestId)
+            if activeList[dialogRequestId] == nil {
+                log.debug("Session activeList not exist session, dialogRequestId: \(dialogRequestId)")
+                self.addTimer(session: session)
+            } else {
+                self.addActiveSession(dialogRequestId: session.dialogRequestId)
+            }
+            
             self.post(NuguAgentNotification.Session.Set(session: session))
         }
     }
@@ -101,6 +107,7 @@ final public class SessionManager: SessionManageable {
 
 private extension SessionManager {
     func addTimer(session: Session) {
+        log.debug("Start session remove timer. dialogRequestId: \(session.dialogRequestId)")
         activeTimers[session.dialogRequestId] = Single<Int>.timer(SessionConst.sessionTimeout, scheduler: sessionScheduler)
             .subscribe(onSuccess: { [weak self] _ in
                 log.debug("Timer fired. \(session.dialogRequestId)")

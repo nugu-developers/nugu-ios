@@ -41,7 +41,7 @@ public final class SystemAgent: SystemAgentProtocol {
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "UpdateState", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleUpdateState),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Exception", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleException),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Revoke", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleRevoke),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "NoDirectives", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: { { $1(.finished) } }),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "NoDirectives", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleNoDirectives),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Noop", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: { { $1(.finished) } }),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ResetConnection", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleResetConnection)
     ]
@@ -138,6 +138,16 @@ private extension SystemAgent {
         }
     }
     
+    func handleNoDirectives() -> HandleDirective {
+        return { [weak self] directive, completion in
+            defer { completion(.finished) }
+
+            self?.systemDispatchQueue.async { [weak self] in
+                self?.post(NuguAgentNotification.System.NoDirective(header: directive.header))
+            }
+        }
+    }
+    
     func handleResetConnection() -> HandleDirective {
         return { [weak self] _, completion in
             defer { completion(.finished) }
@@ -173,6 +183,7 @@ private extension SystemAgent {
 extension Notification.Name {
     static let systemAgentDidReceiveExceptionFail = Notification.Name("com.sktelecom.romaine.notification.name.system_agent_did_receive_exception_fail")
     static let systemAgentDidReceiveRevokeDevice = Notification.Name("com.sktelecom.romaine.notification.name.system_agent_did_revoke_device")
+    static let systemAgentDidReceiveNoDirective = Notification.Name("com.sktelecom.romaine.notification.name.system_agent_no_directive")
 }
 
 public extension NuguAgentNotification {
@@ -200,6 +211,17 @@ public extension NuguAgentNotification {
                       let header = from["header"] as? Downstream.Header else { return nil }
                 
                 return RevokeDevice(reason: reason, header: header)
+            }
+        }
+        
+        public struct NoDirective: TypedNotification {
+            static public var name: Notification.Name = .systemAgentDidReceiveNoDirective
+            public let header: Downstream.Header
+            
+            public static func make(from: [String: Any]) -> NoDirective? {
+                guard let header = from["header"] as? Downstream.Header else { return nil }
+                
+                return NoDirective(header: header)
             }
         }
     }

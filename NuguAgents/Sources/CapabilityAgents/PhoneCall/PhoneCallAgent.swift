@@ -25,7 +25,7 @@ import NuguCore
 import RxSwift
 
 public class PhoneCallAgent: PhoneCallAgentProtocol {
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .phoneCall, version: "1.3")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .phoneCall, version: "1.4")
     
     // PhoneCallAgentProtocol
     public weak var delegate: PhoneCallAgentDelegate?

@@ -278,6 +278,8 @@ public class NuguClient {
     // Private
     private var pausedByInterruption = false
     private let backgroundFocusHolder: BackgroundFocusHolder
+    private var audioDeactivateWorkItem: DispatchWorkItem?
+    private let directiveConnectionQueue = DispatchQueue(label: "com.sktelecom.romaine.NuguClientKit.directive_connection")
     
     init(
         contextManager: ContextManageable,
@@ -421,14 +423,22 @@ public extension NuguClient {
      The server can send some directives at certain times.
      */
     func startReceiveServerInitiatedDirective(completion: ((StreamDataState) -> Void)? = nil) {
-        ConfigurationStore.shared.registryServerUrl { [weak self] result in
-            switch result {
-            case .failure(let error):
-                completion?(.error(error))
-            case .success(let url):
-                NuguServerInfo.registryServerAddress = url
-                self?.streamDataRouter.startReceiveServerInitiatedDirective(completion: completion)
+        directiveConnectionQueue.async { [weak self] in
+            let sema = DispatchSemaphore(value: .zero)
+            ConfigurationStore.shared.registryServerUrl { [weak self] result in
+                switch result {
+                case .failure(let error):
+                    sema.signal()
+                    completion?(.error(error))
+                case .success(let url):
+                    NuguServerInfo.registryServerAddress = url
+                    self?.streamDataRouter.startReceiveServerInitiatedDirective(completion: { [weak sema] state in
+                        sema?.signal()
+                        completion?(state)
+                    })
+                }
             }
+            sema.wait()
         }
     }
     
@@ -436,7 +446,9 @@ public extension NuguClient {
      Stop receiving server-initiated-directive.
      */
     func stopReceiveServerInitiatedDirective() {
-        streamDataRouter.stopReceiveServerInitiatedDirective()
+        directiveConnectionQueue.async { [weak self] in
+            self?.streamDataRouter.stopReceiveServerInitiatedDirective()
+        }
     }
     
     /// Send event that needs a text-based recognition
@@ -541,6 +553,10 @@ extension NuguClient: FocusDelegate {
             return delegate?.nuguClientShouldUpdateAudioSessionForFocusAquire() == true
         }
         
+        if let audioDeactivateWorkItem = audioDeactivateWorkItem {
+            audioDeactivateWorkItem.cancel()
+        }
+        
         return audioSessionManager.updateAudioSession(requestingFocus: true) == true
     }
     
@@ -550,8 +566,12 @@ extension NuguClient: FocusDelegate {
             return
         }
         
-        audioSessionManager.notifyAudioSessionDeactivation()
+        let audioDeactivateWorkItem = DispatchWorkItem {
+            audioSessionManager.notifyAudioSessionDeactivation()
+        }
         
+        DispatchQueue.global().asyncAfter(deadline: .now() + NuguClientConst.audioSessionDeactivationDelay, execute: audioDeactivateWorkItem)
+        self.audioDeactivateWorkItem = audioDeactivateWorkItem
     }
 }
 
@@ -650,6 +670,10 @@ extension NuguClient {
 // MARK: - AudioSessionManagerDelegate
 
 extension NuguClient: AudioSessionManagerDelegate {
+    public var allowsUpdateAudioSessionActivation: Bool {
+        delegate?.nuguClientAllowsAcitveAudioSession() ?? true
+    }
+    
     private func setupAudioSessionManager() {
         audioSessionManager?.delegate = self
     }

@@ -45,6 +45,9 @@ public protocol NuguClientDelegate: AnyObject {
     /// Notify that nugu client won't play sound anymore.
     func nuguClientDidReleaseAudioSession()
     
+    /// Check Can ActiveAudioSessiong
+    func nuguClientAllowsAcitveAudioSession() -> Bool
+    
     // speech recognizer aggregator state related
     
     /// Notify that  nugu client speech-related state has been changed
@@ -94,6 +97,7 @@ public extension NuguClientDelegate {
     // even if it is optional delegate method.
     // Do proper stuffs when NUGU SDK has released using audio session.
     func nuguClientDidReleaseAudioSession() {}
+    func nuguClientAllowsAcitveAudioSession() -> Bool { return true }
     
     // speech recognizer aggregator state related
     func nuguClientDidChangeSpeechState(_ state: SpeechRecognizerAggregatorState) {}

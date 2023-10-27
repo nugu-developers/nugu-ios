@@ -344,16 +344,19 @@ private extension RoutineExecuter {
         let completion: ((StreamDataState) -> Void) = { [weak self] result in
             log.debug(result)
             if case .error = result {
-                self?.doNextAction()
+                self?.pause()
             }
         }
         
         if let actionTimeout = action.actionTimeoutInMilliseconds,
            .zero < actionTimeout {
             state = .suspended
-            DispatchQueue.global().asyncAfter(deadline: .now() + NuguTimeInterval(milliseconds: actionTimeout).seconds) { [weak self] in
+            
+            let workItem = DispatchWorkItem { [weak self] in
                 self?.delegate?.routineExecuterShouldSendActionTriggerTimout(token: action.token)
             }
+            actionWorkItem = workItem
+            routineDispatchQueue.asyncAfter(deadline: .now() + NuguTimeInterval(milliseconds: actionTimeout).seconds, execute: workItem)
         }
         
         log.debug(action.type)
@@ -364,12 +367,14 @@ private extension RoutineExecuter {
                 doNextAction()
                 return
             }
-            if let playServiceId = action.playServiceId {
-                handlingEvent = textAgent.requestTextInput(text: text, token: action.token, requestType: .specific(playServiceId: playServiceId), completion: completion)
-                
-            } else {
-                handlingEvent = textAgent.requestTextInput(text: text, token: action.token, requestType: .normal, completion: completion)
-            }
+            let dynamicSource: TextInputSource = .dynamic("DYNAMIC_ROUTINE_ACTION")
+            handlingEvent = textAgent.requestTextInput(
+                text: text,
+                token: action.token,
+                playServiceId: action.playServiceId,
+                source: dynamicSource,
+                completion: completion
+            )
         case .data:
             if let eventIdentifier = delegate?.routineExecuterShouldRequestAction(action: action, referrerDialogRequestId: routine.dialogRequestId, completion: completion) {
                 handlingEvent = eventIdentifier.dialogRequestId
@@ -380,7 +385,7 @@ private extension RoutineExecuter {
     }
     
     func doNextAction() {
-        guard let action = currentAction else { return }
+        guard let action = currentAction, state == .playing else { return }
         actionWorkItem?.cancel()
         if shouldDelayAction, let delay = currentAction?.muteDelay {
             log.debug("Delaying action using mute delay, delay: \(delay.dispatchTimeInterval)")
@@ -390,7 +395,6 @@ private extension RoutineExecuter {
             doActionAfter(delay: delay)
         } else {
             delegate?.routineExecuterDidFinishProcessingAction(action)
-            guard state == .playing else { return }
             guard hasNextAction else {
                 doFinish()
                 return
