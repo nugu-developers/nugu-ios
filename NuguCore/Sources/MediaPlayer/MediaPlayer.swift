@@ -81,6 +81,7 @@ extension MediaPlayer {
         mediaPlayer.replaceCurrentItem(with: nil)
         removePlayerItemObserver()  // CHECK-ME: 타이밍 이슈 없을지 확인
         
+        downloadAudioData = nil
         playerItem = nil
         player = nil
         
@@ -114,13 +115,12 @@ extension MediaPlayer {
     }
     
     public func seek(to offset: TimeIntervallic, completion: ((EndedUp<Error>) -> Void)?) {
-        guard
-            let mediaPlayer = player,
-            mediaPlayer.currentItem != nil else {
-                completion?(.failure(MediaPlayableError.notPrepareSource))
-                return
+        guard let mediaPlayer = player,
+              mediaPlayer.currentItem != nil else {
+            completion?(.failure(MediaPlayableError.notPrepareSource))
+            return
         }
-
+        
         mediaPlayer.seek(to: offset.cmTime)
         completion?(.success)
     }
@@ -204,13 +204,13 @@ extension MediaPlayer: MediaUrlDataSource {
         playerItem.cacheKey = cacheKey
         addPlayerItemObserver(object: playerItem)
         self.playerItem = playerItem
-
+        
         player = AVQueuePlayer(playerItem: playerItem)
         
         if offset.seconds > 0 {
             player?.seek(to: offset.cmTime)
         }
-
+        
     }
 }
 
@@ -244,28 +244,29 @@ extension MediaPlayer {
 
 extension MediaPlayer: AVAssetResourceLoaderDelegate {
     public func resourceLoader(_ resourceLoader: AVAssetResourceLoader, shouldWaitForLoadingOfRequestedResource loadingRequest: AVAssetResourceLoadingRequest) -> Bool {
-        guard let originalScheme = originalScheme else {
-            log.error("originalScheme should not be nil")
-            return false
-        }
-        
         pendingRequestQueue.sync {
             _ = pendingRequests.insert(loadingRequest)
         }
         
-        if sessionHasFinishedLoading == true {
+        guard (sessionHasFinishedLoading ?? false) == false else {
             processPendingRequests()
+            return true
         }
         
         if downloadSession == nil {
             guard let url = loadingRequest.request.url,
-            var urlToConvert = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
+                  var urlToConvert = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
                 log.error("intercepted url is invalid")
                 return false
             }
             
-            sessionHasFinishedLoading = false
+            guard let originalScheme = originalScheme else {
+                log.error("originalScheme should not be nil")
+                return false
+            }
+            
             urlToConvert.scheme = originalScheme
+            sessionHasFinishedLoading = false
             
             guard let convertedUrl = urlToConvert.url else {
                 log.error("intercepted url is invalid")
@@ -314,7 +315,7 @@ private extension MediaPlayer {
     
     func fillInContentInformation(contentInformationRequest: AVAssetResourceLoadingContentInformationRequest?) {
         guard let downloadResponse = downloadResponse,
-            let mimeType = downloadResponse.mimeType else { return }
+              let mimeType = downloadResponse.mimeType else { return }
         
         let unmanagedFileUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, mimeType as CFString, nil)
         guard let contentType = unmanagedFileUTI?.takeRetainedValue() else {
@@ -361,11 +362,10 @@ private extension MediaPlayer {
         downloadDataTask?.cancel()
         downloadDataTask = nil
         downloadSession = nil
-        downloadAudioData = nil
         downloadResponse = nil
         originalScheme = nil
-
-        if pendingRequests.count > 0 {
+        
+        if pendingRequests.isEmpty == false {
             for request in pendingRequests {
                 request.finishLoading()
             }
@@ -406,7 +406,7 @@ extension MediaPlayer: URLSessionDataDelegate {
         self.downloadAudioData?.append(data)
         
         if let downloadAudioData = downloadAudioData,
-            let expectedDataLength = expectedDataLength {
+           let expectedDataLength = expectedDataLength {
             log.debug("\(Float(downloadAudioData.count) / Float(expectedDataLength))")
         } else {
             log.debug("expectedDataLength should not be nil!")
@@ -418,9 +418,8 @@ extension MediaPlayer: URLSessionDataDelegate {
     public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         defer {
             releaseCacheData()
+            sessionHasFinishedLoading = true
         }
-        
-        sessionHasFinishedLoading = true
         
         if error != nil {
             log.error("\(error!)")
@@ -430,14 +429,14 @@ extension MediaPlayer: URLSessionDataDelegate {
         processPendingRequests()
         
         guard let audioDataToWrite = downloadAudioData,
-            let itemKeyForCache = playerItem?.cacheKey else {
+              let itemKeyForCache = playerItem?.cacheKey else {
             return
         }
         
         MediaCacheManager.saveMediaData(
             mediaData: audioDataToWrite,
             cacheKey: itemKeyForCache
-            ) ? log.debug("SaveComplete: \(itemKeyForCache)") : log.error("SaveFailed")
+        ) ? log.debug("SaveComplete: \(itemKeyForCache)") : log.error("SaveFailed")
     }
 }
 
@@ -453,11 +452,11 @@ private extension MediaPlayer {
                 if let cacheKey = object.cacheKey {
                     MediaCacheManager.setModifiedDateForCacheFile(key: cacheKey)
                 }
-
+                
             case .failed:
                 log.debug("playback failed reason: \(object.error.debugDescription)")
                 self.delegate?.mediaPlayerStateDidChange(.error(error: object.error ?? MediaPlayableError.unknown), mediaPlayer: self)
-
+                
             default:
                 break
             }
