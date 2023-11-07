@@ -28,6 +28,7 @@ public enum SystemAgentExceptionCode: Equatable {
         case playRouterProcessingException = "PLAY_ROUTER_PROCESSING_EXCEPTION"
         case ttsSpeakingException = "TTS_SPEAKING_EXCEPTION"
         case internalServiceException = "INTERNAL_SERVICE_EXCEPTION"
+        case concurrentConnectionException = "CONCURRENT_CONNECTION_EXCEPTION"
     }
     
     /// <#Description#>
