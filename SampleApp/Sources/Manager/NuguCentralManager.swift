@@ -332,7 +332,7 @@ private extension NuguCentralManager {
                 self.localTTSAgent.playLocalTTS(type: .deviceGatewayPlayRouterConnectionError)
             case .ttsSpeakingException:
                 self.localTTSAgent.playLocalTTS(type: .deviceGatewayTTSConnectionError)
-            case .unauthorizedRequestException:
+            case .unauthorizedRequestException, .concurrentConnectionException:
                 self.refreshToken { [weak self] result in
                     switch result {
                     case .success:
