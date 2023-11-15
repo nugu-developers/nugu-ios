@@ -555,7 +555,6 @@ private extension AudioPlayerAgent {
                 return
             }
             
-//            self.currentPlaylist = nil
             self.stop(player: player, cancelAssociation: true)
         }
     }
