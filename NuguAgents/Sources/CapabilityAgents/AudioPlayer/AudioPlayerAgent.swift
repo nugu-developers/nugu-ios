@@ -253,6 +253,7 @@ public extension AudioPlayerAgent {
         audioPlayerDispatchQueue.async { [weak self] in
             guard let player = self?.latestPlayer else { return }
             
+            self?.currentPlaylist = nil
             self?.stop(player: player, cancelAssociation: true)
         }
     }
@@ -554,6 +555,7 @@ private extension AudioPlayerAgent {
                 return
             }
             
+//            self.currentPlaylist = nil
             self.stop(player: player, cancelAssociation: true)
         }
     }
