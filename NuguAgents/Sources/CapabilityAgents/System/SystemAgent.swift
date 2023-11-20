@@ -167,7 +167,7 @@ private extension SystemAgent {
             
             self?.systemDispatchQueue.async { [weak self] in
                 log.info("")
-                self?.post(NuguAgentNotification.System.TermiateApp(header: directive.header))
+                self?.post(NuguAgentNotification.System.TermiateApp(header: directive.header, data: directive.payload))
             }
         }
     }
@@ -178,7 +178,7 @@ private extension SystemAgent {
             
             self?.systemDispatchQueue.async { [weak self] in
                 log.info("")
-                self?.post(NuguAgentNotification.System.RequireUpdate(header: directive.header))
+                self?.post(NuguAgentNotification.System.RequireUpdate(header: directive.header, data: directive.payload))
             }
         }
     }
@@ -256,22 +256,26 @@ public extension NuguAgentNotification {
         public struct TermiateApp: TypedNotification {
             static public var name: Notification.Name = .systemAgentDidReceiveTermiateApp
             public let header: Downstream.Header
+            public let data: Data
             
             public static func make(from: [String : Any]) -> TermiateApp? {
-                guard let header = from["header"] as? Downstream.Header else { return nil }
+                guard let header = from["header"] as? Downstream.Header,
+                      let data = from["data"] as? Data else { return nil }
                 
-                return TermiateApp(header: header)
+                return TermiateApp(header: header, data: data)
             }
         }
         
         public struct RequireUpdate: TypedNotification {
             static public var name : Notification.Name = .systemAgentDidReceiveRequireUpdate
             public let header: Downstream.Header
+            public let data: Data
             
             public static func make(from: [String : Any]) -> RequireUpdate? {
-                guard let header = from["header"] as? Downstream.Header else { return nil }
+                guard let header = from["header"] as? Downstream.Header,
+                      let data = from["data"] as? Data else { return nil }
                 
-                return RequireUpdate(header: header)
+                return RequireUpdate(header: header, data: data)
             }
         }
     }
