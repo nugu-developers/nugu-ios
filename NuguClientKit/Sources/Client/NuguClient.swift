@@ -468,6 +468,7 @@ public extension NuguClient {
         token: String? = nil,
         source: TextInputSource? = nil,
         requestType: TextAgentRequestType,
+        roomId: String? = nil,
         completion: ((StreamDataState) -> Void)? = nil
     ) -> String {
         dialogStateAggregator.isChipsRequestInProgress = true
@@ -476,7 +477,8 @@ public extension NuguClient {
             text: text,
             token: token,
             source: source,
-            requestType: requestType
+            requestType: requestType,
+            roomId: roomId
         ) { [weak self] state in
             switch state {
             case .sent:
@@ -505,6 +507,7 @@ public extension NuguClient {
         token: String? = nil,
         playServiceId: String? = nil,
         source: TextInputSource? = nil,
+        roomId: String? = nil,
         completion: ((StreamDataState) -> Void)? = nil
     ) -> String {
         dialogStateAggregator.isChipsRequestInProgress = true
@@ -513,7 +516,8 @@ public extension NuguClient {
             text: text,
             token: token,
             playServiceId: playServiceId,
-            source: source
+            source: source,
+            roomId: roomId
         ) { [weak self] state in
             switch state {
             case .sent:

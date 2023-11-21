@@ -38,6 +38,7 @@ public protocol TextAgentProtocol: CapabilityAgentable {
         token: String?,
         source: TextInputSource?,
         requestType: TextAgentRequestType,
+        roomId: String?,
         completion: ((StreamDataState) -> Void)?
     ) -> String
     
@@ -51,6 +52,7 @@ public protocol TextAgentProtocol: CapabilityAgentable {
         token: String?,
         playServiceId: String?,
         source: TextInputSource?,
+        roomId: String?,
         completion: ((StreamDataState) -> Void)?
     ) -> String
 }
@@ -62,13 +64,15 @@ public extension TextAgentProtocol {
         text: String,
         token: String? = nil,
         source: TextInputSource? = nil,
-        requestType: TextAgentRequestType
+        requestType: TextAgentRequestType,
+        roomId: String? = nil
     ) -> String {
         return requestTextInput(
             text: text,
             token: token,
             source: source,
             requestType: requestType,
+            roomId: roomId,
             completion: nil
         )
     }
@@ -78,6 +82,7 @@ public extension TextAgentProtocol {
         token: String? = nil,
         source: TextInputSource? = nil,
         requestType: TextAgentRequestType,
+        roomId: String? = nil,
         completion: ((StreamDataState) -> Void)?
     ) -> String {
         return requestTextInput(
@@ -85,6 +90,7 @@ public extension TextAgentProtocol {
             token: token,
             source: source,
             requestType: requestType,
+            roomId: roomId,
             completion: completion
         )
     }
@@ -94,6 +100,7 @@ public extension TextAgentProtocol {
         token: String? = nil,
         playServiceId: String? = nil,
         source: TextInputSource? = nil,
+        roomId: String? = nil,
         completion: ((StreamDataState) -> Void)? = nil
     ) -> String {
         requestTextInput(
@@ -101,6 +108,7 @@ public extension TextAgentProtocol {
             token: token,
             playServiceId: playServiceId,
             source: source,
+            roomId: roomId,
             completion: completion
         )
     }

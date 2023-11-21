@@ -119,6 +119,7 @@ extension TextAgent {
         token: String?,
         source: TextInputSource?,
         requestType: TextAgentRequestType,
+        roomId: String?,
         completion: ((StreamDataState) -> Void)?
     ) -> String {
         sendFullContextEvent(
@@ -138,6 +139,7 @@ extension TextAgent {
         token: String?,
         playServiceId: String?,
         source: TextInputSource?,
+        roomId: String?,
         completion: ((StreamDataState) -> Void)?
     ) -> String {
         sendFullContextEvent(
@@ -327,6 +329,7 @@ private extension TextAgent {
         token: String?,
         source: TextInputSource? = nil,
         requestType: TextAgentRequestType,
+        roomId: String? = nil,
         referrerDialogRequestId: String? = nil
     ) -> Single<Eventable> {
         return Single<[String: AnyHashable]>.create { [weak self] single in
@@ -356,6 +359,10 @@ private extension TextAgent {
                         attributes["interactionControl"] = interactionControlDictionary
                     }
                     
+                    if let roomId = roomId {
+                        attributes["roomId"] = roomId
+                    }
+                    
                     return attributes
                 }
                 
@@ -377,6 +384,7 @@ private extension TextAgent {
         token: String?,
         playServiceId: String?,
         source: TextInputSource? = nil,
+        roomId: String? = nil,
         referrerDialogRequestId: String? = nil
     ) -> Single<Eventable> {
         return Single<[String: AnyHashable]>.create { [weak self] single in
@@ -402,6 +410,10 @@ private extension TextAgent {
                    let interactionControlData = try? JSONEncoder().encode(interactionControl),
                    let interactionControlDictionary = try? JSONSerialization.jsonObject(with: interactionControlData, options: []) as? [String: AnyHashable] {
                     attributes["interactionControl"] = interactionControlDictionary
+                }
+                
+                if let roomId = roomId {
+                    attributes["roomId"] = roomId
                 }
                     
                 single(.success(attributes))
