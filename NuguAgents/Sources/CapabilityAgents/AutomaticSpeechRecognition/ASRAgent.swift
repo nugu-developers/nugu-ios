@@ -255,6 +255,7 @@ public final class ASRAgent: ASRAgentProtocol {
 public extension ASRAgent {
     @discardableResult func startRecognition(
         initiator: ASRInitiator,
+        roomId: String?,
         completion: ((StreamDataState) -> Void)?
     ) -> String {
         log.debug("startRecognition, initiator: \(initiator)")
@@ -268,7 +269,12 @@ public extension ASRAgent {
                 return
             }
          
-            self.startRecognition(initiator: initiator, eventIdentifier: eventIdentifier, completion: completion)
+            self.startRecognition(
+                initiator: initiator,
+                eventIdentifier: eventIdentifier,
+                roomId: roomId,
+                completion: completion
+            )
         }
         
         return eventIdentifier.dialogRequestId
@@ -458,7 +464,12 @@ private extension ASRAgent {
                 }
                 
                 self.asrState = .expectingSpeech
-                self.startRecognition(initiator: .expectSpeech, eventIdentifier: EventIdentifier(), completion: nil)
+                self.startRecognition(
+                    initiator: .expectSpeech,
+                    eventIdentifier: EventIdentifier(),
+                    roomId: asrRequest?.roomId,
+                    completion: nil
+                )
             }
         }
     }
@@ -590,7 +601,7 @@ private extension ASRAgent {
         }
         upstreamDataSender.sendStream(
             Event(
-                typeInfo: .recognize(initiator: asrRequest.initiator, options: asrRequest.options),
+                typeInfo: .recognize(initiator: asrRequest.initiator, options: asrRequest.options, roomId: asrRequest.roomId),
                 dialogAttributes: dialogAttributeStore.requestAttributes(key: expectSpeech?.messageId),
                 referrerDialogRequestId: asrRequest.referrerDialogRequestId
             ).makeEventMessage(
@@ -677,6 +688,7 @@ private extension ASRAgent {
     func startRecognition(
         initiator: ASRInitiator,
         eventIdentifier: EventIdentifier,
+        roomId: String?,
         completion: ((StreamDataState) -> Void)?
     ) {
         let semaphore = DispatchSemaphore(value: 0)
@@ -697,6 +709,7 @@ private extension ASRAgent {
             initiator: initiator,
             options: options,
             referrerDialogRequestId: expectSpeech?.dialogRequestId,
+            roomId: roomId,
             completion: completion
         )
         self.contextManager.getContexts { [weak self] contextPayload in

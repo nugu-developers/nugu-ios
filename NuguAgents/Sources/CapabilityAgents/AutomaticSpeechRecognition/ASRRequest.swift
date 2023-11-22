@@ -27,6 +27,7 @@ struct ASRRequest {
     let initiator: ASRInitiator
     let options: ASROptions
     let referrerDialogRequestId: String?
+    let roomId: String?
     let completion: ((StreamDataState) -> Void)?
     
     var contextPayload: [ContextInfo] = []
