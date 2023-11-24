@@ -548,16 +548,30 @@ extension NuguClient: FocusDelegate {
         focusManager.delegate = self
     }
     
-    public func focusShouldAcquire() -> Bool {
+    public func focusShouldAcquire(completion: @escaping (Result<Bool, Error>) -> Void) {
         guard let audioSessionManager = audioSessionManager else {
-            return delegate?.nuguClientShouldUpdateAudioSessionForFocusAquire() == true
+            completion(.success(delegate?.nuguClientShouldUpdateAudioSessionForFocusAquire() == true))
+            return
         }
         
         if let audioDeactivateWorkItem = audioDeactivateWorkItem {
             audioDeactivateWorkItem.cancel()
         }
         
-        return audioSessionManager.updateAudioSession(requestingFocus: true) == true
+        DispatchQueue.global().async {
+            var isFocusAcquired = false
+            var retryCount: Int = .zero
+            repeat {
+                if .zero < retryCount {
+                    Thread.sleep(forTimeInterval: 1)
+                }
+                
+                isFocusAcquired = audioSessionManager.updateAudioSession(requestingFocus: true)
+                retryCount += 1
+            } while retryCount < 3 || isFocusAcquired == false
+            
+            completion(.success(isFocusAcquired))
+        }
     }
     
     public func focusShouldRelease() {

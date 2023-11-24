@@ -73,42 +73,46 @@ public extension FocusManager {
     
     func requestFocus(channelDelegate: FocusChannelDelegate) {
         focusDispatchQueue.sync { [weak self] in
-            guard let self = self else { return }
-            guard self.channelInfos.object(forDelegate: channelDelegate) != nil else {
+            guard let self else { return }
+            guard channelInfos.object(forDelegate: channelDelegate) != nil else {
                 log.warning("\(channelDelegate): Channel not registered")
                 return
             }
-            guard self.delegate?.focusShouldAcquire() == true else {
-                log.warning("Focus should not acquire. \(channelDelegate.focusChannelPriority())")
-                self.update(channelDelegate: channelDelegate, focusState: .nothing)
-                return
-            }
             
-            guard self.foregroundChannelDelegate !== channelDelegate else {
-                self.update(channelDelegate: channelDelegate, focusState: .foreground)
-                return
-            }
-            
-            // Move current foreground channel to background If Its priority is lower than requested.
-            if let foregroundChannelDelegate = self.foregroundChannelDelegate,
-                channelDelegate.focusChannelPriority().requestPriority >= foregroundChannelDelegate.focusChannelPriority().maintainPriority {
-                self.update(channelDelegate: foregroundChannelDelegate, focusState: .background)
-            }
+            delegate?.focusShouldAcquire { [weak self] result in
+                guard let self else { return }
+                if case .success(let success) = result, success {
+                    guard foregroundChannelDelegate !== channelDelegate else {
+                        update(channelDelegate: channelDelegate, focusState: .foreground)
+                        return
+                    }
+                    
+                    // Move current foreground channel to background If Its priority is lower than requested.
+                    if let foregroundChannelDelegate = foregroundChannelDelegate,
+                        channelDelegate.focusChannelPriority().requestPriority >= foregroundChannelDelegate.focusChannelPriority().maintainPriority {
+                        update(channelDelegate: foregroundChannelDelegate, focusState: .background)
+                    }
 
-            if let prepareChannelDelegate = self.prepareChannelDelegate,
-               prepareChannelDelegate !== channelDelegate,
-               channelDelegate.focusChannelPriority().requestPriority < prepareChannelDelegate.focusChannelPriority().requestPriority {
-                // Prepare channel will request focus in the future.
-                self.update(channelDelegate: channelDelegate, focusState: .background)
-            } else if let backgroundChannelDelegate = self.backgroundChannelDelegate,
-               backgroundChannelDelegate !== channelDelegate,
-                channelDelegate.focusChannelPriority().requestPriority < backgroundChannelDelegate.focusChannelPriority().maintainPriority {
-                // Assign a higher background channel to the foreground in the future.
-                self.update(channelDelegate: channelDelegate, focusState: .background)
-            } else if self.foregroundChannelDelegate == nil {
-                self.update(channelDelegate: channelDelegate, focusState: .foreground)
-            } else {
-                self.update(channelDelegate: channelDelegate, focusState: .background)
+                    if let prepareChannelDelegate = prepareChannelDelegate,
+                       prepareChannelDelegate !== channelDelegate,
+                       channelDelegate.focusChannelPriority().requestPriority < prepareChannelDelegate.focusChannelPriority().requestPriority {
+                        // Prepare channel will request focus in the future.
+                        update(channelDelegate: channelDelegate, focusState: .background)
+                    } else if let backgroundChannelDelegate = backgroundChannelDelegate,
+                       backgroundChannelDelegate !== channelDelegate,
+                        channelDelegate.focusChannelPriority().requestPriority < backgroundChannelDelegate.focusChannelPriority().maintainPriority {
+                        // Assign a higher background channel to the foreground in the future.
+                        update(channelDelegate: channelDelegate, focusState: .background)
+                    } else if foregroundChannelDelegate == nil {
+                        update(channelDelegate: channelDelegate, focusState: .foreground)
+                    } else {
+                        update(channelDelegate: channelDelegate, focusState: .background)
+                    }
+                } else {
+                    log.warning("Focus should not acquire. \(channelDelegate.focusChannelPriority())")
+                    update(channelDelegate: channelDelegate, focusState: .nothing)
+                    
+                }
             }
         }
     }

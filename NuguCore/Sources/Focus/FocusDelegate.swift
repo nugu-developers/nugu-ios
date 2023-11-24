@@ -25,7 +25,7 @@ public protocol FocusDelegate: AnyObject {
     /// Determines whether the `AVAudioSession` should be activates.
     ///
     /// This mehthod called When the `FocusManager` receives a `requestFocus:channelDelegate:`
-    func focusShouldAcquire() -> Bool
+    func focusShouldAcquire(completion: @escaping (Result<Bool, Error>) -> Void)
     
     /// Determines whether the `AVAudioSession` should be deactivates.
     func focusShouldRelease()
