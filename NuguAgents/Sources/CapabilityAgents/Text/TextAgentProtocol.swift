@@ -38,7 +38,7 @@ public protocol TextAgentProtocol: CapabilityAgentable {
         token: String?,
         source: TextInputSource?,
         requestType: TextAgentRequestType,
-        roomId: String?,
+        service: [String: AnyHashable]?,
         completion: ((StreamDataState) -> Void)?
     ) -> String
     
@@ -52,7 +52,7 @@ public protocol TextAgentProtocol: CapabilityAgentable {
         token: String?,
         playServiceId: String?,
         source: TextInputSource?,
-        roomId: String?,
+        service: [String: AnyHashable]?,
         completion: ((StreamDataState) -> Void)?
     ) -> String
 }
@@ -65,14 +65,14 @@ public extension TextAgentProtocol {
         token: String? = nil,
         source: TextInputSource? = nil,
         requestType: TextAgentRequestType,
-        roomId: String? = nil
+        service: [String: AnyHashable]? = nil
     ) -> String {
         return requestTextInput(
             text: text,
             token: token,
             source: source,
             requestType: requestType,
-            roomId: roomId,
+            service: service,
             completion: nil
         )
     }
@@ -82,7 +82,7 @@ public extension TextAgentProtocol {
         token: String? = nil,
         source: TextInputSource? = nil,
         requestType: TextAgentRequestType,
-        roomId: String? = nil,
+        service: [String: AnyHashable]? = nil,
         completion: ((StreamDataState) -> Void)?
     ) -> String {
         return requestTextInput(
@@ -90,7 +90,7 @@ public extension TextAgentProtocol {
             token: token,
             source: source,
             requestType: requestType,
-            roomId: roomId,
+            service: service,
             completion: completion
         )
     }
@@ -100,7 +100,7 @@ public extension TextAgentProtocol {
         token: String? = nil,
         playServiceId: String? = nil,
         source: TextInputSource? = nil,
-        roomId: String? = nil,
+        service: [String: AnyHashable]? = nil,
         completion: ((StreamDataState) -> Void)? = nil
     ) -> String {
         requestTextInput(
@@ -108,7 +108,7 @@ public extension TextAgentProtocol {
             token: token,
             playServiceId: playServiceId,
             source: source,
-            roomId: roomId,
+            service: service,
             completion: completion
         )
     }
