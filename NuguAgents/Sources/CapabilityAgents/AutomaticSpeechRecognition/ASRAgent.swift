@@ -30,7 +30,7 @@ import RxSwift
 public final class ASRAgent: ASRAgentProtocol {
     // CapabilityAgentable
     // TODO: ASR interface version 1.1 -> ASR.Recognize(wakeup/power)
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .automaticSpeechRecognition, version: "1.7")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .automaticSpeechRecognition, version: "1.8")
     private let playSyncProperty = PlaySyncProperty(layerType: .asr, contextType: .sound)
     
     // Private
@@ -255,7 +255,7 @@ public final class ASRAgent: ASRAgentProtocol {
 public extension ASRAgent {
     @discardableResult func startRecognition(
         initiator: ASRInitiator,
-        roomId: String?,
+        service: [String: AnyHashable]?,
         completion: ((StreamDataState) -> Void)?
     ) -> String {
         log.debug("startRecognition, initiator: \(initiator)")
@@ -272,7 +272,7 @@ public extension ASRAgent {
             self.startRecognition(
                 initiator: initiator,
                 eventIdentifier: eventIdentifier,
-                roomId: roomId,
+                service: service,
                 completion: completion
             )
         }
@@ -467,7 +467,7 @@ private extension ASRAgent {
                 self.startRecognition(
                     initiator: .expectSpeech,
                     eventIdentifier: EventIdentifier(),
-                    roomId: asrRequest?.roomId,
+                    service: asrRequest?.service,
                     completion: nil
                 )
             }
@@ -601,7 +601,7 @@ private extension ASRAgent {
         }
         upstreamDataSender.sendStream(
             Event(
-                typeInfo: .recognize(initiator: asrRequest.initiator, options: asrRequest.options, roomId: asrRequest.roomId),
+                typeInfo: .recognize(initiator: asrRequest.initiator, options: asrRequest.options, service: asrRequest.service),
                 dialogAttributes: dialogAttributeStore.requestAttributes(key: expectSpeech?.messageId),
                 referrerDialogRequestId: asrRequest.referrerDialogRequestId
             ).makeEventMessage(
@@ -688,7 +688,7 @@ private extension ASRAgent {
     func startRecognition(
         initiator: ASRInitiator,
         eventIdentifier: EventIdentifier,
-        roomId: String?,
+        service: [String: AnyHashable]?,
         completion: ((StreamDataState) -> Void)?
     ) {
         let semaphore = DispatchSemaphore(value: 0)
@@ -709,7 +709,7 @@ private extension ASRAgent {
             initiator: initiator,
             options: options,
             referrerDialogRequestId: expectSpeech?.dialogRequestId,
-            roomId: roomId,
+            service: service,
             completion: completion
         )
         self.contextManager.getContexts { [weak self] contextPayload in

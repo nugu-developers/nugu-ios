@@ -39,7 +39,7 @@ public protocol ASRAgentProtocol: CapabilityAgentable, TypedNotifyable {
     /// - Returns: The dialogRequestId for request.
     @discardableResult func startRecognition(
         initiator: ASRInitiator,
-        roomId: String?,
+        service: [String: AnyHashable]?,
         completion: ((StreamDataState) -> Void)?
     ) -> String
     
@@ -67,7 +67,7 @@ public extension ASRAgentProtocol {
     ///   - options: The options for recognition.
     /// - Returns: The dialogRequestId for request.
     @discardableResult func startRecognition(initiator: ASRInitiator) -> String {
-        return startRecognition(initiator: initiator, roomId: nil, completion: nil)
+        return startRecognition(initiator: initiator, service: nil, completion: nil)
     }
     
     /// This function asks the `ASRAgent` to send a Recognize Event to Server and start streaming from `AudioStream`, which transitions it to the `recognizing` state.
@@ -78,6 +78,6 @@ public extension ASRAgentProtocol {
     ///   - options: The options for recognition.
     /// - Returns: The dialogRequestId for request.
     @discardableResult func startRecognition(initiator: ASRInitiator, completion: ((StreamDataState) -> Void)?) -> String {
-        return startRecognition(initiator: initiator, roomId: nil, completion: completion)
+        return startRecognition(initiator: initiator, service: nil, completion: completion)
     }
 }
