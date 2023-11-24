@@ -24,6 +24,11 @@ import AVFoundation
 import NuguCore
 import NuguAgents
 
+private enum Const {
+    static let maxRetryCount = 3
+    static let retryTimeInterval: TimeInterval = 1
+}
+
 /// <#Description#>
 public class NuguClient {
     public weak var delegate: NuguClientDelegate?
@@ -563,12 +568,12 @@ extension NuguClient: FocusDelegate {
             var retryCount: Int = .zero
             repeat {
                 if .zero < retryCount {
-                    Thread.sleep(forTimeInterval: 1)
+                    Thread.sleep(forTimeInterval: Const.retryTimeInterval)
                 }
                 
                 isFocusAcquired = audioSessionManager.updateAudioSession(requestingFocus: true)
                 retryCount += 1
-            } while retryCount < 3 || isFocusAcquired == false
+            } while retryCount < Const.maxRetryCount && isFocusAcquired == false
             
             completion(.success(isFocusAcquired))
         }
