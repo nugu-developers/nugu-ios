@@ -27,7 +27,7 @@ import RxSwift
 
 public final class SystemAgent: SystemAgentProtocol {
     // CapabilityAgentable
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .system, version: "1.3")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .system, version: "1.4")
     
     // Private
     private let contextManager: ContextManageable
@@ -43,7 +43,9 @@ public final class SystemAgent: SystemAgentProtocol {
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Revoke", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleRevoke),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "NoDirectives", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleNoDirectives),
         DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "Noop", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: { { $1(.finished) } }),
-        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ResetConnection", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleResetConnection)
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "ResetConnection", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleResetConnection),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "TerminateApp", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleTerminateApp),
+        DirectiveHandleInfo(namespace: capabilityAgentProperty.name, name: "RequireUpdate", blockingPolicy: BlockingPolicy(medium: .none, isBlocking: false), directiveHandler: handleRequireUpdate)
     ]
     
     private var disposeBag = DisposeBag()
@@ -158,6 +160,28 @@ private extension SystemAgent {
             }
         }
     }
+    
+    func handleTerminateApp() -> HandleDirective {
+        return { [weak self] directive, completion in
+            defer { completion(.finished) }
+            
+            self?.systemDispatchQueue.async { [weak self] in
+                log.info("")
+                self?.post(NuguAgentNotification.System.TermiateApp(header: directive.header, data: directive.payload))
+            }
+        }
+    }
+    
+    func handleRequireUpdate() -> HandleDirective {
+        return { [weak self] directive, completion in
+            defer { completion(.finished) }
+            
+            self?.systemDispatchQueue.async { [weak self] in
+                log.info("")
+                self?.post(NuguAgentNotification.System.RequireUpdate(header: directive.header, data: directive.payload))
+            }
+        }
+    }
 }
 
 // MARK: - Private (handle directive)
@@ -184,6 +208,10 @@ extension Notification.Name {
     static let systemAgentDidReceiveExceptionFail = Notification.Name("com.sktelecom.romaine.notification.name.system_agent_did_receive_exception_fail")
     static let systemAgentDidReceiveRevokeDevice = Notification.Name("com.sktelecom.romaine.notification.name.system_agent_did_revoke_device")
     static let systemAgentDidReceiveNoDirective = Notification.Name("com.sktelecom.romaine.notification.name.system_agent_no_directive")
+    static let systemAgentDidReceiveTermiateApp =
+        Notification.Name("com.sktelecom.romaine.notification.name.system_agent_termiate_app")
+    static let systemAgentDidReceiveRequireUpdate =
+        Notification.Name("com.sktelecom.romaine.notification.name.system_agent_require_update")
 }
 
 public extension NuguAgentNotification {
@@ -222,6 +250,32 @@ public extension NuguAgentNotification {
                 guard let header = from["header"] as? Downstream.Header else { return nil }
                 
                 return NoDirective(header: header)
+            }
+        }
+        
+        public struct TermiateApp: TypedNotification {
+            static public var name: Notification.Name = .systemAgentDidReceiveTermiateApp
+            public let header: Downstream.Header
+            public let data: Data
+            
+            public static func make(from: [String : Any]) -> TermiateApp? {
+                guard let header = from["header"] as? Downstream.Header,
+                      let data = from["data"] as? Data else { return nil }
+                
+                return TermiateApp(header: header, data: data)
+            }
+        }
+        
+        public struct RequireUpdate: TypedNotification {
+            static public var name : Notification.Name = .systemAgentDidReceiveRequireUpdate
+            public let header: Downstream.Header
+            public let data: Data
+            
+            public static func make(from: [String : Any]) -> RequireUpdate? {
+                guard let header = from["header"] as? Downstream.Header,
+                      let data = from["data"] as? Data else { return nil }
+                
+                return RequireUpdate(header: header, data: data)
             }
         }
     }
