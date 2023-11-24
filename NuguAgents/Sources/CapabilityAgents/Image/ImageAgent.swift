@@ -31,7 +31,7 @@ private enum Const {
 }
 
 public class ImageAgent: ImageAgentProtocol {
-    public var capabilityAgentProperty: CapabilityAgentProperty = .init(category: .image, version: "1.0")
+    public var capabilityAgentProperty: CapabilityAgentProperty = .init(category: .image, version: "1.1")
     
     // private
     private let directiveSequencer: DirectiveSequenceable
@@ -74,7 +74,7 @@ public class ImageAgent: ImageAgentProtocol {
 public extension ImageAgent {
     @discardableResult func requestSendImage(
         _ image: Data,
-        roomId: String?,
+        service: [String: AnyHashable]?,
         playServiceId: String?,
         completion: ((StreamDataState) -> Void)? = nil
     ) -> String {
@@ -90,7 +90,7 @@ public extension ImageAgent {
                 guard let self = self else { return }
                 self.upstreamDataSender.sendStream(
                     Event(
-                        typeInfo: .sendImage(roomId: roomId, playServiceId: playServiceId),
+                        typeInfo: .sendImage(service: service, playServiceId: playServiceId),
                         referrerDialogRequestId: nil
                     ).makeEventMessage(
                         property: self.capabilityAgentProperty,
