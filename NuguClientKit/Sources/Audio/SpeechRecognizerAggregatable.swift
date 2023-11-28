@@ -32,7 +32,7 @@ public protocol SpeechRecognizerAggregatable: AnyObject {
     /// - Parameters:
     ///   - initiator: The options for recognition.
     ///   - completion: The completion handler to call when the request is complete.
-    func startListening(initiator: ASRInitiator, completion: ((StreamDataState) -> Void)?)
+    func startListening(initiator: ASRInitiator, requestType: String?, completion: ((StreamDataState) -> Void)?)
     
     /// Start keyword detector with microphone.
     func startListeningWithTrigger(completion: ((Result<Void, Error>) -> Void)?)
@@ -49,8 +49,8 @@ public extension SpeechRecognizerAggregatable {
     /// Start ASR(`ASRAgentProcotol`) with microphone.
     /// - Parameters:
     ///   - initiator: The options for recognition.
-    func startListening(initiator: ASRInitiator) {
-        startListening(initiator: initiator, completion: nil)
+    func startListening(initiator: ASRInitiator, requestType: String? = nil) {
+        startListening(initiator: initiator, requestType: requestType, completion: nil)
     }
     
     func startListeningWithTrigger() {
