@@ -26,7 +26,7 @@ import RxSwift
 
 public final class TextAgent: TextAgentProtocol {
     // CapabilityAgentable
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .text, version: "1.7")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .text, version: "1.8")
     public weak var delegate: TextAgentDelegate?
     
     // Private
@@ -119,6 +119,7 @@ extension TextAgent {
         token: String?,
         source: TextInputSource?,
         requestType: TextAgentRequestType,
+        service: [String: AnyHashable]?,
         completion: ((StreamDataState) -> Void)?
     ) -> String {
         sendFullContextEvent(
@@ -126,7 +127,8 @@ extension TextAgent {
                 text: text,
                 token: token,
                 source: source,
-                requestType: requestType
+                requestType: requestType,
+                service: service
             ),
             completion: completion
         )
@@ -138,6 +140,7 @@ extension TextAgent {
         token: String?,
         playServiceId: String?,
         source: TextInputSource?,
+        service: [String: AnyHashable]?,
         completion: ((StreamDataState) -> Void)?
     ) -> String {
         sendFullContextEvent(
@@ -145,7 +148,8 @@ extension TextAgent {
                 text: text,
                 token: token,
                 playServiceId: playServiceId,
-                source: source
+                source: source,
+                service: service
             ),
             completion: completion
         )
@@ -327,6 +331,7 @@ private extension TextAgent {
         token: String?,
         source: TextInputSource? = nil,
         requestType: TextAgentRequestType,
+        service: [String: AnyHashable]? = nil,
         referrerDialogRequestId: String? = nil
     ) -> Single<Eventable> {
         return Single<[String: AnyHashable]>.create { [weak self] single in
@@ -356,6 +361,10 @@ private extension TextAgent {
                         attributes["interactionControl"] = interactionControlDictionary
                     }
                     
+                    if let service = service {
+                        attributes["service"] = service
+                    }
+                    
                     return attributes
                 }
                 
@@ -377,6 +386,7 @@ private extension TextAgent {
         token: String?,
         playServiceId: String?,
         source: TextInputSource? = nil,
+        service: [String: AnyHashable]? = nil,
         referrerDialogRequestId: String? = nil
     ) -> Single<Eventable> {
         return Single<[String: AnyHashable]>.create { [weak self] single in
@@ -402,6 +412,10 @@ private extension TextAgent {
                    let interactionControlData = try? JSONEncoder().encode(interactionControl),
                    let interactionControlDictionary = try? JSONSerialization.jsonObject(with: interactionControlData, options: []) as? [String: AnyHashable] {
                     attributes["interactionControl"] = interactionControlDictionary
+                }
+                
+                if let service = service {
+                    attributes["service"] = service
                 }
                     
                 single(.success(attributes))
