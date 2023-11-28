@@ -30,7 +30,7 @@ import RxSwift
 public final class ASRAgent: ASRAgentProtocol {
     // CapabilityAgentable
     // TODO: ASR interface version 1.1 -> ASR.Recognize(wakeup/power)
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .automaticSpeechRecognition, version: "1.7")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .automaticSpeechRecognition, version: "1.8")
     private let playSyncProperty = PlaySyncProperty(layerType: .asr, contextType: .sound)
     
     // Private
@@ -255,6 +255,7 @@ public final class ASRAgent: ASRAgentProtocol {
 public extension ASRAgent {
     @discardableResult func startRecognition(
         initiator: ASRInitiator,
+        service: [String: AnyHashable]?,
         completion: ((StreamDataState) -> Void)?
     ) -> String {
         log.debug("startRecognition, initiator: \(initiator)")
@@ -268,7 +269,12 @@ public extension ASRAgent {
                 return
             }
          
-            self.startRecognition(initiator: initiator, eventIdentifier: eventIdentifier, completion: completion)
+            startRecognition(
+                initiator: initiator,
+                eventIdentifier: eventIdentifier,
+                service: service,
+                completion: completion
+            )
         }
         
         return eventIdentifier.dialogRequestId
@@ -458,7 +464,12 @@ private extension ASRAgent {
                 }
                 
                 self.asrState = .expectingSpeech
-                self.startRecognition(initiator: .expectSpeech, eventIdentifier: EventIdentifier(), completion: nil)
+                startRecognition(
+                    initiator: .expectSpeech,
+                    eventIdentifier: EventIdentifier(),
+                    service: asrRequest?.service,
+                    completion: nil
+                )
             }
         }
     }
@@ -590,7 +601,7 @@ private extension ASRAgent {
         }
         upstreamDataSender.sendStream(
             Event(
-                typeInfo: .recognize(initiator: asrRequest.initiator, options: asrRequest.options),
+                typeInfo: .recognize(initiator: asrRequest.initiator, options: asrRequest.options, service: asrRequest.service),
                 dialogAttributes: dialogAttributeStore.requestAttributes(key: expectSpeech?.messageId),
                 referrerDialogRequestId: asrRequest.referrerDialogRequestId
             ).makeEventMessage(
@@ -677,6 +688,7 @@ private extension ASRAgent {
     func startRecognition(
         initiator: ASRInitiator,
         eventIdentifier: EventIdentifier,
+        service: [String: AnyHashable]?,
         completion: ((StreamDataState) -> Void)?
     ) {
         let semaphore = DispatchSemaphore(value: 0)
@@ -697,6 +709,7 @@ private extension ASRAgent {
             initiator: initiator,
             options: options,
             referrerDialogRequestId: expectSpeech?.dialogRequestId,
+            service: service,
             completion: completion
         )
         self.contextManager.getContexts { [weak self] contextPayload in
