@@ -25,7 +25,6 @@ public protocol ImageAgentProtocol: CapabilityAgentable {
     @discardableResult func requestSendImage(
         _ image: Data,
         service: [String: AnyHashable]?,
-        playServiceId: String?,
         completion: ((StreamDataState) -> Void)?
     ) -> String
 }
@@ -35,14 +34,6 @@ public extension ImageAgentProtocol {
         _ image: Data,
         completion: ((StreamDataState) -> Void)?
     ) -> String {
-        requestSendImage(image, service: nil, playServiceId: nil, completion: completion)
-    }
-    
-    @discardableResult func requestSendImage(
-        _ image: Data,
-        service: [String: AnyHashable]?,
-        completion: ((StreamDataState) -> Void)?
-    ) -> String {
-        requestSendImage(image, service: service, playServiceId: nil, completion: completion)
+        requestSendImage(image, service: nil, completion: completion)
     }
 }

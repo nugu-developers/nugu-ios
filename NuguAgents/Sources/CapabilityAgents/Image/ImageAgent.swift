@@ -75,7 +75,6 @@ public extension ImageAgent {
     @discardableResult func requestSendImage(
         _ image: Data,
         service: [String: AnyHashable]?,
-        playServiceId: String?,
         completion: ((StreamDataState) -> Void)? = nil
     ) -> String {
         let eventIdentifier = EventIdentifier()
@@ -90,7 +89,7 @@ public extension ImageAgent {
                 guard let self = self else { return }
                 self.upstreamDataSender.sendStream(
                     Event(
-                        typeInfo: .sendImage(service: service, playServiceId: playServiceId),
+                        typeInfo: .sendImage(service: service),
                         referrerDialogRequestId: nil
                     ).makeEventMessage(
                         property: self.capabilityAgentProperty,
