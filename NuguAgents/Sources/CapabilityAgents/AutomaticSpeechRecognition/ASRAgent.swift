@@ -269,7 +269,7 @@ public extension ASRAgent {
                 return
             }
          
-            self.startRecognition(
+            startRecognition(
                 initiator: initiator,
                 eventIdentifier: eventIdentifier,
                 service: service,
@@ -464,7 +464,7 @@ private extension ASRAgent {
                 }
                 
                 self.asrState = .expectingSpeech
-                self.startRecognition(
+                startRecognition(
                     initiator: .expectSpeech,
                     eventIdentifier: EventIdentifier(),
                     service: asrRequest?.service,
