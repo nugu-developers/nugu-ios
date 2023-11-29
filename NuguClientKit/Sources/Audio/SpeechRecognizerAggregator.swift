@@ -101,7 +101,12 @@ public class SpeechRecognizerAggregator: SpeechRecognizerAggregatable {
 // MARK: - SpeechRecognizerAggregatable
 
 public extension SpeechRecognizerAggregator {
-    func startListening(initiator: ASRInitiator, requestType: String?, completion: ((StreamDataState) -> Void)? = nil) {
+    func startListening(
+        initiator: ASRInitiator,
+        service: [String: AnyHashable]?,
+        requestType: String?,
+        completion: ((StreamDataState) -> Void)? = nil
+    ) {
         recognizeQueue.async { [weak self] in
             guard let self else { return }
             
@@ -116,7 +121,7 @@ public extension SpeechRecognizerAggregator {
                 asrAgent.stopRecognition()
             }
             
-            asrAgent.startRecognition(initiator: initiator, requestType: requestType) { [weak self] state in
+            asrAgent.startRecognition(initiator: initiator, service: service, requestType: requestType) { [weak self] state in
                 guard case .prepared = state else {
                     completion?(state)
                     return
