@@ -256,6 +256,7 @@ public extension ASRAgent {
     @discardableResult func startRecognition(
         initiator: ASRInitiator,
         service: [String: AnyHashable]?,
+        requestType: String?,
         completion: ((StreamDataState) -> Void)?
     ) -> String {
         log.debug("startRecognition, initiator: \(initiator)")
@@ -273,6 +274,7 @@ public extension ASRAgent {
                 initiator: initiator,
                 eventIdentifier: eventIdentifier,
                 service: service,
+                requestType: requestType,
                 completion: completion
             )
         }
@@ -468,6 +470,7 @@ private extension ASRAgent {
                     initiator: .expectSpeech,
                     eventIdentifier: EventIdentifier(),
                     service: asrRequest?.service,
+                    requestType: options.requestType,
                     completion: nil
                 )
             }
@@ -500,7 +503,7 @@ private extension ASRAgent {
                 case .partial:
                     self.asrResult = .partial(text: item.result ?? "", header: directive.header)
                 case .complete:
-                    self.asrResult = .complete(text: item.result ?? "", header: directive.header)
+                    self.asrResult = .complete(text: item.result ?? "", header: directive.header, requestType: item.requestType)
                 case .none:
                     self.asrResult = .none(header: directive.header)
                 case .error:
@@ -689,10 +692,11 @@ private extension ASRAgent {
         initiator: ASRInitiator,
         eventIdentifier: EventIdentifier,
         service: [String: AnyHashable]?,
+        requestType: String?,
         completion: ((StreamDataState) -> Void)?
     ) {
         let semaphore = DispatchSemaphore(value: 0)
-        let options: ASROptions
+        var options: ASROptions
         if let epd = self.expectSpeech?.payload.epd {
             options = ASROptions(
                 maxDuration: epd.maxDuration ?? self.options.maxDuration,
@@ -704,6 +708,7 @@ private extension ASRAgent {
         } else {
             options = self.options
         }
+        options.updateRequestType(requestType)
         asrRequest = ASRRequest(
             eventIdentifier: eventIdentifier,
             initiator: initiator,

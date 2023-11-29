@@ -66,7 +66,8 @@ extension ASRAgent.Event: Eventable {
                     "listen": options.timeout.truncatedMilliSeconds,
                     "maxSpeech": options.maxDuration.truncatedMilliSeconds,
                     "response": 10000
-                ]
+                ],
+                "requestType": options.requestType
             ]
             
             if case let .wakeUpWord(keyword, _, start, end, detection) = initiator {
