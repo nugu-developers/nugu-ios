@@ -259,7 +259,7 @@ private extension AudioPlayer {
                       seconds.isInfinite == false else {
                     return 0
                 }
-                return Int(ceil(seconds))
+                return Int(floor(seconds))
             })
             .filter { [weak self] offset in
                 guard let self = self else { return false }
