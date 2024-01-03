@@ -76,7 +76,7 @@ public extension ImageAgent {
         _ image: Data,
         service: [String: AnyHashable]?,
         completion: ((StreamDataState) -> Void)? = nil
-    ) -> String {
+    ) -> EventIdentifier {
         let eventIdentifier = EventIdentifier()
         
         imageQueue.async { [weak self] in
@@ -113,7 +113,7 @@ public extension ImageAgent {
             }
         }
         
-        return eventIdentifier.dialogRequestId
+        return eventIdentifier
     }
     
     private func resizeToSuitableResolution(imageData: Data) -> Data? {

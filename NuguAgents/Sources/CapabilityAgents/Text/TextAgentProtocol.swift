@@ -55,6 +55,20 @@ public protocol TextAgentProtocol: CapabilityAgentable {
         service: [String: AnyHashable]?,
         completion: ((StreamDataState) -> Void)?
     ) -> String
+    
+    /// Send event that needs a text-based recognition
+    /// - Parameters:
+    ///   - text: The `text` to be recognized
+    ///   - completion: The completion handler to call when the request is complete.
+    /// - Returns: The eventIdentifier for request.
+    @discardableResult func requestTextInput(
+        text: String,
+        token: String?,
+        playServiceId: String?,
+        source: TextInputSource?,
+        service: [String: AnyHashable]?,
+        completion: ((StreamDataState) -> Void)?
+    ) -> EventIdentifier
 }
 
 // MARK: - Default
@@ -110,6 +124,6 @@ public extension TextAgentProtocol {
             source: source,
             service: service,
             completion: completion
-        )
+        ).dialogRequestId
     }
 }
