@@ -510,6 +510,35 @@ public extension NuguClient {
         service: [String: AnyHashable]? = nil,
         completion: ((StreamDataState) -> Void)? = nil
     ) -> String {
+        requestTextInput(
+            text: text,
+            token: token,
+            playServiceId: playServiceId,
+            source: source,
+            service: service,
+            completion: completion
+        ).dialogRequestId
+    }
+    
+    /// Send event that needs a text-based recognition
+    ///
+    /// This function cancel speech recognition.(e.g. `ASRAgentProtocol.startRecognition(:initiator)`)
+    /// Use `NuguClient.textAgent.requestTextInput` directly to request independent of speech recognition.
+    ///
+    /// - Parameters:
+    ///   - text: The `text` to be recognized
+    ///   - token: token
+    ///   - requestType: `TextAgentRequestType`
+    ///   - completion: The completion handler to call when the request is complete
+    /// - Returns: The eventIdentifier for request.
+    @discardableResult func requestTextInput(
+        text: String,
+        token: String? = nil,
+        playServiceId: String? = nil,
+        source: TextInputSource? = nil,
+        service: [String: AnyHashable]? = nil,
+        completion: ((StreamDataState) -> Void)? = nil
+    ) -> EventIdentifier {
         dialogStateAggregator.isChipsRequestInProgress = true
         
         return textAgent.requestTextInput(
