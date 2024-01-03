@@ -98,10 +98,12 @@ public final class ASRAgent: ASRAgentProtocol {
             // `ASRState` -> Event -> `expectSpeechDirective` -> `ASRAgentDelegate`
             switch asrResult {
             case .none:
+                asrState = .idle
                 expectSpeech = nil
             case .partial:
                 break
             case .complete:
+                asrState = .idle
                 expectSpeech = nil
             case .cancel:
                 asrState = .idle
@@ -617,8 +619,6 @@ private extension ASRAgent {
                     guard self?.asrRequest?.eventIdentifier == asrRequest.eventIdentifier else { return }
                     
                     switch state {
-                    case .finished:
-                        self?.asrState = .idle
                     case .error(let error):
                         self?.asrResult = .error(error)
                     case .sent:
