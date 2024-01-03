@@ -142,7 +142,7 @@ extension TextAgent {
         source: TextInputSource?,
         service: [String: AnyHashable]?,
         completion: ((StreamDataState) -> Void)?
-    ) -> String {
+    ) -> EventIdentifier {
         sendFullContextEvent(
             textInput(
                 text: text,
@@ -153,7 +153,6 @@ extension TextAgent {
             ),
             completion: completion
         )
-        .dialogRequestId
     }
 }
 
