@@ -37,6 +37,7 @@ struct ASRExpectSpeech {
         let asrContext: [String: AnyHashable]?
         let epd: EPD?
         let listenTimeoutFailBeep: Bool?
+        let service: [String: AnyHashable]?
 
         struct EPD: Decodable {
             let timeoutMilliseconds: Int?
@@ -55,6 +56,7 @@ extension ASRExpectSpeech.Payload: Decodable {
         case asrContext
         case epd
         case listenTimeoutFailBeep
+        case service
     }
     
     public init(from decoder: Decoder) throws {
@@ -64,6 +66,7 @@ extension ASRExpectSpeech.Payload: Decodable {
         asrContext = try? container.decodeIfPresent([String: AnyHashable].self, forKey: .asrContext)
         epd = try? container.decode(EPD.self, forKey: .epd)
         listenTimeoutFailBeep = try? container.decode(Bool.self, forKey: .listenTimeoutFailBeep)
+        service = try? container.decodeIfPresent([String: AnyHashable].self, forKey: .service)
     }
 }
 
