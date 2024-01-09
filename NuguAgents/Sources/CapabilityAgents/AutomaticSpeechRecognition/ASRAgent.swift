@@ -29,9 +29,10 @@ import RxSwift
 
 public final class ASRAgent: ASRAgentProtocol {
     // CapabilityAgentable
-    // TODO: ASR interface version 1.1 -> ASR.Recognize(wakeup/power)
     public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .automaticSpeechRecognition, version: "1.8")
     private let playSyncProperty = PlaySyncProperty(layerType: .asr, contextType: .sound)
+    
+    public weak var delegate: ASRAgentDelegate?
     
     // Private
     private let focusManager: FocusManageable
@@ -93,7 +94,7 @@ public final class ASRAgent: ASRAgentProtocol {
                 log.error("ASR request: \(String(describing: asrRequest)), result: \(String(describing: asrResult))")
                 return
             }
-            log.info("\(asrResult)")
+            log.info("asrResult: \(asrResult)")
             
             // `ASRState` -> Event -> `expectSpeechDirective` -> `ASRAgentDelegate`
             switch asrResult {
@@ -453,7 +454,7 @@ private extension ASRAgent {
             defer { completion(.finished) }
             
             self?.asrDispatchQueue.sync { [weak self] in
-                guard let self = self else { return }
+                guard let self = self, let delegate = self.delegate else { return }
                 // ex> TTS 도중 stopRecognition 호출.
                 guard let expectSpeech = self.expectSpeech, expectSpeech.messageId == directive.header.messageId else {
                     log.info("Message id does not match")
@@ -464,12 +465,18 @@ private extension ASRAgent {
                     log.warning("ExpectSpeech only allowed in IDLE or BUSY state.")
                     return
                 }
+                let service = expectSpeech.payload.service
+                guard service == nil || delegate.asrAgentWillStartExpectSpeech(service: service) else {
+                    log.warning("ExpectSpeech service field is not nil. service: \(String(describing: service))")
+                    self.asrResult = nil
+                    return
+                }
                 
                 self.asrState = .expectingSpeech
                 startRecognition(
                     initiator: .expectSpeech,
                     eventIdentifier: EventIdentifier(),
-                    service: asrRequest?.service,
+                    service: service,
                     requestType: options.requestType,
                     completion: nil
                 )
