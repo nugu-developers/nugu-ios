@@ -261,6 +261,7 @@ private extension TextAgent {
                     text: payload.text,
                     token: payload.token,
                     requestType: requestType,
+                    service: payload.service,
                     referrerDialogRequestId: directive.header.dialogRequestId
                 ), completion: interactionHandler)
             }
@@ -438,7 +439,8 @@ private extension TextAgentExpectTyping.Payload {
         return [
             "asrContext": asrContext,
             "domainTypes": domainTypes,
-            "playServiceId": playServiceId
+            "playServiceId": playServiceId,
+            "service": service
         ]
     }
 }

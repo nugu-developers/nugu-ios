@@ -27,4 +27,26 @@ struct TextAgentRedirectPayload: Decodable {
     let playServiceId: String
     let targetPlayServiceId: String?
     let interactionControl: InteractionControl?
+    let service: [String: AnyHashable]?
+    
+    enum CodingKeys: String, CodingKey {
+        case text
+        case token
+        case source
+        case playServiceId
+        case targetPlayServiceId
+        case interactionControl
+        case service
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        text = try container.decode(String.self, forKey: .text)
+        token = try container.decode(String.self, forKey: .token)
+        source = try? container.decodeIfPresent(String.self, forKey: .source)
+        playServiceId = try container.decode(String.self, forKey: .playServiceId)
+        targetPlayServiceId = try? container.decodeIfPresent(String.self, forKey: .targetPlayServiceId)
+        interactionControl = try? container.decodeIfPresent(InteractionControl.self, forKey: .interactionControl)
+        service = try? container.decodeIfPresent([String: AnyHashable].self, forKey: .service)
+    }
 }
