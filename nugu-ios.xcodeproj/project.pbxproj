@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -529,6 +529,7 @@
 		E649868A28337649001AD733 /* ControlCenterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E649868928337649001AD733 /* ControlCenterManager.swift */; };
 		E6BE047C2A0BA1A400AE29E3 /* Image+Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6BE047B2A0BA1A400AE29E3 /* Image+Event.swift */; };
 		E6BE047E2A0BA1BD00AE29E3 /* ImageAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6BE047D2A0BA1BD00AE29E3 /* ImageAgent.swift */; };
+		E6F3DCBD2B4CB9D800298A20 /* ASRAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6F3DCBC2B4CB9D800298A20 /* ASRAgentDelegate.swift */; };
 		E6FBA02B2A1379C500AF8B05 /* MessengerAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FBA02A2A1379C400AF8B05 /* MessengerAgentProtocol.swift */; };
 		E6FBA02D2A137A9700AF8B05 /* ImageAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FBA02C2A137A9700AF8B05 /* ImageAgentProtocol.swift */; };
 		F6A6B0842AAEFDD900D41DEC /* AudioPlayer2Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A6B0832AAEFDD900D41DEC /* AudioPlayer2Template.swift */; };
@@ -1331,6 +1332,7 @@
 		E649868928337649001AD733 /* ControlCenterManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControlCenterManager.swift; sourceTree = "<group>"; };
 		E6BE047B2A0BA1A400AE29E3 /* Image+Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Image+Event.swift"; sourceTree = "<group>"; };
 		E6BE047D2A0BA1BD00AE29E3 /* ImageAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAgent.swift; sourceTree = "<group>"; };
+		E6F3DCBC2B4CB9D800298A20 /* ASRAgentDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASRAgentDelegate.swift; sourceTree = "<group>"; };
 		E6FBA02A2A1379C400AF8B05 /* MessengerAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessengerAgentProtocol.swift; sourceTree = "<group>"; };
 		E6FBA02C2A137A9700AF8B05 /* ImageAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAgentProtocol.swift; sourceTree = "<group>"; };
 		F6A6B0832AAEFDD900D41DEC /* AudioPlayer2Template.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayer2Template.swift; sourceTree = "<group>"; };
@@ -2080,6 +2082,7 @@
 				737388F024A46C7F0018DDD2 /* ASROptions.swift */,
 				737388F124A46C7F0018DDD2 /* ASRResult.swift */,
 				737388F224A46C7F0018DDD2 /* ASRState.swift */,
+				E6F3DCBC2B4CB9D800298A20 /* ASRAgentDelegate.swift */,
 			);
 			path = AutomaticSpeechRecognition;
 			sourceTree = "<group>";
@@ -4512,6 +4515,7 @@
 				73152FCC23E0415B00F843C3 /* DisplayRenderingInfo.swift in Sources */,
 				736508652462F7FA00EF4549 /* SktOpusParser.swift in Sources */,
 				7E284D9C24DD2B4A00BF9640 /* InteractionControlManager.swift in Sources */,
+				E6F3DCBD2B4CB9D800298A20 /* ASRAgentDelegate.swift in Sources */,
 				1FD5D19124C82F3B007BA384 /* MediaPlayerAgent+Event.swift in Sources */,
 				737388C924A46C1D0018DDD2 /* ChipsAgentProtocol.swift in Sources */,
 				1FD5D17E24A99993007BA384 /* PhoneCallType.swift in Sources */,
