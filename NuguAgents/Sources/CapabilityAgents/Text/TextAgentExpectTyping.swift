@@ -33,18 +33,21 @@ extension TextAgentExpectTyping {
         let playServiceId: String?
         let domainTypes: [AnyHashable]?
         let asrContext: [String: AnyHashable]?
+        let service: [String: AnyHashable]?
         
         enum CodingKeys: String, CodingKey {
             case playServiceId
             case domainTypes
             case asrContext
+            case service
         }
         
-        public init(from decoder: Decoder) throws {
+        init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             playServiceId = try? container.decode(String.self, forKey: .playServiceId)
             domainTypes = try? container.decode([AnyHashable].self, forKey: .domainTypes)
             asrContext = try? container.decodeIfPresent([String: AnyHashable].self, forKey: .asrContext)
+            service = try? container.decodeIfPresent([String: AnyHashable].self, forKey: .service)
         }
     }
 }
