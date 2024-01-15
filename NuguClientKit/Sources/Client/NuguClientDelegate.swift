@@ -82,6 +82,8 @@ public protocol NuguClientDelegate: AnyObject {
     /// Notify that nugu client server initiated directive state has been changed
     /// - Parameter state: ServerSideEventReceiverState
     func nuguClientServerInitiatedDirectiveRecevierStateDidChange(_ state: ServerSideEventReceiverState)
+    
+    func nuguClientRequestRecognitionWithTriggerContext() -> [String: AnyHashable]
 }
 
 // MARK: - Optional
@@ -109,4 +111,5 @@ public extension NuguClientDelegate {
     func nuguClientDidSend(event: Event, error: Error?) {}
     func nuguClientDidSend(attachment: EventAttachment, error: Error?) {}
     func nuguClientServerInitiatedDirectiveRecevierStateDidChange(_ state: ServerSideEventReceiverState) {}
+    func nuguClientRequestRecognitionWithTriggerContext() -> [String: AnyHashable] { [:] }
 }
