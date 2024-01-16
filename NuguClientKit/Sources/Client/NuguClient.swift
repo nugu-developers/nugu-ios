@@ -148,8 +148,6 @@ public class NuguClient {
      */
     public let nudgeAgent: NudgeAgentProtocol
     
-    public let messengerAgent: MessengerAgentProtocol
-    
     public let imageAgent: ImageAgentProtocol
     
     // Additional Agents
@@ -236,6 +234,12 @@ public class NuguClient {
         upstreamDataSender: streamDataRouter
     )
     
+    public lazy var messengerAgent: MessengerAgentProtocol = MessengerAgent(
+        directiveSequencer: directiveSequencer,
+        contextManager: contextManager,
+        upstreamDataSender: streamDataRouter
+    )
+    
     // Supports
     /**
      Indicates the dialog state.
@@ -312,7 +316,7 @@ public class NuguClient {
         permissionAgent: PermissionAgentProtocol?,
         alertsAgent: AlertsAgentProtocol?,
         nudgeAgent: NudgeAgentProtocol,
-        messengerAgent: MessengerAgentProtocol,
+        messengerAgent: MessengerAgentProtocol?,
         imageAgent: ImageAgentProtocol
     ) {
         // Core
@@ -352,7 +356,6 @@ public class NuguClient {
         self.utilityAgent = utilityAgent
         self.routineAgent = routineAgent
         self.nudgeAgent = nudgeAgent
-        self.messengerAgent = messengerAgent
         self.imageAgent = imageAgent
         
         // Supports
@@ -396,6 +399,10 @@ public class NuguClient {
         
         if let alertsAgent = alertsAgent {
             self.alertsAgent = alertsAgent
+        }
+        
+        if let messengerAgent = messengerAgent {
+            self.messengerAgent = messengerAgent
         }
         
         // Wiring
