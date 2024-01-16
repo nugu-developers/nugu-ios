@@ -277,13 +277,25 @@ extension SpeechRecognizerAggregator: KeywordDetectorDelegate {
     public func keywordDetectorDidDetect(keyword: String?, data: Data, start: Int, end: Int, detection: Int) {
         state = .wakeup(initiator: .wakeUpWord(keyword: keyword, data: data, start: start, end: end, detection: detection))
         
-        asrAgent.startRecognition(initiator: .wakeUpWord(
+        var service: [String: AnyHashable]?
+        var requestType: String?
+        if let context = delegate?.speechRecognizerRequestRecognitionContext() {
+            service = context["service"] as? [String: AnyHashable]
+            requestType = context["requestType"] as? String
+        }
+        let initiator: ASRInitiator = .wakeUpWord(
             keyword: keyword,
             data: data,
             start: start,
             end: end,
             detection: detection
-        ))
+        )
+        asrAgent.startRecognition(
+            initiator: initiator,
+            service: service,
+            requestType: requestType,
+            completion: nil
+        )
     }
     
     public func keywordDetectorStateDidChange(_ state: KeywordDetectorState) {

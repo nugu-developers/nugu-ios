@@ -776,6 +776,10 @@ extension NuguClient: SpeechRecognizerAggregatorDelegate {
         delegate?.nuguClientDidChangeSpeechState(state)
         notificationCenter.post(name: NuguClient.speechStateChangedNotification, object: self, userInfo: ["state": state])
     }
+    
+    public func speechRecognizerRequestRecognitionContext() -> [String : AnyHashable] {
+        delegate?.nuguClientRequestRecognitionWithTriggerContext() ?? [:]
+    }
 }
 
 extension NuguClient {
