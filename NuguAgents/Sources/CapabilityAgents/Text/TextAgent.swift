@@ -197,6 +197,7 @@ private extension TextAgent {
                     text: payload.text,
                     token: payload.token,
                     requestType: requestType,
+                    service: payload.service,
                     referrerDialogRequestId: directive.header.dialogRequestId
                 ))
             }
