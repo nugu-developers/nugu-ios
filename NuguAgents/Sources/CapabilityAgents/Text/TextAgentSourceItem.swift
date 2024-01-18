@@ -24,4 +24,20 @@ struct TextAgentSourceItem: Decodable {
     let text: String
     let token: String
     let playServiceId: String?
+    let service: [String: AnyHashable]?
+    
+    enum CodingKeys: String, CodingKey {
+        case text
+        case token
+        case playServiceId
+        case service
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        text = try container.decode(String.self, forKey: .text)
+        token = try container.decode(String.self, forKey: .token)
+        playServiceId = try container.decode(String.self, forKey: .playServiceId)
+        service = try? container.decodeIfPresent([String: AnyHashable].self, forKey: .service)
+    }
 }
