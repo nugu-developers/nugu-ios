@@ -37,7 +37,7 @@ struct TextAgentSourceItem: Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         text = try container.decode(String.self, forKey: .text)
         token = try container.decode(String.self, forKey: .token)
-        playServiceId = try container.decode(String.self, forKey: .playServiceId)
+        playServiceId = try? container.decodeIfPresent(String.self, forKey: .playServiceId)
         service = try? container.decodeIfPresent([String: AnyHashable].self, forKey: .service)
     }
 }
