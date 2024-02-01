@@ -606,8 +606,12 @@ extension NuguClient: FocusDelegate {
             return
         }
         
-        let audioDeactivateWorkItem = DispatchWorkItem {
+        // 이미 Release(Deactivate)가 예정되어있으면 다시 등록하지 않음.
+        guard audioDeactivateWorkItem == nil else { return }
+        
+        let audioDeactivateWorkItem = DispatchWorkItem { [weak self] in
             audioSessionManager.notifyAudioSessionDeactivation()
+            self?.audioDeactivateWorkItem = nil
         }
         
         DispatchQueue.global().asyncAfter(deadline: .now() + NuguClientConst.audioSessionDeactivationDelay, execute: audioDeactivateWorkItem)
