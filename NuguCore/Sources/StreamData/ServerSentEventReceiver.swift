@@ -1,5 +1,5 @@
 //
-//  ServerSideEventReceiver.swift
+//  ServerSentEventReceiver.swift
 //  NuguCore
 //
 //  Created by childc on 2020/03/05.
@@ -22,14 +22,14 @@ import Foundation
 
 import RxSwift
 
-class ServerSideEventReceiver {
+class ServerSentEventReceiver {
     private let apiProvider: NuguApiProvider
     private var pingDisposable: Disposable?
-    private let stateSubject = PublishSubject<ServerSideEventReceiverState>()
-    private let sseStateQueue = DispatchQueue(label: "com.sktelecom.romaine.core.serve_sent_event_state")
+    private let stateSubject = PublishSubject<ServerSentEventReceiverState>()
+    private let sseStateQueue = DispatchQueue(label: "com.sktelecom.romaine.core.server_sent_event_state")
     private let disposeBag = DisposeBag()
     
-    private(set) var state: ServerSideEventReceiverState = .unconnected {
+    private(set) var state: ServerSentEventReceiverState = .unconnected {
         didSet {
             if oldValue != state {
                 log.debug("server side event receiver state changed from: \(oldValue) to: \(state)")
@@ -75,14 +75,14 @@ class ServerSideEventReceiver {
             })
     }
 
-    var stateObserver: Observable<ServerSideEventReceiverState> {
+    var stateObserver: Observable<ServerSentEventReceiverState> {
         return stateSubject
     }
 }
 
 // MARK: - ping
 
-private extension ServerSideEventReceiver {
+private extension ServerSentEventReceiver {
     private enum Const {
         static let minPingInterval = 180
         static let maxPingInterval = 300
