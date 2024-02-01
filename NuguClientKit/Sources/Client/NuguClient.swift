@@ -284,6 +284,7 @@ public class NuguClient {
     private let backgroundFocusHolder: BackgroundFocusHolder
     private var audioDeactivateWorkItem: DispatchWorkItem?
     private let directiveConnectionQueue = DispatchQueue(label: "com.sktelecom.romaine.NuguClientKit.directive_connection")
+    private let audioFocusQueue = DispatchQueue(label: "com.sktelecom.romaine.NuguClientKit.audio_focus")
     
     init(
         contextManager: ContextManageable,
@@ -606,16 +607,21 @@ extension NuguClient: FocusDelegate {
             return
         }
         
-        // 이미 Release(Deactivate)가 예정되어있으면 다시 등록하지 않음.
-        guard audioDeactivateWorkItem == nil else { return }
-        
-        let audioDeactivateWorkItem = DispatchWorkItem { [weak self] in
-            audioSessionManager.notifyAudioSessionDeactivation()
-            self?.audioDeactivateWorkItem = nil
+        audioFocusQueue.async { [weak self] in
+            guard let self else { return }
+            
+            // 이미 Release(Deactivate)가 예정되어있으면 다시 등록하지 않음.
+            guard audioDeactivateWorkItem == nil else { return }
+            
+            let audioDeactivateWorkItem = DispatchWorkItem { [weak self] in
+                audioSessionManager.notifyAudioSessionDeactivation()
+                self?.audioDeactivateWorkItem = nil
+            }
+            
+            audioFocusQueue.asyncAfter(deadline: .now() + NuguClientConst.audioSessionDeactivationDelay, execute: audioDeactivateWorkItem)
+            self.audioDeactivateWorkItem = audioDeactivateWorkItem
         }
-        
-        DispatchQueue.global().asyncAfter(deadline: .now() + NuguClientConst.audioSessionDeactivationDelay, execute: audioDeactivateWorkItem)
-        self.audioDeactivateWorkItem = audioDeactivateWorkItem
+
     }
 }
 
