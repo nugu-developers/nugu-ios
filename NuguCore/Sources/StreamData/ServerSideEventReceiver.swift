@@ -26,6 +26,7 @@ class ServerSideEventReceiver {
     private let apiProvider: NuguApiProvider
     private var pingDisposable: Disposable?
     private let stateSubject = PublishSubject<ServerSideEventReceiverState>()
+    private let sseStateQueue = DispatchQueue(label: "com.sktelecom.romaine.core.serve_sent_event_state")
     private let disposeBag = DisposeBag()
     
     private(set) var state: ServerSideEventReceiverState = .unconnected {
@@ -43,15 +44,19 @@ class ServerSideEventReceiver {
     }
 
     var directive: Observable<MultiPartParser.Part> {
-        state = .connecting
-
+        sseStateQueue.async { [weak self] in
+            self?.state = .connecting
+        }
+        
         var error: Error?
         return apiProvider.directive
             .enumerated()
             .map { [weak self] (index: Int, element: MultiPartParser.Part) in
-                if index == 0 {
-                    // Change state when the first directive arrived
-                    self?.state = .connected
+                self?.sseStateQueue.async { [weak self] in
+                    if index == .zero {
+                        // Change state when the first directive arrived
+                        self?.state = .connected
+                    }
                 }
                 
                 return element
@@ -59,12 +64,14 @@ class ServerSideEventReceiver {
             .do(onError: {
                 error = $0
             }, onDispose: { [weak self] in
-                if let error = error {
-                    self?.state = .disconnected(error: error)
-                    return
+                self?.sseStateQueue.async { [weak self] in
+                    if let error = error {
+                        self?.state = .disconnected(error: error)
+                        return
+                    }
+                    
+                    self?.state = .unconnected
                 }
-                
-                self?.state = .unconnected
             })
     }
 
@@ -76,11 +83,17 @@ class ServerSideEventReceiver {
 // MARK: - ping
 
 private extension ServerSideEventReceiver {
+    private enum Const {
+        static let minPingInterval = 180
+        static let maxPingInterval = 300
+        static let maxRetryCount = 3
+    }
+    
     func startPing() {
-        let randomPingTime = Int.random(in: 180..<300)
+        log.debug("Try to start ping schedule")
         
-        pingDisposable?.dispose()
-        pingDisposable = Observable<Int>.interval(.seconds(randomPingTime), scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
+        let randomPingTime = Int.random(in: Const.minPingInterval..<Const.maxRetryCount)
+        let pingDisposable = Observable<Int>.interval(.seconds(randomPingTime), scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
             .flatMap { [weak self] _ -> Completable in
                 guard let apiProvider = self?.apiProvider else {
                     return Completable.error(NetworkError.badRequest)
@@ -92,7 +105,7 @@ private extension ServerSideEventReceiver {
             error
                 .enumerated()
                 .flatMap { (index, error) -> Observable<Int> in
-                    guard index < 3 else {
+                    guard index < Const.maxRetryCount else {
                         return Observable.error(error)
                     }
                     
@@ -105,14 +118,23 @@ private extension ServerSideEventReceiver {
             log.debug("Ping schedule for server initiated directive is cancelled")
         })
         
-        pingDisposable?.disposed(by: disposeBag)
-        log.debug("Ping schedule for server initiated directive is set. It will be triggered \(randomPingTime) seconds later.")
+        sseStateQueue.async { [weak self] in
+            guard let self else { return }
+            self.pingDisposable?.dispose()
+            self.pingDisposable = pingDisposable
+            pingDisposable.disposed(by: disposeBag)
+            log.debug("Ping schedule for server initiated directive is set. It will be triggered \(randomPingTime) seconds later.")
+        }
     }
     
     func stopPing() {
         log.debug("Try to stop ping schedule")
         
-        pingDisposable?.dispose()
-        pingDisposable = nil
+        sseStateQueue.async { [weak self] in
+            guard let self else { return }
+            pingDisposable?.dispose()
+            pingDisposable = nil
+        }
+
     }
 }
