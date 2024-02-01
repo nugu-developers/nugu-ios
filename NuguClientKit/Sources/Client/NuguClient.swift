@@ -594,8 +594,12 @@ extension NuguClient: FocusDelegate {
             return delegate?.nuguClientShouldUpdateAudioSessionForFocusAquire() == true
         }
         
-        if let audioDeactivateWorkItem = audioDeactivateWorkItem {
-            audioDeactivateWorkItem.cancel()
+        audioFocusQueue.async { [weak self] in
+            guard let self else { return }
+            if let audioDeactivateWorkItem = audioDeactivateWorkItem {
+                audioDeactivateWorkItem.cancel()
+                self.audioDeactivateWorkItem = nil
+            }
         }
         
         return audioSessionManager.updateAudioSession(requestingFocus: true) == true
