@@ -28,6 +28,7 @@ public class TycheEndPointDetectorEngine {
     private var flushedLength: Int = 0
     private var flushLength: Int = 0
     private var engineHandle: EpdHandle?
+    private var speexEncoder: SpeexEncoder?
     public weak var delegate: TycheEndPointDetectorEngineDelegate?
     
     #if DEBUG
@@ -97,44 +98,41 @@ public class TycheEndPointDetectorEngine {
                 return
             }
 
-            let engineState = ptrPcmData.withMemoryRebound(to: UInt8.self, capacity: Int(buffer.frameLength*2)) { (ptrData) -> Int32 in
+            let (engineState, inputData) = ptrPcmData.withMemoryRebound(to: UInt8.self, capacity: Int(buffer.frameLength * 2)) { (ptrData) -> (Int32, Data) in
                 #if DEBUG
-                self.inputData.append(ptrData, count: Int(buffer.frameLength)*2)
+                self.inputData.append(ptrData, count: Int(buffer.frameLength) * 2)
                 #endif
+                let inputData = Data(bytes: ptrData, count: Int(buffer.frameLength) * 2)
                 
                 // Calculate flushed audio frame length.
                 var adjustLength = 0
                 if self.flushedLength + Int(buffer.frameLength) <= self.flushLength {
                     self.flushedLength += Int(buffer.frameLength)
-                    return -1
+                    return (-1, inputData)
                 } else if self.flushedLength < self.flushLength {
                     self.flushedLength += Int(buffer.frameLength)
                     adjustLength = Int(buffer.frameLength) - (self.flushedLength - self.flushLength)
                 }
                 
-                return epdClientChannelRUN(
+                let engineState = epdClientChannelRUN(
                     self.engineHandle,
                     ptrData,
-                    myint(UInt32(buffer.frameLength) - UInt32(adjustLength))*2, // data length is double of frame length, because It is 16bit audio data.
+                    myint(UInt32(buffer.frameLength) - UInt32(adjustLength)) * 2, // data length is double of frame length, because It is 16bit audio data.
                     0
                 )
-            }
-            guard 0 <= engineState else { return }
-            
-            let length = epdClientChannelGetOutputDataSize(self.engineHandle)
-            if 0 < length {
-                let detectedBytes = UnsafeMutablePointer<Int8>.allocate(capacity: Int(length))
-                defer { detectedBytes.deallocate() }
                 
-                let result = epdClientChannelGetOutputData(self.engineHandle, detectedBytes, length)
-                if 0 < result {
-                    let detectedData = Data(bytes: detectedBytes, count: Int(result))
-                    self.delegate?.tycheEndPointDetectorEngineDidExtract(speechData: detectedData)
-                    
-                    #if DEBUG
-                    self.outputData.append(detectedData)
-                    #endif
-                }
+                return (engineState, inputData)
+            }
+            guard 0 <= engineState, let speexEncoder else { return }
+            
+            do {
+                let speexData = try speexEncoder.encode(data: inputData)
+                self.delegate?.tycheEndPointDetectorEngineDidExtract(speechData: speexData)
+                #if DEBUG
+                self.outputData.append(speexData)
+                #endif
+            } catch {
+                log.error("Failed to speex encoding, error: \(error)")
             }
             
             self.state = TycheEndPointDetectorEngine.State(engineState: engineState)
@@ -181,6 +179,7 @@ public class TycheEndPointDetectorEngine {
             log.debug("engine is destroyed")
         }
         
+        speexEncoder = nil
         state = .idle
     }
     
@@ -200,6 +199,8 @@ public class TycheEndPointDetectorEngine {
         let modelPath = Bundle.module.url(forResource: "skt_epd_model", withExtension: "raw")!.path
         #endif
         
+        let speexEncoder = SpeexEncoder(sampleRate: Int(sampleRate), inputType: EndPointDetectorConst.inputStreamType)
+        self.speexEncoder = speexEncoder
         guard let epdHandle = epdClientChannelSTART(
             modelPath,
             myint(sampleRate),
