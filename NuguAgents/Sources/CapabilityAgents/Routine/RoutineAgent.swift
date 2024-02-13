@@ -255,6 +255,7 @@ private extension RoutineAgent {
                 payload: payload
             )
             
+            self?.delegate?.routineAgentWillStart(item: routine)
             self?.routineExecuter.start(routine)
         }
     }
