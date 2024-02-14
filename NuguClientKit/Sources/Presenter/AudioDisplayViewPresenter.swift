@@ -309,7 +309,7 @@ private extension AudioDisplayViewPresenter {
         }
         
         audioPlayerDurationObserver = object.observe(NuguAgentNotification.AudioPlayer.Duration.self, queue: .main) { [weak self] (notification) in
-            self?.controlCenterManager?.update(notification.duration)
+            self?.controlCenterManager?.update(duration: notification.duration)
         }
     }
     
