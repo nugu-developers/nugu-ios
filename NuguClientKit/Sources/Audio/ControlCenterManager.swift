@@ -286,6 +286,7 @@ private extension ControlCenterManager {
             .changePlaybackPositionCommand.addTarget { [weak self] (event) -> MPRemoteCommandHandlerStatus in
                 guard let event = event as? MPChangePlaybackPositionCommandEvent else { return .commandFailed }
                 self?.audioPlayerAgent.seek(to: Int(event.positionTime))
+                self?.update(offset: Int(event.positionTime))
                 return .success
         }
     }
