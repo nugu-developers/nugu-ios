@@ -92,7 +92,7 @@ private extension ServerSentEventReceiver {
     func startPing() {
         log.debug("Try to start ping schedule")
         
-        let randomPingTime = Int.random(in: Const.minPingInterval..<Const.maxRetryCount)
+        let randomPingTime = Int.random(in: Const.minPingInterval..<Const.maxPingInterval)
         let pingDisposable = Observable<Int>.interval(.seconds(randomPingTime), scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
             .flatMap { [weak self] _ -> Completable in
                 guard let apiProvider = self?.apiProvider else {
