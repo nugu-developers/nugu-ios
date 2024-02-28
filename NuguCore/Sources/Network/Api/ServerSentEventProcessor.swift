@@ -1,5 +1,5 @@
 //
-//  ServerSideEventProcessor.swift
+//  ServerSentEventProcessor.swift
 //  NuguCore
 //
 //  Created by childc on 2020/03/04.
@@ -22,7 +22,7 @@ import Foundation
 
 import RxSwift
 
-class ServerSideEventProcessor: MultiPartProcessable {
+class ServerSentEventProcessor: MultiPartProcessable {
     var parser: MultiPartParser?
     var data = Data()
     let subject = PublishSubject<Data>()

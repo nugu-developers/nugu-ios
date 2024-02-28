@@ -27,7 +27,7 @@ public typealias Directive = Downstream.Directive
 public typealias DirectiveAttachment = Downstream.Attachment
 public typealias Event = Upstream.Event
 public typealias EventAttachment = Upstream.Attachment
-public typealias ServerSideEventReceiverState = NuguCore.ServerSideEventReceiverState
+public typealias ServerSentEventReceiverState = NuguCore.ServerSentEventReceiverState
 
 public protocol NuguClientDelegate: AnyObject {
     // authorization related
@@ -80,8 +80,8 @@ public protocol NuguClientDelegate: AnyObject {
     func nuguClientDidSend(attachment: EventAttachment, error: Error?)
     
     /// Notify that nugu client server initiated directive state has been changed
-    /// - Parameter state: ServerSideEventReceiverState
-    func nuguClientServerInitiatedDirectiveRecevierStateDidChange(_ state: ServerSideEventReceiverState)
+    /// - Parameter state: ServerSentEventReceiverState
+    func nuguClientServerInitiatedDirectiveRecevierStateDidChange(_ state: ServerSentEventReceiverState)
     
     func nuguClientRequestRecognitionWithTriggerContext() -> [String: AnyHashable]
 }
@@ -110,6 +110,6 @@ public extension NuguClientDelegate {
     func nuguClientWillSend(event: Event) {}
     func nuguClientDidSend(event: Event, error: Error?) {}
     func nuguClientDidSend(attachment: EventAttachment, error: Error?) {}
-    func nuguClientServerInitiatedDirectiveRecevierStateDidChange(_ state: ServerSideEventReceiverState) {}
+    func nuguClientServerInitiatedDirectiveRecevierStateDidChange(_ state: ServerSentEventReceiverState) {}
     func nuguClientRequestRecognitionWithTriggerContext() -> [String: AnyHashable] { [:] }
 }

@@ -56,7 +56,7 @@ class NuguApiProvider: NSObject {
     @Atomic private var eventResponseProcessors = [URLSessionTask: EventResponseProcessor]()
 
     // handle received directives by server side event
-    private var serverSideEventProcessor: ServerSideEventProcessor?
+    private var serverSentEventProcessor: ServerSentEventProcessor?
     
     // state of client side load balanceing
     private(set) public var cslbState: ClientSideLoadBalanceState = .unnecessary {
@@ -142,8 +142,8 @@ class NuguApiProvider: NSObject {
                     return
                 }
                 
-                if self.serverSideEventProcessor == nil {
-                    self.serverSideEventProcessor = ServerSideEventProcessor()
+                if self.serverSentEventProcessor == nil {
+                    self.serverSentEventProcessor = ServerSentEventProcessor()
                     
                     // connect downstream.
                     guard let downstreamUrl = URL(string: NuguApi.directives.uri(baseUrl: loadBalancedUrl)) else {
@@ -160,7 +160,7 @@ class NuguApiProvider: NSObject {
                     log.debug("directive request: \(downstreamRequest)\nheader: \(downstreamRequest.allHTTPHeaderFields?.description ?? "")\n")
                 }
                 
-                single(.success(self.serverSideEventProcessor!.subject))
+                single(.success(self.serverSentEventProcessor!.subject))
             }
             
             return disposable
@@ -169,18 +169,18 @@ class NuguApiProvider: NSObject {
         .flatMap { $0 }
         .concatMap { [weak self] (data) -> Observable<MultiPartParser.Part> in
             guard let self = self,
-                let serverSideEventProcessor = self.serverSideEventProcessor else {
+                let serverSentEventProcessor = self.serverSentEventProcessor else {
                     return Observable.error(NetworkError.streamInitializeFailed)
             }
             
-            return self.makePart(with: data, processor: serverSideEventProcessor)
+            return self.makePart(with: data, processor: serverSentEventProcessor)
         }
         .do(onError: {
             error = $0
         }, onDispose: { [weak self] in
             self?.processorQueue.async {
                 self?.cslbState = error == nil ? .unnecessary : .deactivated
-                self?.serverSideEventProcessor = nil
+                self?.serverSentEventProcessor = nil
                 task?.cancel()
                 
             }
@@ -367,7 +367,7 @@ extension NuguApiProvider: URLSessionDataDelegate, StreamDelegate {
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
         log.debug("didReceive response:\n\(response)\n")
         
-        guard let processor: MultiPartProcessable = eventResponseProcessors[dataTask] ?? serverSideEventProcessor else {
+        guard let processor: MultiPartProcessable = eventResponseProcessors[dataTask] ?? serverSentEventProcessor else {
             log.error("unknown response: \(response)")
             completionHandler(.cancel)
             return
@@ -422,17 +422,17 @@ extension NuguApiProvider: URLSessionDataDelegate, StreamDelegate {
     }
     
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
-        (eventResponseProcessors[dataTask]?.subject ?? serverSideEventProcessor?.subject)?.onNext(data)
+        (eventResponseProcessors[dataTask]?.subject ?? serverSentEventProcessor?.subject)?.onNext(data)
     }
     
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         defer {
             processorQueue.async { [weak self] in
-                self?.eventResponseProcessors.keys.contains(task) == true ? (self?.eventResponseProcessors[task] = nil) : (self?.serverSideEventProcessor = nil)
+                self?.eventResponseProcessors.keys.contains(task) == true ? (self?.eventResponseProcessors[task] = nil) : (self?.serverSentEventProcessor = nil)
             }
         }
         
-        let processor: MultiPartProcessable? = eventResponseProcessors[task] ?? serverSideEventProcessor
+        let processor: MultiPartProcessable? = eventResponseProcessors[task] ?? serverSentEventProcessor
         if let error = error {
             log.debug("didCompleteWithError: \(error)")
             processor?.subject.onError(error)
