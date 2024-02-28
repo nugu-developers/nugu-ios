@@ -123,7 +123,12 @@ public class TycheEndPointDetectorEngine {
                 
                 return (engineState, inputData)
             }
-            guard 0 <= engineState, let speexEncoder else { return }
+            guard 0 <= engineState else { return }
+            
+            guard let speexEncoder else {
+                log.error("SpeexEncoder is not exist. Please initDetectorEngine first.")
+                return
+            }
             
             do {
                 let speexData = try speexEncoder.encode(data: inputData)
