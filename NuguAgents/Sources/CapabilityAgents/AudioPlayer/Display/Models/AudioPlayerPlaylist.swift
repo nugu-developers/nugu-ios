@@ -68,7 +68,7 @@ public struct AudioPlayerPlaylist: Codable {
             }
             
             private enum CodingKeys: String, CodingKey {
-                case text = "text"
+                case text
                 case subText
                 case imageUrl
                 case badgeUrl
@@ -77,6 +77,7 @@ public struct AudioPlayerPlaylist: Codable {
                 case token
                 case postback
                 case favorite
+                case libraryAvailable
             }
             
             public let text: TextObject?
@@ -88,6 +89,7 @@ public struct AudioPlayerPlaylist: Codable {
             public let token: String
             public let postback: [String: AnyHashable]?
             public var favorite: Favorite?
+            public let libraryAvailable: Bool?
             
             public init(from decoder: Decoder) throws {
                 let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -100,6 +102,7 @@ public struct AudioPlayerPlaylist: Codable {
                 token = try container.decode(String.self, forKey: .token)
                 postback = try container.decodeIfPresent([String: AnyHashable].self, forKey: .postback)
                 favorite = try container.decodeIfPresent(Favorite.self, forKey: .favorite)
+                libraryAvailable = try container.decodeIfPresent(Bool.self, forKey: .libraryAvailable)
             }
             
             public func encode(to encoder: Encoder) throws {
