@@ -21,5 +21,6 @@
 public struct AudioPlayerSettingsTemplate: Decodable {
     public let favorite: Bool?
     public let `repeat`: AudioPlayerDisplayRepeat?
+    public let libraryAvailable: Bool?
     public let shuffle: Bool?
 }
