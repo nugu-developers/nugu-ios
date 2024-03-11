@@ -38,6 +38,8 @@ public struct ASROptions {
     /// <#Description#>
     public let endPointing: EndPointing
     
+    public var requestType: String?
+    
     /// - Parameters:
     ///   - maxDuration: Max duration from speech start to end.
     ///   - timeout: Max duration of waiting for speech.
@@ -47,13 +49,15 @@ public struct ASROptions {
         timeout: TimeIntervallic = NuguTimeInterval(seconds: 7),
         pauseLength: TimeIntervallic = NuguTimeInterval(milliseconds: 700),
         encoding: Encoding = .partial,
-        endPointing: EndPointing
+        endPointing: EndPointing,
+        requestType: String? = nil
     ) {
         self.maxDuration = maxDuration
         self.timeout = timeout
         self.pauseLength = pauseLength
         self.encoding = encoding
         self.endPointing = endPointing
+        self.requestType = requestType
     }
     
     /// <#Description#>
@@ -67,6 +71,10 @@ public struct ASROptions {
         case client
         /// Server side end point detector does not support yet.
         case server
+    }
+    
+    mutating func updateRequestType(_ requestType: String?) {
+        self.requestType = requestType
     }
 }
 

@@ -26,6 +26,7 @@ import NuguUtils
 
 /// ASR (AutomaticSpeechRecognition) is responsible for capturing the audio and delivering it to the server and receiving the result of speech recognition.
 public protocol ASRAgentProtocol: CapabilityAgentable, TypedNotifyable {
+    var delegate: ASRAgentDelegate? { get set }
     var options: ASROptions { get set }
     var asrState: ASRState { get }
     
@@ -39,6 +40,8 @@ public protocol ASRAgentProtocol: CapabilityAgentable, TypedNotifyable {
     /// - Returns: The dialogRequestId for request.
     @discardableResult func startRecognition(
         initiator: ASRInitiator,
+        service: [String: AnyHashable]?,
+        requestType: String?,
         completion: ((StreamDataState) -> Void)?
     ) -> String
     
@@ -65,7 +68,22 @@ public extension ASRAgentProtocol {
     /// - Parameters:
     ///   - options: The options for recognition.
     /// - Returns: The dialogRequestId for request.
-    @discardableResult func startRecognition(initiator: ASRInitiator) -> String {
-        return startRecognition(initiator: initiator, completion: nil)
+    @discardableResult func startRecognition(initiator: ASRInitiator, requestType: String? = nil) -> String {
+        return startRecognition(initiator: initiator, service: nil, requestType: requestType, completion: nil)
+    }
+    
+    /// This function asks the `ASRAgent` to send a Recognize Event to Server and start streaming from `AudioStream`, which transitions it to the `recognizing` state.
+    ///
+    /// This function can be called in `idle` and `expectingSpeech` state.
+    ///
+    /// - Parameters:
+    ///   - options: The options for recognition.
+    /// - Returns: The dialogRequestId for request.
+    @discardableResult func startRecognition(
+        initiator: ASRInitiator,
+        requestType: String? = nil,
+        completion: ((StreamDataState) -> Void)?
+    ) -> String {
+        return startRecognition(initiator: initiator, service: nil, requestType: requestType, completion: completion)
     }
 }

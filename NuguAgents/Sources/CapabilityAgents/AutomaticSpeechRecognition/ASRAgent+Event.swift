@@ -29,7 +29,7 @@ extension ASRAgent {
         let referrerDialogRequestId: String?
         
         enum TypeInfo {
-            case recognize(initiator: ASRInitiator, options: ASROptions)
+            case recognize(initiator: ASRInitiator, options: ASROptions, service: [String: AnyHashable]?)
             case responseTimeout
             case listenTimeout
             case stopRecognize
@@ -52,7 +52,7 @@ extension ASRAgent.Event: Eventable {
     var payload: [String: AnyHashable] {
         var payload: [String: AnyHashable?]
         switch typeInfo {
-        case .recognize(let initiator, let options):
+        case .recognize(let initiator, let options, let service):
             payload = [
                 "codec": "SPEEX",
                 "language": "KOR",
@@ -61,11 +61,13 @@ extension ASRAgent.Event: Eventable {
                 "playServiceId": dialogAttributes?["playServiceId"],
                 "domainTypes": dialogAttributes?["domainTypes"],
                 "asrContext": dialogAttributes?["asrContext"],
+                "service": service,
                 "timeout": [
                     "listen": options.timeout.truncatedMilliSeconds,
                     "maxSpeech": options.maxDuration.truncatedMilliSeconds,
                     "response": 10000
-                ]
+                ],
+                "requestType": options.requestType
             ]
             
             if case let .wakeUpWord(keyword, _, start, end, detection) = initiator {

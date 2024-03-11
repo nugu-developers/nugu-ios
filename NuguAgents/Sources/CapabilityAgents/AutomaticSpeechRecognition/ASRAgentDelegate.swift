@@ -1,9 +1,9 @@
 //
-//  ASRRequest.swift
+//  ASRAgentDelegate.swift
 //  NuguAgents
 //
-//  Created by MinChul Lee on 13/05/2019.
-//  Copyright (c) 2019 SK Telecom Co., Ltd. All rights reserved.
+//  Created by Jaycesub on 17/04/2019.
+//  Copyright (c) 2024 SK Telecom Co., Ltd. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -20,15 +20,10 @@
 
 import Foundation
 
-import NuguCore
-
-struct ASRRequest {
-    let eventIdentifier: EventIdentifier
-    let initiator: ASRInitiator
-    let options: ASROptions
-    let referrerDialogRequestId: String?
-    let service: [String: AnyHashable]?
-    let completion: ((StreamDataState) -> Void)?
-    
-    var contextPayload: [ContextInfo] = []
+public protocol ASRAgentDelegate: AnyObject {
+    /// ASRAgent start recognition after receiving expectSpeech directive.
+    /// Returns true if start recognition without being affected by the condition.
+    /// - Parameter service: The service object included in expectSpeech payload
+    /// - Returns: True if the ASRAgent start recognition after receiving expectSpeech directive.
+    func asrAgentWillStartExpectSpeech(service: [String: AnyHashable]?) -> Bool
 }

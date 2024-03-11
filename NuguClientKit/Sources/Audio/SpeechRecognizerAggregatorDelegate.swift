@@ -24,4 +24,5 @@ import NuguAgents
 
 public protocol SpeechRecognizerAggregatorDelegate: AnyObject {
     func speechRecognizerStateDidChange(_ state: SpeechRecognizerAggregatorState)
+    func speechRecognizerRequestRecognitionContext() -> [String: AnyHashable]
 }

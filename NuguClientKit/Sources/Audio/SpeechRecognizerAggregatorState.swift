@@ -47,6 +47,13 @@ public enum SpeechRecognizerAggregatorState: Equatable {
     public struct Result {
         public let type: ResultType
         public let value: String
+        public let requestType: String?
+        
+        public init(type: ResultType, value: String, requestType: String? = nil) {
+            self.type = type
+            self.value = value
+            self.requestType = requestType
+        }
         
         public enum ResultType {
             case partial
@@ -79,8 +86,8 @@ extension SpeechRecognizerAggregatorState {
             self = .result(Result(type: .complete, value: ""))
         case .partial(let text, _):
             self = .result(Result(type: .partial, value: text))
-        case .complete(let text, _):
-            self = .result(Result(type: .complete, value: text))
+        case .complete(let text, _, let requestType):
+            self = .result(Result(type: .complete, value: text, requestType: requestType))
         case .cancel, .cancelExpectSpeech:
             self = .cancelled
         case .error(let error, _):

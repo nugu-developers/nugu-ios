@@ -134,12 +134,24 @@ public extension ControlCenterManager {
         }
     }
     
-    func update(_ duration: Int) {
+    func update(duration: Int) {
         nowPlayInfoCenterQueue.async { [weak self] in
             guard let self = self else { return }
 
             var nowPlayingInfoForUpdate = self.nowPlayingInfo
             nowPlayingInfoForUpdate[MPMediaItemPropertyPlaybackDuration] = (self.seekCommandTarget != nil) ? duration : 0
+            
+            self.nowPlayingInfo = nowPlayingInfoForUpdate
+        }
+    }
+    
+    func update(offset: Int) {
+        nowPlayInfoCenterQueue.async { [weak self] in
+            guard let self else { return }
+
+            var nowPlayingInfoForUpdate = self.nowPlayingInfo
+            nowPlayingInfoForUpdate[MPNowPlayingInfoPropertyElapsedPlaybackTime] = offset
+            nowPlayingInfoForUpdate[MPNowPlayingInfoPropertyPlaybackRate] = 1.0
             
             self.nowPlayingInfo = nowPlayingInfoForUpdate
         }
@@ -274,6 +286,7 @@ private extension ControlCenterManager {
             .changePlaybackPositionCommand.addTarget { [weak self] (event) -> MPRemoteCommandHandlerStatus in
                 guard let event = event as? MPChangePlaybackPositionCommandEvent else { return .commandFailed }
                 self?.audioPlayerAgent.seek(to: Int(event.positionTime))
+                self?.update(offset: Int(event.positionTime))
                 return .success
         }
     }

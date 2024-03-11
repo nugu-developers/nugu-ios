@@ -31,14 +31,14 @@ public class StreamDataRouter: StreamDataRoutable {
     private let directiveSequencer: DirectiveSequenceable
     @Atomic private var eventSenders = [String: EventSender]()
     @Atomic private var eventDisposables = [String: Disposable]()
-    private var serverInitiatedDirectiveReceiver: ServerSideEventReceiver
+    private var serverInitiatedDirectiveReceiver: ServerSentEventReceiver
     private var serverInitiatedDirectiveCompletion: ((StreamDataState) -> Void)?
     private var serverInitiatedDirectiveDisposable: Disposable?
     private var serverInitiatedDirectiveStateDisposable: Disposable?
     private let disposeBag = DisposeBag()
     
     public init(directiveSequencer: DirectiveSequenceable) {
-        serverInitiatedDirectiveReceiver = ServerSideEventReceiver(apiProvider: nuguApiProvider)
+        serverInitiatedDirectiveReceiver = ServerSentEventReceiver(apiProvider: nuguApiProvider)
         self.directiveSequencer = directiveSequencer
     }
 }
@@ -408,6 +408,6 @@ public extension NuguCoreNotification {
             }
         }
         
-        public typealias ServerInitiatedDirectiveReceiverState = ServerSideEventReceiverState
+        public typealias ServerInitiatedDirectiveReceiverState = ServerSentEventReceiverState
     }
 }

@@ -34,7 +34,7 @@ public enum ASRResult {
     /// 사용자 발화의 전체 문장
     /// - Parameter text: Recognized utterance.
     /// - Parameter header: The header of the originally handled directive.
-    case complete(text: String, header: Downstream.Header)
+    case complete(text: String, header: Downstream.Header, requestType: String? = nil)
     /// 음성 인식 요청 취소
     case cancel(header: Downstream.Header? = nil)
     /// The `ASR.ExpectSpeech` directive has been cancelled.

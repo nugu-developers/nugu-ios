@@ -38,6 +38,7 @@ public protocol TextAgentProtocol: CapabilityAgentable {
         token: String?,
         source: TextInputSource?,
         requestType: TextAgentRequestType,
+        service: [String: AnyHashable]?,
         completion: ((StreamDataState) -> Void)?
     ) -> String
     
@@ -51,8 +52,23 @@ public protocol TextAgentProtocol: CapabilityAgentable {
         token: String?,
         playServiceId: String?,
         source: TextInputSource?,
+        service: [String: AnyHashable]?,
         completion: ((StreamDataState) -> Void)?
     ) -> String
+    
+    /// Send event that needs a text-based recognition
+    /// - Parameters:
+    ///   - text: The `text` to be recognized
+    ///   - completion: The completion handler to call when the request is complete.
+    /// - Returns: The eventIdentifier for request.
+    @discardableResult func requestTextInput(
+        text: String,
+        token: String?,
+        playServiceId: String?,
+        source: TextInputSource?,
+        service: [String: AnyHashable]?,
+        completion: ((StreamDataState) -> Void)?
+    ) -> EventIdentifier
 }
 
 // MARK: - Default
@@ -62,13 +78,15 @@ public extension TextAgentProtocol {
         text: String,
         token: String? = nil,
         source: TextInputSource? = nil,
-        requestType: TextAgentRequestType
+        requestType: TextAgentRequestType,
+        service: [String: AnyHashable]? = nil
     ) -> String {
         return requestTextInput(
             text: text,
             token: token,
             source: source,
             requestType: requestType,
+            service: service,
             completion: nil
         )
     }
@@ -78,6 +96,7 @@ public extension TextAgentProtocol {
         token: String? = nil,
         source: TextInputSource? = nil,
         requestType: TextAgentRequestType,
+        service: [String: AnyHashable]? = nil,
         completion: ((StreamDataState) -> Void)?
     ) -> String {
         return requestTextInput(
@@ -85,6 +104,7 @@ public extension TextAgentProtocol {
             token: token,
             source: source,
             requestType: requestType,
+            service: service,
             completion: completion
         )
     }
@@ -94,6 +114,7 @@ public extension TextAgentProtocol {
         token: String? = nil,
         playServiceId: String? = nil,
         source: TextInputSource? = nil,
+        service: [String: AnyHashable]? = nil,
         completion: ((StreamDataState) -> Void)? = nil
     ) -> String {
         requestTextInput(
@@ -101,7 +122,8 @@ public extension TextAgentProtocol {
             token: token,
             playServiceId: playServiceId,
             source: source,
+            service: service,
             completion: completion
-        )
+        ).dialogRequestId
     }
 }

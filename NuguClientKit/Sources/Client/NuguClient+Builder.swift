@@ -103,12 +103,6 @@ public extension NuguClient {
             playSyncManager: playSyncManager
         )
         
-        public lazy var messengerAgent: MessengerAgentProtocol = MessengerAgent(
-            directiveSequencer: directiveSequencer,
-            contextManager: contextManager,
-            upstreamDataSender: streamDataRouter
-        )
-        
         public lazy var imageAgent: ImageAgentProtocol = ImageAgent(
             directiveSequencer: directiveSequencer,
             contextManager: contextManager,
@@ -162,6 +156,8 @@ public extension NuguClient {
          Show Graphical User Interface
          */
         public var displayAgent: DisplayAgentProtocol?
+        
+        public var messengerAgent: MessengerAgentProtocol?
         
         // Supports
         /**
@@ -275,6 +271,15 @@ public extension NuguClient {
                     upstreamDataSender: streamDataRouter
                 )
                 alertsAgent?.delegate = delegate as? AlertsAgentDelegate
+            }
+            
+            if delegate is MessengerAgentDelegate {
+                messengerAgent = MessengerAgent(
+                    directiveSequencer: directiveSequencer,
+                    contextManager: contextManager,
+                    upstreamDataSender: streamDataRouter
+                )
+                messengerAgent?.delegate = delegate as? MessengerAgentDelegate
             }
             
             return self

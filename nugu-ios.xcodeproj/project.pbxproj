@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -270,7 +270,7 @@
 		7345DFF325C68B3A006DBCC6 /* DataBoundInputStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7345DFF225C68B3A006DBCC6 /* DataBoundInputStream.swift */; };
 		7352F19A2A37225600B0199C /* UIImage+resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7352F1992A37225600B0199C /* UIImage+resize.swift */; };
 		735A4CBE241172F1004E7A41 /* EventResponseProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735A4CBA241172F0004E7A41 /* EventResponseProcessor.swift */; };
-		735A4CBF241172F1004E7A41 /* ServerSideEventProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735A4CBB241172F0004E7A41 /* ServerSideEventProcessor.swift */; };
+		735A4CBF241172F1004E7A41 /* ServerSentEventProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735A4CBB241172F0004E7A41 /* ServerSentEventProcessor.swift */; };
 		735A4CC0241172F1004E7A41 /* NuguApiProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735A4CBC241172F0004E7A41 /* NuguApiProvider.swift */; };
 		735A4CC1241172F1004E7A41 /* NuguApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735A4CBD241172F1004E7A41 /* NuguApi.swift */; };
 		735A4CC624117339004E7A41 /* MultiPartParserError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735A4CC424117338004E7A41 /* MultiPartParserError.swift */; };
@@ -361,8 +361,8 @@
 		7378FDD925B8191200AB9764 /* TypedNotifyable+post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7378FDD825B8191200AB9764 /* TypedNotifyable+post.swift */; };
 		738224BE26D4DB5D0050D67A /* DataStreamPlayerBufferState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 738224BD26D4DB5D0050D67A /* DataStreamPlayerBufferState.swift */; };
 		7386DA9923CF279C002BF24C /* NuguClientDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7386DA9823CF279C002BF24C /* NuguClientDelegate.swift */; };
-		739078FD241A3E0C007D753F /* ServerSideEventReceiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 739078FB241A3E0B007D753F /* ServerSideEventReceiver.swift */; };
-		739078FE241A3E0C007D753F /* ServerSideEventReceiverState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 739078FC241A3E0C007D753F /* ServerSideEventReceiverState.swift */; };
+		739078FE241A3E0C007D753F /* ServerSentEventReceiverState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 739078FC241A3E0C007D753F /* ServerSentEventReceiverState.swift */; };
+		73A76A5A2B6B942C007F4178 /* ServerSentEventReceiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A76A592B6B942C007F4178 /* ServerSentEventReceiver.swift */; };
 		73A84E3B2799990200133D45 /* RxSwift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73C256AA269740BB0008FE7F /* RxSwift.xcframework */; };
 		73A84E3C2799990200133D45 /* RxSwift.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 73C256AA269740BB0008FE7F /* RxSwift.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		73BF06DE26A0208700112473 /* NuguObjcUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 73BF06DC26A0208700112473 /* NuguObjcUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -529,6 +529,7 @@
 		E649868A28337649001AD733 /* ControlCenterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E649868928337649001AD733 /* ControlCenterManager.swift */; };
 		E6BE047C2A0BA1A400AE29E3 /* Image+Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6BE047B2A0BA1A400AE29E3 /* Image+Event.swift */; };
 		E6BE047E2A0BA1BD00AE29E3 /* ImageAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6BE047D2A0BA1BD00AE29E3 /* ImageAgent.swift */; };
+		E6F3DCBD2B4CB9D800298A20 /* ASRAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6F3DCBC2B4CB9D800298A20 /* ASRAgentDelegate.swift */; };
 		E6FBA02B2A1379C500AF8B05 /* MessengerAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FBA02A2A1379C400AF8B05 /* MessengerAgentProtocol.swift */; };
 		E6FBA02D2A137A9700AF8B05 /* ImageAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FBA02C2A137A9700AF8B05 /* ImageAgentProtocol.swift */; };
 		F6A6B0842AAEFDD900D41DEC /* AudioPlayer2Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A6B0832AAEFDD900D41DEC /* AudioPlayer2Template.swift */; };
@@ -1088,7 +1089,7 @@
 		7345DFF225C68B3A006DBCC6 /* DataBoundInputStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataBoundInputStream.swift; sourceTree = "<group>"; };
 		7352F1992A37225600B0199C /* UIImage+resize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+resize.swift"; sourceTree = "<group>"; };
 		735A4CBA241172F0004E7A41 /* EventResponseProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventResponseProcessor.swift; sourceTree = "<group>"; };
-		735A4CBB241172F0004E7A41 /* ServerSideEventProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerSideEventProcessor.swift; sourceTree = "<group>"; };
+		735A4CBB241172F0004E7A41 /* ServerSentEventProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerSentEventProcessor.swift; sourceTree = "<group>"; };
 		735A4CBC241172F0004E7A41 /* NuguApiProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguApiProvider.swift; sourceTree = "<group>"; };
 		735A4CBD241172F1004E7A41 /* NuguApi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguApi.swift; sourceTree = "<group>"; };
 		735A4CC424117338004E7A41 /* MultiPartParserError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiPartParserError.swift; sourceTree = "<group>"; };
@@ -1175,8 +1176,8 @@
 		7378FDD825B8191200AB9764 /* TypedNotifyable+post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TypedNotifyable+post.swift"; sourceTree = "<group>"; };
 		738224BD26D4DB5D0050D67A /* DataStreamPlayerBufferState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStreamPlayerBufferState.swift; sourceTree = "<group>"; };
 		7386DA9823CF279C002BF24C /* NuguClientDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NuguClientDelegate.swift; sourceTree = "<group>"; };
-		739078FB241A3E0B007D753F /* ServerSideEventReceiver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerSideEventReceiver.swift; sourceTree = "<group>"; };
-		739078FC241A3E0C007D753F /* ServerSideEventReceiverState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerSideEventReceiverState.swift; sourceTree = "<group>"; };
+		739078FC241A3E0C007D753F /* ServerSentEventReceiverState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerSentEventReceiverState.swift; sourceTree = "<group>"; };
+		73A76A592B6B942C007F4178 /* ServerSentEventReceiver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ServerSentEventReceiver.swift; path = NuguCore/Sources/StreamData/ServerSentEventReceiver.swift; sourceTree = SOURCE_ROOT; };
 		73BF06DA26A0208700112473 /* NuguObjcUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NuguObjcUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		73BF06DC26A0208700112473 /* NuguObjcUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NuguObjcUtils.h; sourceTree = "<group>"; };
 		73BF06DD26A0208700112473 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1331,6 +1332,7 @@
 		E649868928337649001AD733 /* ControlCenterManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControlCenterManager.swift; sourceTree = "<group>"; };
 		E6BE047B2A0BA1A400AE29E3 /* Image+Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Image+Event.swift"; sourceTree = "<group>"; };
 		E6BE047D2A0BA1BD00AE29E3 /* ImageAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAgent.swift; sourceTree = "<group>"; };
+		E6F3DCBC2B4CB9D800298A20 /* ASRAgentDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASRAgentDelegate.swift; sourceTree = "<group>"; };
 		E6FBA02A2A1379C400AF8B05 /* MessengerAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessengerAgentProtocol.swift; sourceTree = "<group>"; };
 		E6FBA02C2A137A9700AF8B05 /* ImageAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAgentProtocol.swift; sourceTree = "<group>"; };
 		F6A6B0832AAEFDD900D41DEC /* AudioPlayer2Template.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayer2Template.swift; sourceTree = "<group>"; };
@@ -2080,6 +2082,7 @@
 				737388F024A46C7F0018DDD2 /* ASROptions.swift */,
 				737388F124A46C7F0018DDD2 /* ASRResult.swift */,
 				737388F224A46C7F0018DDD2 /* ASRState.swift */,
+				E6F3DCBC2B4CB9D800298A20 /* ASRAgentDelegate.swift */,
 			);
 			path = AutomaticSpeechRecognition;
 			sourceTree = "<group>";
@@ -2767,7 +2770,7 @@
 				735A4CBA241172F0004E7A41 /* EventResponseProcessor.swift */,
 				735A4CBD241172F1004E7A41 /* NuguApi.swift */,
 				735A4CBC241172F0004E7A41 /* NuguApiProvider.swift */,
-				735A4CBB241172F0004E7A41 /* ServerSideEventProcessor.swift */,
+				735A4CBB241172F0004E7A41 /* ServerSentEventProcessor.swift */,
 			);
 			name = Api;
 			path = ../Api;
@@ -2789,8 +2792,7 @@
 				7373892924A46D420018DDD2 /* StreamDataRoutable.swift */,
 				7373892824A46D420018DDD2 /* StreamDataState.swift */,
 				7373892B24A46D420018DDD2 /* UpstreamDataSendable.swift */,
-				739078FB241A3E0B007D753F /* ServerSideEventReceiver.swift */,
-				739078FC241A3E0C007D753F /* ServerSideEventReceiverState.swift */,
+				739078FC241A3E0C007D753F /* ServerSentEventReceiverState.swift */,
 				7EDCF2A62384FE88006F96B6 /* StreamDataRouter.swift */,
 				735A4CDF241173F4004E7A41 /* EventSender.swift */,
 				735A4CE0241173F4004E7A41 /* EventSenderError.swift */,
@@ -2810,6 +2812,7 @@
 		7373893024A46D4D0018DDD2 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				73A76A592B6B942C007F4178 /* ServerSentEventReceiver.swift */,
 				7373893124A46D4D0018DDD2 /* Upstream.swift */,
 				7373893224A46D4D0018DDD2 /* Downstream.swift */,
 			);
@@ -4082,7 +4085,7 @@
 				75082BC6243AC85E0027D76D /* FileManager+Convenience.swift in Sources */,
 				7373895724A473A60018DDD2 /* FocusChannelPriority.swift in Sources */,
 				7373894424A46E5F0018DDD2 /* ContextType.swift in Sources */,
-				739078FE241A3E0C007D753F /* ServerSideEventReceiverState.swift in Sources */,
+				739078FE241A3E0C007D753F /* ServerSentEventReceiverState.swift in Sources */,
 				7315301923E11EDF00F843C3 /* MediaPlayableError.swift in Sources */,
 				7373892124A46D120018DDD2 /* MediaPlayerDelegate.swift in Sources */,
 				7373895824A473A60018DDD2 /* FocusChannelDelegate.swift in Sources */,
@@ -4100,6 +4103,7 @@
 				1FFFF3C12375707100C9A177 /* Policy.swift in Sources */,
 				1FFFF3C82375707100C9A177 /* FocusConst.swift in Sources */,
 				7373895924A473A60018DDD2 /* FocusManageable.swift in Sources */,
+				73A76A5A2B6B942C007F4178 /* ServerSentEventReceiver.swift in Sources */,
 				7373892C24A46D430018DDD2 /* StreamDataState.swift in Sources */,
 				7373894224A46E5F0018DDD2 /* ContextInfo.swift in Sources */,
 				73454FC32387BDF00073AF48 /* NuguServerInfo.swift in Sources */,
@@ -4138,8 +4142,7 @@
 				7373894A24A46E720018DDD2 /* BlockingPolicy.swift in Sources */,
 				1FFFF3C72375707100C9A177 /* FocusManager.swift in Sources */,
 				7373893324A46D4D0018DDD2 /* Upstream.swift in Sources */,
-				739078FD241A3E0C007D753F /* ServerSideEventReceiver.swift in Sources */,
-				735A4CBF241172F1004E7A41 /* ServerSideEventProcessor.swift in Sources */,
+				735A4CBF241172F1004E7A41 /* ServerSentEventProcessor.swift in Sources */,
 				7EDCF2A72384FE88006F96B6 /* StreamDataRouter.swift in Sources */,
 				735A4CE1241173F4004E7A41 /* EventSender.swift in Sources */,
 				7373894B24A46E720018DDD2 /* DirectiveHandleInfo.swift in Sources */,
@@ -4512,6 +4515,7 @@
 				73152FCC23E0415B00F843C3 /* DisplayRenderingInfo.swift in Sources */,
 				736508652462F7FA00EF4549 /* SktOpusParser.swift in Sources */,
 				7E284D9C24DD2B4A00BF9640 /* InteractionControlManager.swift in Sources */,
+				E6F3DCBD2B4CB9D800298A20 /* ASRAgentDelegate.swift in Sources */,
 				1FD5D19124C82F3B007BA384 /* MediaPlayerAgent+Event.swift in Sources */,
 				737388C924A46C1D0018DDD2 /* ChipsAgentProtocol.swift in Sources */,
 				1FD5D17E24A99993007BA384 /* PhoneCallType.swift in Sources */,
@@ -4791,7 +4795,7 @@
 					"@loader_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				MARKETING_VERSION = 1.9.2;
+				MARKETING_VERSION = 1.9.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguCore;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4828,7 +4832,7 @@
 					"@loader_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				MARKETING_VERSION = 1.9.2;
+				MARKETING_VERSION = 1.9.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguCore;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4861,7 +4865,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.9.2;
+				MARKETING_VERSION = 1.9.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguClientKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4894,7 +4898,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.9.2;
+				MARKETING_VERSION = 1.9.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguClientKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4927,7 +4931,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.9.2;
+				MARKETING_VERSION = 1.9.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguLoginKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4960,7 +4964,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.9.2;
+				MARKETING_VERSION = 1.9.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguLoginKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4993,7 +4997,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.9.2;
+				MARKETING_VERSION = 1.9.3;
 				OTHER_SWIFT_FLAGS = "-DDEPLOY_OTHER_PACKAGE_MANAGER";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguUIKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
@@ -5027,7 +5031,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.9.2;
+				MARKETING_VERSION = 1.9.3;
 				OTHER_SWIFT_FLAGS = "-DDEPLOY_OTHER_PACKAGE_MANAGER";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguUIKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
@@ -5062,7 +5066,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.9.2;
+				MARKETING_VERSION = 1.9.3;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-l\"c++\"",
@@ -5102,7 +5106,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.9.2;
+				MARKETING_VERSION = 1.9.3;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-l\"c++\"",
@@ -5141,7 +5145,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.9.2;
+				MARKETING_VERSION = 1.9.3;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-l\"c++\"",
@@ -5180,7 +5184,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.9.2;
+				MARKETING_VERSION = 1.9.3;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-l\"c++\"",
@@ -5219,7 +5223,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.9.2;
+				MARKETING_VERSION = 1.9.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.SampleApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = NuguSampleAppDev;
@@ -5250,7 +5254,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.9.2;
+				MARKETING_VERSION = 1.9.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.SampleApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = NuguSampleAppDev;
@@ -5410,7 +5414,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.9.2;
+				MARKETING_VERSION = 1.9.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguUtils;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -5443,7 +5447,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.9.2;
+				MARKETING_VERSION = 1.9.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguUtils;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -5476,7 +5480,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.9.2;
+				MARKETING_VERSION = 1.9.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguAgents;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -5508,7 +5512,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.9.2;
+				MARKETING_VERSION = 1.9.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguAgents;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -5538,7 +5542,7 @@
 					"@loader_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MARKETING_VERSION = 1.9.2;
+				MARKETING_VERSION = 1.9.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.TycheSDK;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -5566,7 +5570,7 @@
 					"@loader_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MARKETING_VERSION = 1.9.2;
+				MARKETING_VERSION = 1.9.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.TycheSDK;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -5592,7 +5596,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.9.2;
+				MARKETING_VERSION = 1.9.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.OpusSDK;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -5618,7 +5622,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.9.2;
+				MARKETING_VERSION = 1.9.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.OpusSDK;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -5645,7 +5649,7 @@
 					"@loader_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = 1.9.2;
+				MARKETING_VERSION = 1.9.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguObjcUtils;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -5674,7 +5678,7 @@
 					"@loader_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = 1.9.2;
+				MARKETING_VERSION = 1.9.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguObjcUtils;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -5706,7 +5710,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.9.2;
+				MARKETING_VERSION = 1.9.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.SilverTray;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -5738,7 +5742,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.9.2;
+				MARKETING_VERSION = 1.9.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.SilverTray;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -5771,7 +5775,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.9.2;
+				MARKETING_VERSION = 1.9.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguServiceKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -5806,7 +5810,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.9.2;
+				MARKETING_VERSION = 1.9.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sktelecom.romaine.NuguServiceKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

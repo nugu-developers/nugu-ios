@@ -1,5 +1,5 @@
 //
-//  ServerSideEventReceiverState.swift
+//  ServerSentEventReceiverState.swift
 //  NuguCore
 //
 //  Created by childc on 2020/03/10.
@@ -22,8 +22,8 @@ import Foundation
 
 import NuguUtils
 
-public enum ServerSideEventReceiverState: Equatable, EnumTypedNotification {
-    public static var name: Notification.Name = .serverSideEventReceiverStateDidChange
+public enum ServerSentEventReceiverState: Equatable, EnumTypedNotification {
+    public static var name: Notification.Name = .serverSentEventReceiverStateDidChange
     
     /// Didn't try to connect to server or connection reset
     case unconnected
@@ -38,7 +38,7 @@ public enum ServerSideEventReceiverState: Equatable, EnumTypedNotification {
     /// - Parameter error: If Connection closed because of the error.
     case disconnected(error: Error)
     
-    public static func == (lhs: ServerSideEventReceiverState, rhs: ServerSideEventReceiverState) -> Bool {
+    public static func == (lhs: ServerSentEventReceiverState, rhs: ServerSentEventReceiverState) -> Bool {
         switch (lhs, rhs) {
         case (.unconnected, .unconnected),
             (.connected, .connected),
@@ -55,5 +55,5 @@ public enum ServerSideEventReceiverState: Equatable, EnumTypedNotification {
 }
 
 extension Notification.Name {
-    static let serverSideEventReceiverStateDidChange = Notification.Name("com.sktelecom.romaine.notification.name.server_side_event_receiver_state_did_change")
+    static let serverSentEventReceiverStateDidChange = Notification.Name("com.sktelecom.romaine.notification.name.server_sent_event_receiver_state_did_change")
 }

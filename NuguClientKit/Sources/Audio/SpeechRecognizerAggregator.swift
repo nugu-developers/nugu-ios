@@ -101,7 +101,12 @@ public class SpeechRecognizerAggregator: SpeechRecognizerAggregatable {
 // MARK: - SpeechRecognizerAggregatable
 
 public extension SpeechRecognizerAggregator {
-    func startListening(initiator: ASRInitiator, completion: ((StreamDataState) -> Void)? = nil) {
+    func startListening(
+        initiator: ASRInitiator,
+        service: [String: AnyHashable]?,
+        requestType: String?,
+        completion: ((StreamDataState) -> Void)? = nil
+    ) {
         recognizeQueue.async { [weak self] in
             guard let self else { return }
             
@@ -116,7 +121,7 @@ public extension SpeechRecognizerAggregator {
                 asrAgent.stopRecognition()
             }
             
-            asrAgent.startRecognition(initiator: initiator) { [weak self] state in
+            asrAgent.startRecognition(initiator: initiator, service: service, requestType: requestType) { [weak self] state in
                 guard case .prepared = state else {
                     completion?(state)
                     return
@@ -272,13 +277,25 @@ extension SpeechRecognizerAggregator: KeywordDetectorDelegate {
     public func keywordDetectorDidDetect(keyword: String?, data: Data, start: Int, end: Int, detection: Int) {
         state = .wakeup(initiator: .wakeUpWord(keyword: keyword, data: data, start: start, end: end, detection: detection))
         
-        asrAgent.startRecognition(initiator: .wakeUpWord(
+        var service: [String: AnyHashable]?
+        var requestType: String?
+        if let context = delegate?.speechRecognizerRequestRecognitionContext() {
+            service = context["service"] as? [String: AnyHashable]
+            requestType = context["requestType"] as? String
+        }
+        let initiator: ASRInitiator = .wakeUpWord(
             keyword: keyword,
             data: data,
             start: start,
             end: end,
             detection: detection
-        ))
+        )
+        asrAgent.startRecognition(
+            initiator: initiator,
+            service: service,
+            requestType: requestType,
+            completion: nil
+        )
     }
     
     public func keywordDetectorStateDidChange(_ state: KeywordDetectorState) {

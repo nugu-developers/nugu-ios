@@ -24,6 +24,23 @@ import NuguCore
 public protocol ImageAgentProtocol: CapabilityAgentable {
     @discardableResult func requestSendImage(
         _ image: Data,
+        service: [String: AnyHashable]?,
         completion: ((StreamDataState) -> Void)?
     ) -> String
+    
+    @discardableResult func requestSendImage(
+        _ image: Data,
+        service: [String: AnyHashable]?,
+        completion: ((StreamDataState) -> Void)?
+    ) -> EventIdentifier
+}
+
+public extension ImageAgentProtocol {
+    @discardableResult func requestSendImage(
+        _ image: Data,
+        service: [String: AnyHashable]? = nil,
+        completion: ((StreamDataState) -> Void)? = nil
+    ) -> String {
+        requestSendImage(image, service: service, completion: completion).dialogRequestId
+    }
 }

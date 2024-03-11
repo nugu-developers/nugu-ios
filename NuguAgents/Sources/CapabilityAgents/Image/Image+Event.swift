@@ -27,7 +27,7 @@ extension ImageAgent {
         let referrerDialogRequestId: String?
 
         enum TypeInfo {
-            case sendImage
+            case sendImage(service: [String: AnyHashable]?)
         }
     }
     
@@ -46,6 +46,8 @@ extension ImageAgent.Event: Eventable {
     var payload: [String: AnyHashable] {
         var payload: [String: AnyHashable] = [:]
         switch typeInfo {
+        case let .sendImage(service):
+            payload["service"] = service
         default:
             break
         }

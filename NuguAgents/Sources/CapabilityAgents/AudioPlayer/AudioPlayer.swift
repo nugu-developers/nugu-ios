@@ -64,6 +64,7 @@ final class AudioPlayer {
     private var lastReportedOffset: Int = 0
     
     private var lastDataAppended = false
+    private var canReportDelayEvent: Bool = true
     
     init(directive: Downstream.Directive) throws {
         payload = try JSONDecoder().decode(AudioPlayerPlayPayload.self, from: directive.payload)
@@ -259,7 +260,7 @@ private extension AudioPlayer {
                       seconds.isInfinite == false else {
                     return 0
                 }
-                return Int(ceil(seconds))
+                return Int(floor(seconds))
             })
             .filter { [weak self] offset in
                 guard let self = self else { return false }
@@ -277,7 +278,8 @@ private extension AudioPlayer {
                 
                 // Check if there is any report target between last offset and current offset.
                 let offsetRange = (self.lastReportedOffset + 1...offset)
-                if delayReportTime > 0, offsetRange.contains(delayReportTime) {
+                if delayReportTime > 0, offsetRange.contains(delayReportTime), canReportDelayEvent {
+                    self.canReportDelayEvent = false
                     self.progressDelegate?.audioPlayerDidReportDelay(self)
                 }
                 if intervalReportTime > 0, offsetRange.contains(intervalReportTime * (self.lastReportedOffset / intervalReportTime + 1)) {

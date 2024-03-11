@@ -29,9 +29,10 @@ import RxSwift
 
 public final class ASRAgent: ASRAgentProtocol {
     // CapabilityAgentable
-    // TODO: ASR interface version 1.1 -> ASR.Recognize(wakeup/power)
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .automaticSpeechRecognition, version: "1.7")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .automaticSpeechRecognition, version: "1.8")
     private let playSyncProperty = PlaySyncProperty(layerType: .asr, contextType: .sound)
+    
+    public weak var delegate: ASRAgentDelegate?
     
     // Private
     private let focusManager: FocusManageable
@@ -93,15 +94,17 @@ public final class ASRAgent: ASRAgentProtocol {
                 log.error("ASR request: \(String(describing: asrRequest)), result: \(String(describing: asrResult))")
                 return
             }
-            log.info("\(asrResult)")
+            log.info("asrResult: \(asrResult)")
             
             // `ASRState` -> Event -> `expectSpeechDirective` -> `ASRAgentDelegate`
             switch asrResult {
             case .none:
+                asrState = .idle
                 expectSpeech = nil
             case .partial:
                 break
             case .complete:
+                asrState = .idle
                 expectSpeech = nil
             case .cancel:
                 asrState = .idle
@@ -255,6 +258,8 @@ public final class ASRAgent: ASRAgentProtocol {
 public extension ASRAgent {
     @discardableResult func startRecognition(
         initiator: ASRInitiator,
+        service: [String: AnyHashable]?,
+        requestType: String?,
         completion: ((StreamDataState) -> Void)?
     ) -> String {
         log.debug("startRecognition, initiator: \(initiator)")
@@ -268,7 +273,13 @@ public extension ASRAgent {
                 return
             }
          
-            self.startRecognition(initiator: initiator, eventIdentifier: eventIdentifier, completion: completion)
+            startRecognition(
+                initiator: initiator,
+                eventIdentifier: eventIdentifier,
+                service: service,
+                requestType: requestType,
+                completion: completion
+            )
         }
         
         return eventIdentifier.dialogRequestId
@@ -445,7 +456,7 @@ private extension ASRAgent {
             defer { completion(.finished) }
             
             self?.asrDispatchQueue.sync { [weak self] in
-                guard let self = self else { return }
+                guard let self = self, let delegate = self.delegate else { return }
                 // ex> TTS 도중 stopRecognition 호출.
                 guard let expectSpeech = self.expectSpeech, expectSpeech.messageId == directive.header.messageId else {
                     log.info("Message id does not match")
@@ -456,9 +467,21 @@ private extension ASRAgent {
                     log.warning("ExpectSpeech only allowed in IDLE or BUSY state.")
                     return
                 }
+                let service = expectSpeech.payload.service
+                guard service == nil || delegate.asrAgentWillStartExpectSpeech(service: service) else {
+                    log.warning("ExpectSpeech service field is not nil. service: \(String(describing: service))")
+                    self.asrResult = nil
+                    return
+                }
                 
                 self.asrState = .expectingSpeech
-                self.startRecognition(initiator: .expectSpeech, eventIdentifier: EventIdentifier(), completion: nil)
+                startRecognition(
+                    initiator: .expectSpeech,
+                    eventIdentifier: EventIdentifier(),
+                    service: service,
+                    requestType: options.requestType,
+                    completion: nil
+                )
             }
         }
     }
@@ -489,7 +512,7 @@ private extension ASRAgent {
                 case .partial:
                     self.asrResult = .partial(text: item.result ?? "", header: directive.header)
                 case .complete:
-                    self.asrResult = .complete(text: item.result ?? "", header: directive.header)
+                    self.asrResult = .complete(text: item.result ?? "", header: directive.header, requestType: item.requestType)
                 case .none:
                     self.asrResult = .none(header: directive.header)
                 case .error:
@@ -590,7 +613,7 @@ private extension ASRAgent {
         }
         upstreamDataSender.sendStream(
             Event(
-                typeInfo: .recognize(initiator: asrRequest.initiator, options: asrRequest.options),
+                typeInfo: .recognize(initiator: asrRequest.initiator, options: asrRequest.options, service: asrRequest.service),
                 dialogAttributes: dialogAttributeStore.requestAttributes(key: expectSpeech?.messageId),
                 referrerDialogRequestId: asrRequest.referrerDialogRequestId
             ).makeEventMessage(
@@ -603,8 +626,6 @@ private extension ASRAgent {
                     guard self?.asrRequest?.eventIdentifier == asrRequest.eventIdentifier else { return }
                     
                     switch state {
-                    case .finished:
-                        self?.asrState = .idle
                     case .error(let error):
                         self?.asrResult = .error(error)
                     case .sent:
@@ -677,10 +698,12 @@ private extension ASRAgent {
     func startRecognition(
         initiator: ASRInitiator,
         eventIdentifier: EventIdentifier,
+        service: [String: AnyHashable]?,
+        requestType: String?,
         completion: ((StreamDataState) -> Void)?
     ) {
         let semaphore = DispatchSemaphore(value: 0)
-        let options: ASROptions
+        var options: ASROptions
         if let epd = self.expectSpeech?.payload.epd {
             options = ASROptions(
                 maxDuration: epd.maxDuration ?? self.options.maxDuration,
@@ -692,11 +715,13 @@ private extension ASRAgent {
         } else {
             options = self.options
         }
+        options.updateRequestType(requestType)
         asrRequest = ASRRequest(
             eventIdentifier: eventIdentifier,
             initiator: initiator,
             options: options,
             referrerDialogRequestId: expectSpeech?.dialogRequestId,
+            service: service,
             completion: completion
         )
         self.contextManager.getContexts { [weak self] contextPayload in

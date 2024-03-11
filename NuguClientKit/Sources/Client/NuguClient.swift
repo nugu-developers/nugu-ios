@@ -148,8 +148,6 @@ public class NuguClient {
      */
     public let nudgeAgent: NudgeAgentProtocol
     
-    public let messengerAgent: MessengerAgentProtocol
-    
     public let imageAgent: ImageAgentProtocol
     
     // Additional Agents
@@ -236,6 +234,12 @@ public class NuguClient {
         upstreamDataSender: streamDataRouter
     )
     
+    public lazy var messengerAgent: MessengerAgentProtocol = MessengerAgent(
+        directiveSequencer: directiveSequencer,
+        contextManager: contextManager,
+        upstreamDataSender: streamDataRouter
+    )
+    
     // Supports
     /**
      Indicates the dialog state.
@@ -280,6 +284,7 @@ public class NuguClient {
     private let backgroundFocusHolder: BackgroundFocusHolder
     private var audioDeactivateWorkItem: DispatchWorkItem?
     private let directiveConnectionQueue = DispatchQueue(label: "com.sktelecom.romaine.NuguClientKit.directive_connection")
+    private let audioFocusQueue = DispatchQueue(label: "com.sktelecom.romaine.NuguClientKit.audio_focus")
     
     init(
         contextManager: ContextManageable,
@@ -312,7 +317,7 @@ public class NuguClient {
         permissionAgent: PermissionAgentProtocol?,
         alertsAgent: AlertsAgentProtocol?,
         nudgeAgent: NudgeAgentProtocol,
-        messengerAgent: MessengerAgentProtocol,
+        messengerAgent: MessengerAgentProtocol?,
         imageAgent: ImageAgentProtocol
     ) {
         // Core
@@ -352,7 +357,6 @@ public class NuguClient {
         self.utilityAgent = utilityAgent
         self.routineAgent = routineAgent
         self.nudgeAgent = nudgeAgent
-        self.messengerAgent = messengerAgent
         self.imageAgent = imageAgent
         
         // Supports
@@ -396,6 +400,10 @@ public class NuguClient {
         
         if let alertsAgent = alertsAgent {
             self.alertsAgent = alertsAgent
+        }
+        
+        if let messengerAgent = messengerAgent {
+            self.messengerAgent = messengerAgent
         }
         
         // Wiring
@@ -468,6 +476,7 @@ public extension NuguClient {
         token: String? = nil,
         source: TextInputSource? = nil,
         requestType: TextAgentRequestType,
+        service: [String: AnyHashable]? = nil,
         completion: ((StreamDataState) -> Void)? = nil
     ) -> String {
         dialogStateAggregator.isChipsRequestInProgress = true
@@ -476,7 +485,8 @@ public extension NuguClient {
             text: text,
             token: token,
             source: source,
-            requestType: requestType
+            requestType: requestType,
+            service: service
         ) { [weak self] state in
             switch state {
             case .sent:
@@ -505,15 +515,46 @@ public extension NuguClient {
         token: String? = nil,
         playServiceId: String? = nil,
         source: TextInputSource? = nil,
+        service: [String: AnyHashable]? = nil,
         completion: ((StreamDataState) -> Void)? = nil
     ) -> String {
+        requestTextInput(
+            text: text,
+            token: token,
+            playServiceId: playServiceId,
+            source: source,
+            service: service,
+            completion: completion
+        ).dialogRequestId
+    }
+    
+    /// Send event that needs a text-based recognition
+    ///
+    /// This function cancel speech recognition.(e.g. `ASRAgentProtocol.startRecognition(:initiator)`)
+    /// Use `NuguClient.textAgent.requestTextInput` directly to request independent of speech recognition.
+    ///
+    /// - Parameters:
+    ///   - text: The `text` to be recognized
+    ///   - token: token
+    ///   - requestType: `TextAgentRequestType`
+    ///   - completion: The completion handler to call when the request is complete
+    /// - Returns: The eventIdentifier for request.
+    @discardableResult func requestTextInput(
+        text: String,
+        token: String? = nil,
+        playServiceId: String? = nil,
+        source: TextInputSource? = nil,
+        service: [String: AnyHashable]? = nil,
+        completion: ((StreamDataState) -> Void)? = nil
+    ) -> EventIdentifier {
         dialogStateAggregator.isChipsRequestInProgress = true
         
         return textAgent.requestTextInput(
             text: text,
             token: token,
             playServiceId: playServiceId,
-            source: source
+            source: source,
+            service: service
         ) { [weak self] state in
             switch state {
             case .sent:
@@ -553,8 +594,12 @@ extension NuguClient: FocusDelegate {
             return delegate?.nuguClientShouldUpdateAudioSessionForFocusAquire() == true
         }
         
-        if let audioDeactivateWorkItem = audioDeactivateWorkItem {
-            audioDeactivateWorkItem.cancel()
+        audioFocusQueue.async { [weak self] in
+            guard let self else { return }
+            if let audioDeactivateWorkItem = audioDeactivateWorkItem {
+                audioDeactivateWorkItem.cancel()
+                self.audioDeactivateWorkItem = nil
+            }
         }
         
         return audioSessionManager.updateAudioSession(requestingFocus: true) == true
@@ -566,12 +611,21 @@ extension NuguClient: FocusDelegate {
             return
         }
         
-        let audioDeactivateWorkItem = DispatchWorkItem {
-            audioSessionManager.notifyAudioSessionDeactivation()
+        audioFocusQueue.async { [weak self] in
+            guard let self else { return }
+            
+            // 이미 Release(Deactivate)가 예정되어있으면 다시 등록하지 않음.
+            guard audioDeactivateWorkItem == nil else { return }
+            
+            let audioDeactivateWorkItem = DispatchWorkItem { [weak self] in
+                audioSessionManager.notifyAudioSessionDeactivation()
+                self?.audioDeactivateWorkItem = nil
+            }
+            
+            audioFocusQueue.asyncAfter(deadline: .now() + NuguClientConst.audioSessionDeactivationDelay, execute: audioDeactivateWorkItem)
+            self.audioDeactivateWorkItem = audioDeactivateWorkItem
         }
-        
-        DispatchQueue.global().asyncAfter(deadline: .now() + NuguClientConst.audioSessionDeactivationDelay, execute: audioDeactivateWorkItem)
-        self.audioDeactivateWorkItem = audioDeactivateWorkItem
+
     }
 }
 
@@ -742,6 +796,10 @@ extension NuguClient: SpeechRecognizerAggregatorDelegate {
     public func speechRecognizerStateDidChange(_ state: SpeechRecognizerAggregatorState) {
         delegate?.nuguClientDidChangeSpeechState(state)
         notificationCenter.post(name: NuguClient.speechStateChangedNotification, object: self, userInfo: ["state": state])
+    }
+    
+    public func speechRecognizerRequestRecognitionContext() -> [String : AnyHashable] {
+        delegate?.nuguClientRequestRecognitionWithTriggerContext() ?? [:]
     }
 }
 
