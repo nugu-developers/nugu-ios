@@ -862,14 +862,9 @@ private extension AudioPlayerAgent {
     
     func playlistEvent(typeInfo: PlaylistEvent.TypeInfo) -> Single<Eventable> {
         return Single.create { [weak self] (observer) -> Disposable in
-            guard let self = self, let player = self.latestPlayer else {
-                observer(.failure(NuguAgentError.invalidState))
-                return Disposables.create()
-            }
-            
             let playlistEvent = PlaylistEvent(
                 typeInfo: typeInfo,
-                playServiceId: player.payload.playServiceId
+                playServiceId: self?.latestPlayer?.payload.playServiceId
             )
             observer(.success(playlistEvent))
             return Disposables.create()

@@ -161,7 +161,7 @@ extension AudioPlayerDisplayManager {
     }
     
     func updateMetadata(payload: AudioPlayerUpdateMetadataPayload, playServiceId: String, header: Downstream.Header) {
-        guard currentItem?.mediaPayload.playServiceId == playServiceId else { return }
+//        guard currentItem?.mediaPayload.playServiceId == playServiceId else { return }
         delegate?.audioPlayerDisplayShouldUpdateMetadata(payload: payload, header: header)
     }
     

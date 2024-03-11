@@ -24,7 +24,7 @@ import Foundation
 extension AudioPlayerAgent {
     struct PlaylistEvent {
         let typeInfo: TypeInfo
-        let playServiceId: String
+        let playServiceId: String?
         
         enum TypeInfo {
             case playlistItemSelected(token: String, postback: [String: AnyHashable])
