@@ -153,7 +153,6 @@ public extension AudioSessionManager {
         log.debug("")
         // Defer statement for recovering audioSession and MicInputProvider
         defer {
-            updateAudioSession()
             delegate?.audioSessionDidDeactivate()
         }
         do {
