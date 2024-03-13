@@ -884,7 +884,7 @@ private extension AudioPlayerAgent {
         if ignoreLatestPlayer == true {
             return PlaylistEvent(
                 typeInfo: typeInfo,
-                playServiceId: nil
+                playServiceId: latestPlayer?.payload.playServiceId
             )
         } else {
             guard let player = self.latestPlayer else {
@@ -893,7 +893,7 @@ private extension AudioPlayerAgent {
             
             return PlaylistEvent(
                 typeInfo: typeInfo,
-                playServiceId: latestPlayer?.payload.playServiceId
+                playServiceId: player.payload.playServiceId
             )
         }
     }
