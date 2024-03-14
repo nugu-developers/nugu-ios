@@ -10,6 +10,7 @@ Nugu framework for AI Service
   s.homepage = 'https://github.com/nugu-developers/nugu-ios'
   s.author = { 'SK Telecom Co., Ltd.' => 'nugu_dev_sdk@sk.com' }
   s.source = { :git => 'https://github.com/nugu-developers/nugu-ios.git', :tag => s.version }
+  s.resource_bundles = {"NuguUtils" => ["NuguUtils/PrivacyInfo.xcprivacy"]}
   s.documentation_url = 'https://developers.nugu.co.kr'
 
   s.ios.deployment_target = '12.0'

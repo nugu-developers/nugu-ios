@@ -529,6 +529,10 @@
 		E649868A28337649001AD733 /* ControlCenterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E649868928337649001AD733 /* ControlCenterManager.swift */; };
 		E6BE047C2A0BA1A400AE29E3 /* Image+Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6BE047B2A0BA1A400AE29E3 /* Image+Event.swift */; };
 		E6BE047E2A0BA1BD00AE29E3 /* ImageAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6BE047D2A0BA1BD00AE29E3 /* ImageAgent.swift */; };
+		E6D10A982B9FD2FE0004DE40 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = E6D10A972B9FD2FE0004DE40 /* PrivacyInfo.xcprivacy */; };
+		E6D10A9A2B9FD9C20004DE40 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = E6D10A992B9FD9C20004DE40 /* PrivacyInfo.xcprivacy */; };
+		E6D10A9C2B9FD9E80004DE40 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = E6D10A9B2B9FD9E80004DE40 /* PrivacyInfo.xcprivacy */; };
+		E6D10A9E2B9FDBB10004DE40 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = E6D10A9D2B9FDBB10004DE40 /* PrivacyInfo.xcprivacy */; };
 		E6F3DCBD2B4CB9D800298A20 /* ASRAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6F3DCBC2B4CB9D800298A20 /* ASRAgentDelegate.swift */; };
 		E6FBA02B2A1379C500AF8B05 /* MessengerAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FBA02A2A1379C400AF8B05 /* MessengerAgentProtocol.swift */; };
 		E6FBA02D2A137A9700AF8B05 /* ImageAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FBA02C2A137A9700AF8B05 /* ImageAgentProtocol.swift */; };
@@ -1332,6 +1336,10 @@
 		E649868928337649001AD733 /* ControlCenterManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControlCenterManager.swift; sourceTree = "<group>"; };
 		E6BE047B2A0BA1A400AE29E3 /* Image+Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Image+Event.swift"; sourceTree = "<group>"; };
 		E6BE047D2A0BA1BD00AE29E3 /* ImageAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAgent.swift; sourceTree = "<group>"; };
+		E6D10A972B9FD2FE0004DE40 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		E6D10A992B9FD9C20004DE40 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		E6D10A9B2B9FD9E80004DE40 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		E6D10A9D2B9FDBB10004DE40 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		E6F3DCBC2B4CB9D800298A20 /* ASRAgentDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASRAgentDelegate.swift; sourceTree = "<group>"; };
 		E6FBA02A2A1379C400AF8B05 /* MessengerAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessengerAgentProtocol.swift; sourceTree = "<group>"; };
 		E6FBA02C2A137A9700AF8B05 /* ImageAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAgentProtocol.swift; sourceTree = "<group>"; };
@@ -1857,6 +1865,7 @@
 				1FFFF30B2375707000C9A177 /* Sources */,
 				1FFFEFFF23753F1800C9A177 /* NuguCore.h */,
 				1FFFF00023753F1800C9A177 /* Info.plist */,
+				E6D10A9D2B9FDBB10004DE40 /* PrivacyInfo.xcprivacy */,
 			);
 			path = NuguCore;
 			sourceTree = "<group>";
@@ -1867,6 +1876,7 @@
 				1FFFF3D72375735E00C9A177 /* Sources */,
 				1FFFF00C23753F3100C9A177 /* NuguClientKit.h */,
 				1FFFF00D23753F3100C9A177 /* Info.plist */,
+				E6D10A992B9FD9C20004DE40 /* PrivacyInfo.xcprivacy */,
 			);
 			path = NuguClientKit;
 			sourceTree = "<group>";
@@ -2561,6 +2571,7 @@
 				7314DF67255E3EDB004882BB /* Sources */,
 				7314DF49255E3EA2004882BB /* NuguUtils.h */,
 				7314DF4A255E3EA2004882BB /* Info.plist */,
+				E6D10A9B2B9FD9E80004DE40 /* PrivacyInfo.xcprivacy */,
 			);
 			path = NuguUtils;
 			sourceTree = "<group>";
@@ -2598,6 +2609,7 @@
 				73152FA623E0411200F843C3 /* Sources */,
 				73152F9C23E0405900F843C3 /* NuguAgents.h */,
 				73152F9D23E0405900F843C3 /* Info.plist */,
+				E6D10A972B9FD2FE0004DE40 /* PrivacyInfo.xcprivacy */,
 			);
 			path = NuguAgents;
 			sourceTree = "<group>";
@@ -3690,6 +3702,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E6D10A9E2B9FDBB10004DE40 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3697,6 +3710,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E6D10A9A2B9FD9C20004DE40 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3772,6 +3786,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E6D10A9C2B9FD9E80004DE40 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3779,6 +3794,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E6D10A982B9FD2FE0004DE40 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
