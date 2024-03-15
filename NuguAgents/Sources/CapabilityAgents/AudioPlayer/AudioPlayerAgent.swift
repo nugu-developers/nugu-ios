@@ -63,6 +63,8 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
         }
     }
     
+    public var ignoreLatestPlayer: Bool = false
+    
     // Private
     private let playSyncManager: PlaySyncManageable
     private let contextManager: ContextManageable
@@ -862,18 +864,38 @@ private extension AudioPlayerAgent {
     
     func playlistEvent(typeInfo: PlaylistEvent.TypeInfo) -> Single<Eventable> {
         return Single.create { [weak self] (observer) -> Disposable in
-            guard let self = self, let player = self.latestPlayer else {
+            guard let self else { 
                 observer(.failure(NuguAgentError.invalidState))
                 return Disposables.create()
             }
             
-            let playlistEvent = PlaylistEvent(
+            do {
+                let playlistEvent = try self.makePlaylistEvent(typeInfo: typeInfo)
+                observer(.success(playlistEvent))
+            } catch {
+                observer(.failure(NuguAgentError.invalidState))
+            }
+            
+            return Disposables.create()
+        }.subscribe(on: audioPlayerScheduler)
+    }
+    
+    private func makePlaylistEvent(typeInfo: PlaylistEvent.TypeInfo) throws -> PlaylistEvent {
+        if ignoreLatestPlayer == true {
+            return PlaylistEvent(
+                typeInfo: typeInfo,
+                playServiceId: latestPlayer?.payload.playServiceId
+            )
+        } else {
+            guard let player = self.latestPlayer else {
+                throw NuguAgentError.invalidState
+            }
+            
+            return PlaylistEvent(
                 typeInfo: typeInfo,
                 playServiceId: player.payload.playServiceId
             )
-            observer(.success(playlistEvent))
-            return Disposables.create()
-        }.subscribe(on: audioPlayerScheduler)
+        }
     }
 }
 

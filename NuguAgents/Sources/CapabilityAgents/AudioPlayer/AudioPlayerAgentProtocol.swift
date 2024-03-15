@@ -45,6 +45,9 @@ public protocol AudioPlayerAgentProtocol: CapabilityAgentable, TypedNotifyable {
     /// This function retrieves the volume of the current `MediaPlayable` handled by the `AudioPlayerAgent`.
     var volume: Float { get set }
     
+    /// Ignore latestPlayerInfo when receive Directive
+    var ignoreLatestPlayer: Bool { get set }
+    
     /// Begins playback of the current item.
     func play()
     
