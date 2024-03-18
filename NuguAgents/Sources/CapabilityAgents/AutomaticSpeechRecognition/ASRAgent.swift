@@ -29,7 +29,7 @@ import RxSwift
 
 public final class ASRAgent: ASRAgentProtocol {
     // CapabilityAgentable
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .automaticSpeechRecognition, version: "1.8")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .automaticSpeechRecognition, version: "1.9")
     private let playSyncProperty = PlaySyncProperty(layerType: .asr, contextType: .sound)
     
     public weak var delegate: ASRAgentDelegate?
