@@ -52,7 +52,7 @@ extension ASRAgent.Event: Eventable {
     var payload: [String: AnyHashable] {
         var payload: [String: AnyHashable?]
         switch typeInfo {
-        case .recognize(let initiator, let options, let service):
+        case let .recognize(initiator, options, service):
             payload = [
                 "codec": "SPEEX",
                 "language": "KOR",
@@ -62,13 +62,22 @@ extension ASRAgent.Event: Eventable {
                 "domainTypes": dialogAttributes?["domainTypes"],
                 "asrContext": dialogAttributes?["asrContext"],
                 "service": service,
-                "timeout": [
-                    "listen": options.timeout.truncatedMilliSeconds,
-                    "maxSpeech": options.maxDuration.truncatedMilliSeconds,
-                    "response": 10000
-                ],
                 "requestType": options.requestType
             ]
+            
+            if options.endPointing == .client {
+                payload["epd"] = [
+                    "timeoutMilliseconds": options.timeout.truncatedMilliSeconds,
+                    "silenceIntervalInMilliseconds": options.pauseLength.truncatedMilliSeconds,
+                    "maxSpeechDurationMilliseconds": options.maxDuration.truncatedMilliSeconds,
+                ]
+            } else {
+                payload["timeout"] = [
+                    "listen": options.timeout.truncatedMilliSeconds,
+                    "maxSpeech": options.maxDuration.truncatedMilliSeconds,
+                    "response": 10000 // default value
+                ]
+            }
             
             if case let .wakeUpWord(keyword, _, start, end, detection) = initiator {
                 var wakeup: [String: AnyHashable?] = ["word": keyword]
