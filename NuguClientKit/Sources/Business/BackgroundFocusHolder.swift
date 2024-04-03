@@ -29,7 +29,6 @@ class BackgroundFocusHolder {
     private let queue = DispatchQueue(label: "com.sktelecom.romaine.dummy_focus_requester")
     // Prevent releasing focus while these event are being processed.
     private let focusTargets = [
-        "Text.TextInput",
         "TTS.SpeechFinished",
         "AudioPlayer.PlaybackFinished",
         "MediaPlayer.PlaySuspended"
