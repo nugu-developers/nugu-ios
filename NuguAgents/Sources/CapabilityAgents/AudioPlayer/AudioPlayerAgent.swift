@@ -27,7 +27,7 @@ import RxSwift
 
 public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
     // CapabilityAgentable
-    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .audioPlayer, version: "1.9")
+    public var capabilityAgentProperty: CapabilityAgentProperty = CapabilityAgentProperty(category: .audioPlayer, version: "1.10")
     private let playSyncProperty = PlaySyncProperty(layerType: .media, contextType: .sound)
     
     // AudioPlayerAgentProtocol
@@ -315,6 +315,10 @@ public extension AudioPlayerAgent {
     
     func requestPlaylistModified(deletedTokens: [String], tokens: [String]) {
         sendFullContextEvent(playlistEvent(typeInfo: .modifyPlaylist(deletedTokens: deletedTokens, tokens: tokens)))
+    }
+    
+    func requestBadgeButtonSelected(with token: String, postback: [String: AnyHashable]) {
+        sendFullContextEvent(badgeButtonEvent(typeInfo: .badgeButtonSelected(token: token, postback: postback)))
     }
     
     func notifyUserInteraction() {
@@ -872,6 +876,27 @@ private extension AudioPlayerAgent {
             do {
                 let playlistEvent = try self.makePlaylistEvent(typeInfo: typeInfo)
                 observer(.success(playlistEvent))
+            } catch {
+                observer(.failure(NuguAgentError.invalidState))
+            }
+            
+            return Disposables.create()
+        }.subscribe(on: audioPlayerScheduler)
+    }
+    
+    func badgeButtonEvent(typeInfo: BadgeButtonEvent.TypeInfo) -> Single<Eventable> {
+        return Single.create { [weak self] (observer) -> Disposable in
+            guard let self, let player = self.latestPlayer else {
+                observer(.failure(NuguAgentError.invalidState))
+                return Disposables.create()
+            }
+            
+            do {
+                let badgeButtonEvent = BadgeButtonEvent(
+                    typeInfo: typeInfo,
+                    playServiceId: player.payload.playServiceId
+                )
+                observer(.success(badgeButtonEvent))
             } catch {
                 observer(.failure(NuguAgentError.invalidState))
             }
