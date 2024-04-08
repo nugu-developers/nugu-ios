@@ -536,6 +536,7 @@
 		E6F3DCBD2B4CB9D800298A20 /* ASRAgentDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6F3DCBC2B4CB9D800298A20 /* ASRAgentDelegate.swift */; };
 		E6FBA02B2A1379C500AF8B05 /* MessengerAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FBA02A2A1379C400AF8B05 /* MessengerAgentProtocol.swift */; };
 		E6FBA02D2A137A9700AF8B05 /* ImageAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FBA02C2A137A9700AF8B05 /* ImageAgentProtocol.swift */; };
+		F685625A2BC3D8E600597762 /* AudioPlayerAgent+BadgeButtonEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68562592BC3D8E600597762 /* AudioPlayerAgent+BadgeButtonEvent.swift */; };
 		F6A6B0842AAEFDD900D41DEC /* AudioPlayer2Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A6B0832AAEFDD900D41DEC /* AudioPlayer2Template.swift */; };
 		F6D49D0D296BAD3500510498 /* AudioPlayerPlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D49D0C296BAD3500510498 /* AudioPlayerPlaylist.swift */; };
 		F6D49D0F296BAE9600510498 /* AudioPlayerAgent+PlaylistEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D49D0E296BAE9600510498 /* AudioPlayerAgent+PlaylistEvent.swift */; };
@@ -1343,6 +1344,7 @@
 		E6F3DCBC2B4CB9D800298A20 /* ASRAgentDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASRAgentDelegate.swift; sourceTree = "<group>"; };
 		E6FBA02A2A1379C400AF8B05 /* MessengerAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessengerAgentProtocol.swift; sourceTree = "<group>"; };
 		E6FBA02C2A137A9700AF8B05 /* ImageAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAgentProtocol.swift; sourceTree = "<group>"; };
+		F68562592BC3D8E600597762 /* AudioPlayerAgent+BadgeButtonEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AudioPlayerAgent+BadgeButtonEvent.swift"; sourceTree = "<group>"; };
 		F6A6B0832AAEFDD900D41DEC /* AudioPlayer2Template.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayer2Template.swift; sourceTree = "<group>"; };
 		F6D49D0C296BAD3500510498 /* AudioPlayerPlaylist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerPlaylist.swift; sourceTree = "<group>"; };
 		F6D49D0E296BAE9600510498 /* AudioPlayerAgent+PlaylistEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AudioPlayerAgent+PlaylistEvent.swift"; sourceTree = "<group>"; };
@@ -1574,6 +1576,7 @@
 		06CF291D2547F8B600CEC3EC /* Event */ = {
 			isa = PBXGroup;
 			children = (
+				F68562592BC3D8E600597762 /* AudioPlayerAgent+BadgeButtonEvent.swift */,
 				1FFFF3392375707000C9A177 /* AudioPlayerAgent+PlayEvent.swift */,
 				A135E6942428B6C8006F82E5 /* AudioPlayerAgent+RequestPlayEvent.swift */,
 				A135E662241F1925006F82E5 /* AudioPlayerAgent+SettingsEvent.swift */,
@@ -4358,6 +4361,7 @@
 				E649868628336CED001AD733 /* DisplayRedirectTriggerChildPayload.swift in Sources */,
 				73152FB523E0413F00F843C3 /* AudioPlayerAgent+PlayEvent.swift in Sources */,
 				7373891A24A46CC20018DDD2 /* LocationAgentDelegate.swift in Sources */,
+				F685625A2BC3D8E600597762 /* AudioPlayerAgent+BadgeButtonEvent.swift in Sources */,
 				737388E724A46C5D0018DDD2 /* AudioPlayerState.swift in Sources */,
 				1F9337AD25BF265200CEBF66 /* MessageAgent+Event.swift in Sources */,
 				06FE563F253E9EC0002FAC9B /* TTSPlayer.swift in Sources */,
