@@ -87,6 +87,9 @@ public protocol AudioPlayerAgentProtocol: CapabilityAgentable, TypedNotifyable {
     /// Change current playlist information by sending deletedTokens and playlist tokens
     func requestPlaylistModified(deletedTokens: [String], tokens: [String])
     
+    /// Request directive by selecting badge button.
+    func requestBadgeButtonSelected(with token: String, postback: [String: AnyHashable])
+    
     /// Sets the current playback time to the specified time.
     ///
     /// - Parameter offset: The time(seconds) to which to seek.
