@@ -49,6 +49,12 @@ public final class AudioPlayerAgent: AudioPlayerAgentProtocol {
         }
     }
     
+    public var offsetInMilliSeconds: Int? {
+        audioPlayerDispatchQueue.sync {
+            latestPlayer?.offset.truncatedMilliSeconds
+        }
+    }
+    
     public var volume: Float = 1.0 {
         didSet {
             audioPlayerDispatchQueue.sync {

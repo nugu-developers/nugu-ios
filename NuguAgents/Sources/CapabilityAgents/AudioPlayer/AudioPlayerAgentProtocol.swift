@@ -40,6 +40,11 @@ public protocol AudioPlayerAgentProtocol: CapabilityAgentable, TypedNotifyable {
     /// This function retrieves the duration(seconds) of the current `MediaPlayable` handled by the `AudioPlayerAgent`.
     var duration: Int? { get }
     
+    /// Returns the current time of the current player item.
+    ///
+    /// This function retrieves the offset(milliseconds) of the current `MediaPlayable` handled by the `AudioPlayerAgent`.
+    var offsetInMilliSeconds: Int? { get }
+    
     /// The audio playback volume for the player.
     ///
     /// This function retrieves the volume of the current `MediaPlayable` handled by the `AudioPlayerAgent`.
