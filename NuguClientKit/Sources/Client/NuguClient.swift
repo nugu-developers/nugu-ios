@@ -774,6 +774,8 @@ extension NuguClient: AudioSessionManagerDelegate {
             if audioSessionManager?.isCarplayConnected() == true {
                 speechRecognizerAggregator.stopListening()
             }
+        case .categoryChange:
+            break
         }
     }
     
