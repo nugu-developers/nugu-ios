@@ -34,8 +34,13 @@ class BackgroundFocusHolder {
         "MediaPlayer.PlaySuspended"
     ]
     
+    private let pendingTargets = [
+        "ASR.NotifyResult"
+    ]
+    
     private var handlingEvents = Set<String>()
     private var handlingSoundDirectives = Set<String>()
+    private var handlingPendingDirectives = Set<String>()
     private var dialogState: DialogState = .idle
     
     // Observers
@@ -43,6 +48,7 @@ class BackgroundFocusHolder {
     private var eventWillSendObserver: Any?
     private var eventDidSendObserver: Any?
     private var dialogStateObserver: Any?
+    private var directiveReceiveObserver: Any?
     private var directivePrefetchObserver: Any?
     private var directiveCompleteObserver: Any?
     
@@ -82,6 +88,10 @@ class BackgroundFocusHolder {
         if let directiveCompleteObserver = directiveCompleteObserver {
             notificationCenter.removeObserver(directiveCompleteObserver)
         }
+        
+        if let directiveReceiveObserver = directiveReceiveObserver {
+            notificationCenter.removeObserver(directiveReceiveObserver)
+        }
     }
 }
 
@@ -107,6 +117,7 @@ private extension BackgroundFocusHolder {
     func tryReleaseFocus() {
         guard handlingEvents.isEmpty,
               handlingSoundDirectives.isEmpty,
+              handlingPendingDirectives.isEmpty,
               dialogState == .idle else { return }
         
         focusManager.releaseFocus(channelDelegate: self)
@@ -134,6 +145,22 @@ private extension BackgroundFocusHolder {
                 
                 if self.handlingEvents.remove(notification.event.header.messageId) != nil {
                     self.tryReleaseFocus()
+                }
+            }
+        }
+        
+        directiveReceiveObserver = object.observe(NuguCoreNotification.StreamDataRoute.ReceivedDirective.self, queue: nil) { [weak self] notification in
+            self?.queue.async { [weak self] in
+                guard let self else { return }
+                let dialogRequestId = notification.directive.header.dialogRequestId
+                if pendingTargets.contains(notification.directive.header.type) {
+                    handlingPendingDirectives.insert(dialogRequestId)
+                    requestFocus()
+                } else if handlingPendingDirectives.contains(dialogRequestId) {
+                    // PendingTarget과 동일한 dialogRequestId를 수신할 경우 focus를 유지
+                } else {
+                    handlingPendingDirectives.removeAll()
+                    tryReleaseFocus()
                 }
             }
         }
