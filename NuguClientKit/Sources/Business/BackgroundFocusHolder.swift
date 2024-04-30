@@ -157,7 +157,7 @@ private extension BackgroundFocusHolder {
                     handlingPendingDirectives.insert(dialogRequestId)
                     requestFocus()
                 } else if handlingPendingDirectives.contains(dialogRequestId) {
-                    return
+                    // PendingTarget과 동일한 dialogRequestId를 수신할 경우 focus를 유지
                 } else {
                     handlingPendingDirectives.removeAll()
                     tryReleaseFocus()
