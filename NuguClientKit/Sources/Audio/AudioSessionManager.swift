@@ -222,7 +222,7 @@ private extension AudioSessionManager {
                 self?.delegate?.audioSessionRouteChanged(reason: .categoryChange)
                 
                 if self?.isCarplayConnected() == true {
-                    self?.updateAudioSession(requestingFocus: true)
+                    self?.updateAudioSession()
                 }
             default: break
             }
