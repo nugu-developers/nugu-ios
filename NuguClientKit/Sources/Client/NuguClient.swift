@@ -770,12 +770,10 @@ extension NuguClient: AudioSessionManagerDelegate {
             if previousRoute?.outputs.first?.portType == .carAudio {
                 speechRecognizerAggregator.startListeningWithTrigger()
             }
-        case .newDeviceAvailable:
+        case .newDeviceAvailable, .categoryChange:
             if audioSessionManager?.isCarplayConnected() == true {
                 speechRecognizerAggregator.stopListening()
             }
-        case .categoryChange:
-            break
         }
     }
     
