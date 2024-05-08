@@ -70,7 +70,7 @@ final public class AudioSessionManager: AudioSessionManageable {
 
 public extension AudioSessionManager {
     func isCarplayConnected() -> Bool {
-        AVAudioSession.sharedInstance().availableInputs?.contains(where: { $0.portType == .carAudio }) ?? false
+        AVAudioSession.sharedInstance().currentRoute.outputs.contains(where: { $0.portType == .carAudio })
     }
     
     func requestRecordPermission(_ response: @escaping (Bool) -> Void) {
@@ -220,10 +220,6 @@ private extension AudioSessionManager {
                 }
             case .categoryChange, .routeConfigurationChange:
                 self?.delegate?.audioSessionRouteChanged(reason: .categoryChange)
-                
-                if self?.isCarplayConnected() == true {
-                    self?.updateAudioSession()
-                }
             default: break
             }
         })
