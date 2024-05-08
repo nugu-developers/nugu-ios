@@ -220,10 +220,6 @@ private extension AudioSessionManager {
                 }
             case .categoryChange, .routeConfigurationChange:
                 self?.delegate?.audioSessionRouteChanged(reason: .categoryChange)
-                
-                if self?.isCarplayConnected() == true {
-                    self?.updateAudioSession()
-                }
             default: break
             }
         })
