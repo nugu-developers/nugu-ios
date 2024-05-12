@@ -45,8 +45,31 @@ public struct AudioPlayer1Template: Decodable {
             public let backgroundColor: String?
             public let badgeImageUrl: String?
             public let badgeMessage: String?
+            public let badgeButton: BadgeButton?
             public let lyrics: AudioPlayerLyricsTemplate?
             public let settings: AudioPlayerSettingsTemplate?
+            
+            public struct BadgeButton: Decodable {
+                private enum CodingKeys: CodingKey {
+                    case token
+                    case text
+                    case backgroundColor
+                    case postback
+                }
+                
+                public let token: String
+                public let text: String
+                public let backgroundColor: String?
+                public let postback: [String: AnyHashable]?
+                
+                public init(from decoder: Decoder) throws {
+                    let container = try decoder.container(keyedBy: CodingKeys.self)
+                    token = try container.decode(String.self, forKey: .token)
+                    text = try container.decode(String.self, forKey: .text)
+                    backgroundColor = try container.decodeIfPresent(String.self, forKey: .backgroundColor)
+                    postback = try container.decodeIfPresent([String: AnyHashable].self, forKey: .postback)
+                }
+            }
         }
     }
 }

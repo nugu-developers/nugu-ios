@@ -38,7 +38,7 @@ final public class AudioSessionManager: AudioSessionManageable {
     ///   - nuguClient: NuguClient instance which should be passed for delegation.
     public init(audioPlayerAgent: AudioPlayerAgentProtocol) {
         self.audioPlayerAgent = audioPlayerAgent
-
+        
         // observers
         addAudioPlayerAgentObserver(audioPlayerAgent)
         addAudioSessionObservers()
@@ -70,13 +70,13 @@ final public class AudioSessionManager: AudioSessionManageable {
 
 public extension AudioSessionManager {
     func isCarplayConnected() -> Bool {
-        return AVAudioSession.sharedInstance().currentRoute.outputs.first?.portType == AVAudioSession.Port.carAudio
+        AVAudioSession.sharedInstance().currentRoute.outputs.contains(where: { $0.portType == .carAudio })
     }
     
     func requestRecordPermission(_ response: @escaping (Bool) -> Void) {
         AVAudioSession.sharedInstance().requestRecordPermission(response)
     }
-        
+    
     @discardableResult func updateAudioSessionToPlaybackIfNeeded(mixWithOthers: Bool = false) -> Bool {
         var options = AVAudioSession.CategoryOptions(arrayLiteral: [])
         if mixWithOthers == true {
@@ -97,7 +97,7 @@ public extension AudioSessionManager {
     }
     
     @discardableResult func updateAudioSessionWhenCarplayConnected(requestingFocus: Bool) -> Bool {
-        if requestingFocus == true {
+        if requestingFocus {
             let options = AVAudioSession.CategoryOptions(arrayLiteral: [])
             // If audioSession is already has been set properly, resetting audioSession is unnecessary
             guard AVAudioSession.sharedInstance().category != .playAndRecord ||
@@ -195,12 +195,13 @@ private extension AudioSessionManager {
         
         audioSessionRouteObserver = NotificationCenter.default.addObserver(forName: AVAudioSession.routeChangeNotification, object: nil, queue: nil, using: { [weak self] (notification) in
             guard let userInfo = notification.userInfo,
-                let reasonValue = userInfo[AVAudioSessionRouteChangeReasonKey] as? UInt,
-                let reason = AVAudioSession.RouteChangeReason(rawValue: reasonValue) else { return }
+                  let reasonValue = userInfo[AVAudioSessionRouteChangeReasonKey] as? UInt,
+                  let reason = AVAudioSession.RouteChangeReason(rawValue: reasonValue) else {
+                return
+            }
             
             switch reason {
             case .oldDeviceUnavailable:
-                log.debug("Route changed due to oldDeviceUnavailable")
                 let previousRoute = userInfo[AVAudioSessionRouteChangePreviousRouteKey] as? AVAudioSessionRouteDescription
                 if previousRoute?.outputs.first?.portType == .carAudio {
                     self?.updateAudioSession()
@@ -217,6 +218,8 @@ private extension AudioSessionManager {
                 if self?.audioPlayerAgent.isPlaying == true {
                     self?.updateAudioSessionToPlaybackIfNeeded()
                 }
+            case .categoryChange, .routeConfigurationChange:
+                self?.delegate?.audioSessionRouteChanged(reason: .categoryChange)
             default: break
             }
         })
@@ -298,5 +301,6 @@ public extension AudioSessionManager {
     enum AudioSessionRouteChangeReason {
         case newDeviceAvailable
         case oldDeviceUnavailable(previousRoute: AVAudioSessionRouteDescription?)
+        case categoryChange
     }
 }

@@ -40,6 +40,11 @@ public protocol AudioPlayerAgentProtocol: CapabilityAgentable, TypedNotifyable {
     /// This function retrieves the duration(seconds) of the current `MediaPlayable` handled by the `AudioPlayerAgent`.
     var duration: Int? { get }
     
+    /// Returns the current time of the current player item.
+    ///
+    /// This function retrieves the offset(milliseconds) of the current `MediaPlayable` handled by the `AudioPlayerAgent`.
+    var offsetInMilliSeconds: Int? { get }
+    
     /// The audio playback volume for the player.
     ///
     /// This function retrieves the volume of the current `MediaPlayable` handled by the `AudioPlayerAgent`.
@@ -86,6 +91,9 @@ public protocol AudioPlayerAgentProtocol: CapabilityAgentable, TypedNotifyable {
     
     /// Change current playlist information by sending deletedTokens and playlist tokens
     func requestPlaylistModified(deletedTokens: [String], tokens: [String])
+    
+    /// Request directive by selecting badge button.
+    func requestBadgeButtonSelected(with token: String, postback: [String: AnyHashable])
     
     /// Sets the current playback time to the specified time.
     ///

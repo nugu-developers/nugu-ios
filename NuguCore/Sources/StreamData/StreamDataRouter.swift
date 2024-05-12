@@ -66,6 +66,10 @@ public extension StreamDataRouter {
                     
                     self?.post(state)
                 }
+            }, onError: { [weak self] error in
+                self?.post(ServerSentEventReceiverState.disconnected(error: error))
+            }, onDisposed: { [weak self] in
+                self?.post(ServerSentEventReceiverState.unconnected)
             })
         serverInitiatedDirectiveStateDisposable?.disposed(by: disposeBag)
         
@@ -234,6 +238,7 @@ public extension StreamDataRouter {
 }
 
 // MARK: - private
+
 extension StreamDataRouter {
     /**
      Send directive or attachment to `DirectiveSequencer` and Call closure
