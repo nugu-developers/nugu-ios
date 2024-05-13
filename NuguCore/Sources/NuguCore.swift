@@ -56,5 +56,5 @@ public var logLevel: NattyLog.LogLevel {
 public let nuguSDKVersion = (Bundle(for: AuthorizationStore.self).object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0")
 #else
 // FIXME: 현재는 SPM에서 버전을 가져올 방법이 없다.
-public let nuguSDKVersion = "1.10.1"
+public let nuguSDKVersion = "1.10.2"
 #endif

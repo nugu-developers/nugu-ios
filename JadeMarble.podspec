@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'JadeMarble'
-  s.version = '1.10.1'
+  s.version = '1.10.2'
   s.license = 'Apache License, Version 2.0'
   s.summary = 'End Point Detector for NUGU ASR'
   s.homepage = 'https://github.com/nugu-developers/nugu-ios'
